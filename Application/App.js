@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button, Provider as PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-
+import r from "./db/RethinkDBConn";
 const Stack = createStackNavigator();
 
 const tempScreen = ({ navigation }) => (
