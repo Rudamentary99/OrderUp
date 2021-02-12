@@ -29,7 +29,6 @@ const secScreen = ({ navigation }) => {
   );
 };
 export default function App() {
-  console.log("connPromise", connPromise);
   return (
     <PaperProvider>
       <NavigationContainer>
