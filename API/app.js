@@ -1,35 +1,26 @@
 var async = require("async");
 const fs = require("fs");
 var r = require("rethinkdb");
-var indexRouter = require("./routes/index");
+const testRoutes = require("./routes/testRoutes");
+
 //get App Config
 const config = JSON.parse(fs.readFileSync(`${__dirname}/config.json`));
 
-var app = require("./expressApp");
+//get express app
+var app = require("./expressApp")([
+  ...testRoutes,
+  {
+    method: "all",
+    path: "/test",
+    fn: (req, res, next) => {
+      r.table("testTable").run(app._rdbConn, (err, result) => {
+        if (err) return next(err);
 
-//var usersRouter = require("./routes/users");
-
-// Load config for RethinkDB and express
-
-//app.use("/", indexRouter);
-//app.use("/users", usersRouter);
-// app.all("/test", (req, res, next) => {
-//   r.table("testTable").run(app._rdbConn, (err, result) => {
-//     if (err) return next(err);
-
-//     res.json(result);
-//   });
-// });
-// app.all("/api/testBody", (req, res, next) => {
-//   try {
-//     res.send(req.body);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-// app.all("/api/testParams", (req, res) => {
-//   res.send(req.params);
-// });
+        res.json(result);
+      });
+    },
+  },
+]);
 
 //connect to rethinkDB and start express
 async.waterfall([

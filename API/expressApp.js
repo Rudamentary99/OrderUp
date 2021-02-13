@@ -31,8 +31,8 @@ app.use(function (err, req, res, next) {
 module.exports = (pRoutes) => {
   //create each route
   pRoutes.forEach((route) => {
-    const { method, path, action } = route;
-    app[method](path, action);
+    const { method, path, fn } = route;
+    app[method](path, fn);
   });
 
   //add 404 as final route
