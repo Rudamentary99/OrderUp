@@ -1,14 +1,15 @@
+var async = require("async");
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+var r = require("rethinkdb");
+//var indexRouter = require("./routes/index");
+//var usersRouter = require("./routes/users");
 var app = express();
-//set the port api will listen to
-const port = 3000;
-let testFunc = require("./db/testDB.js");
+// Load config for RethinkDB and express
+var config = require(`${__dirname}/config.js`);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -20,11 +21,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/test", testFunc);
-app.all("/api/testBody", (req, res) => {
-  res.send(req.body);
+//app.use("/", indexRouter);
+//app.use("/users", usersRouter);
+app.all("/test", (req, res, next) => {
+  r.table("testTable").run(app._rdbConn, (err, result) => {
+    if (err) return next(err);
+
+    res.json(result);
+  });
+});
+app.all("/api/testBody", (req, res, next) => {
+  try {
+    res.send(req.body);
+  } catch (error) {
+    next(error);
+  }
 });
 app.all("/api/testParams", (req, res) => {
   res.send(req.params);
@@ -45,7 +56,19 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
-app.listen(port, () =>
-  console.log(`Express API listening on http://localhost:${port}`)
-);
-//module.exports = app;
+//connect to rethinkDB and start express
+async.waterfall([
+  function connect(callback) {
+    console.log("conecting to rdb");
+    r.connect(config.rethinkdb, callback);
+  },
+  function startExpress(connection) {
+    console.log("starting express");
+    app._rdbConn = connection;
+    app.listen(config.express.port, () =>
+      console.log(
+        `Express API listening on http://localhost:${config.express.port}`
+      )
+    );
+  },
+]);
