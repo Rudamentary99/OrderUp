@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button, Provider as PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-
+import AdminComponent from "./Components/Admin/index";
 const Stack = createStackNavigator();
 
 const tempScreen = ({ navigation }) => (
@@ -14,27 +14,21 @@ const tempScreen = ({ navigation }) => (
     <Button
       mode="contained"
       onPress={() => {
-        navigation.navigate("sec");
+        navigation.navigate("admin");
       }}
     >
-      test button
+      go to admin
     </Button>
   </View>
 );
-const secScreen = ({ navigation }) => {
-  return (
-    <View>
-      <Text>This is the other screen</Text>
-    </View>
-  );
-};
+
 export default function App() {
   return (
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="temp">
           <Stack.Screen name="temp" component={tempScreen} />
-          <Stack.Screen name="sec" component={secScreen}></Stack.Screen>
+          <Stack.Screen name="admin" component={AdminComponent} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
