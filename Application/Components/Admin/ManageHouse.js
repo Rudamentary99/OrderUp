@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import RoundButton from "../helpers/RoundButton";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { Text, useTheme } from "react-native-paper";
+import { Text, BottomNavigation } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 const Tab = createMaterialBottomTabNavigator();
 
@@ -15,35 +15,22 @@ const ManageTable = () => {
 };
 
 const ManageHouse = (props) => {
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: "manageWaiters", title: "Manage Servers", icon: "account-multiple" },
+    { key: "manageFloors", title: "Manage Floors", icon: "table-furniture" },
+  ]);
+
   return (
-    <Tab.Navigator initialRouteName="Manage Table" shifting>
-      <Tab.Screen
-        name="Manage Servers"
-        component={ManageTable}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="account-multiple"
-              color={color}
-              size={26}
-            />
-          ),
-        }}
-      ></Tab.Screen>
-      <Tab.Screen
-        name="Manage Table"
-        component={ManageTable}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="table-furniture"
-              color={color}
-              size={26}
-            />
-          ),
-        }}
-      ></Tab.Screen>
-    </Tab.Navigator>
+    <BottomNavigation
+      navigationState={{ index, routes }}
+      onIndexChange={setIndex}
+      renderScene={BottomNavigation.SceneMap({
+        manageWaiters: ManageTable,
+        manageFloors: ManageTable,
+      })}
+      shifting
+    />
   );
 };
 export default ManageHouse;
