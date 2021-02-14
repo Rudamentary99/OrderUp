@@ -1,10 +1,13 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-const ManageMenu = ({ navigation }) => {
+
+const ManageHouse = (props) => {
+  const { navigation } = props;
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>ManageView</Text>
+      <Text>ManageHouse</Text>
     </View>
   );
 };
-export default ManageMenu;
+export default ManageHouse;
