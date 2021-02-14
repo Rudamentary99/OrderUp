@@ -1,27 +1,34 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Button, Provider as PaperProvider } from "react-native-paper";
+import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
+import {
+  TouchableRipple,
+  Surface,
+  Title,
+  Provider as PaperProvider,
+} from "react-native-paper";
+
+import RoundButton from "../helpers/RoundButton";
 
 const AdminOverview = ({ navigation }) => {
+  const [testText, setTestText] = useState("Manage House");
   return (
     <View style={styles.view}>
-      <Button
-        style={styles.Button}
-        mode="contained"
+      <RoundButton
+        rippleColor="rgba(0, 0, 0, .32)"
         onPress={() => {
-          navigation.navigate("admin");
+          navigation.navigate("temp");
         }}
       >
-        Manage Food
-      </Button>
-      <Button
-        mode="contained"
+        Manage Menu
+      </RoundButton>
+      <RoundButton
+        rippleColor="rgba(0, 0, 0, .32)"
         onPress={() => {
-          navigation.navigate("admin");
+          navigation.navigate("temp");
         }}
       >
         Manage House
-      </Button>
+      </RoundButton>
     </View>
   );
 };
@@ -33,7 +40,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
   },
-  Button: {},
+  Button: {
+    height: 200,
+    width: 200,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 5,
+    borderRadius: 100,
+  },
 });
 
 export default AdminOverview;

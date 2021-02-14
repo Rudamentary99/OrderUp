@@ -1,7 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Button, Provider as PaperProvider } from "react-native-paper";
+import {
+  DefaultTheme,
+  Button,
+  Provider as PaperProvider,
+} from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AdminComponent from "./Components/Admin/index";
@@ -26,7 +30,7 @@ export default function App() {
   return (
     <PaperProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="temp">
+        <Stack.Navigator headerMode="none" initialRouteName="admin">
           <Stack.Screen name="temp" component={tempScreen} />
           <Stack.Screen name="admin" component={AdminComponent} />
         </Stack.Navigator>
