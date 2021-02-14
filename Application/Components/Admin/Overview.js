@@ -14,7 +14,6 @@ const AdminOverview = ({ navigation }) => {
   return (
     <View style={styles.view}>
       <RoundButton
-        rippleColor="rgba(0, 0, 0, .32)"
         onPress={() => {
           navigation.navigate("Manage Menu");
         }}
@@ -22,7 +21,6 @@ const AdminOverview = ({ navigation }) => {
         Manage Menu
       </RoundButton>
       <RoundButton
-        rippleColor="rgba(0, 0, 0, .32)"
         onPress={() => {
           navigation.navigate("Manage House");
         }}

@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { TouchableRipple, Surface, Title } from "react-native-paper";
 const RoundButton = (props) => {
-  const { onPress, children, rippleColor } = props;
+  const { onPress, children, rippleColor, style } = props;
 
   return (
-    <Surface style={styles.Button}>
+    <Surface style={[styles.Button, style]}>
       <TouchableRipple
         onPress={onPress}
-        rippleColor={rippleColor}
-        style={styles.Button}
+        rippleColor={rippleColor || "rgba(0, 0, 0, .32)"}
+        style={[styles.Button, style, { position: "relative" }]}
       >
         <Title>{children}</Title>
       </TouchableRipple>
