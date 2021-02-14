@@ -1,18 +1,7 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import RoundButton from "../helpers/RoundButton";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { Text, BottomNavigation } from "react-native-paper";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-const Tab = createMaterialBottomTabNavigator();
-
-const ManageTable = () => {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Manage Table</Text>
-    </View>
-  );
-};
+import ManageFloor from "./ManageFloor/ManageFloor";
+import ManageWaiters from "./ManageWaiters/ManageWaiters";
 
 const ManageHouse = (props) => {
   const [index, setIndex] = React.useState(0);
@@ -26,8 +15,8 @@ const ManageHouse = (props) => {
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={BottomNavigation.SceneMap({
-        manageWaiters: ManageTable,
-        manageFloors: ManageTable,
+        manageWaiters: ManageWaiters,
+        manageFloors: ManageFloor,
       })}
       shifting
     />

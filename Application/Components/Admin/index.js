@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AdminOverview from "./Overview";
 import ManageMenu from "./ManageMenu";
-import ManageHouse from "./ManageHouse";
+import ManageHouse from "./ManageHouse/ManageHouse";
 const Stack = createStackNavigator();
 
 const AdminComponent = () => {
