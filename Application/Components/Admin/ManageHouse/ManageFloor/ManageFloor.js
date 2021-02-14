@@ -1,8 +1,17 @@
 import React from "react";
-import { View, Text, StyleSheet, KeyboardAvoidingView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Keyboard,
+} from "react-native";
 import { FAB, Modal, TextInput, Title, Button } from "react-native-paper";
+import { createNewFloor } from "./FloorController";
+
 const ManageFloor = ({ state }) => {
   const [doCreateFloor, setCreateFloor] = React.useState(false);
+  const [newFloorName, setNewFloorName] = React.useState("");
   return (
     <KeyboardAvoidingView
       behavior="height"
@@ -24,12 +33,34 @@ const ManageFloor = ({ state }) => {
           setCreateFloor(false);
         }}
       >
-        <Title>New Floor</Title>
-        <TextInput style={{ marginBottom: 30 }} label="Name"></TextInput>
-        <View style={{ flexDirection: "row-reverse" }}>
-          <Button>Create</Button>
-          <Button>Cancel</Button>
-        </View>
+        <KeyboardAvoidingView behavior="height">
+          <Title>New Floor</Title>
+          <TextInput
+            value={newFloorName}
+            onChangeText={(text) => {
+              setNewFloorName(text);
+            }}
+            style={{ marginBottom: 30 }}
+            label="Name"
+          ></TextInput>
+          <View style={{ flexDirection: "row-reverse" }}>
+            <Button
+              onPress={() => {
+                createNewFloor(newFloorName);
+              }}
+            >
+              Create
+            </Button>
+            <Button
+              onPress={() => {
+                setCreateFloor(false);
+                setNewFloorName("");
+              }}
+            >
+              Cancel
+            </Button>
+          </View>
+        </KeyboardAvoidingView>
       </Modal>
     </KeyboardAvoidingView>
   );
