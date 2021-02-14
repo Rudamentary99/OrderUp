@@ -1,12 +1,18 @@
 import React from "react";
-import { View } from "react-native";
-import { Text } from "react-native-paper";
+import { ScrollView } from "react-native";
+import { Text, Card, Title, Paragraph } from "react-native-paper";
 
 const ManageWaiters = (props) => {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <ScrollView
+      contentContainerStyle={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Text>Manage Waiters</Text>
-    </View>
+    </ScrollView>
   );
 };
 export default ManageWaiters;
