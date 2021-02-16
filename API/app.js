@@ -10,6 +10,24 @@ const config = JSON.parse(fs.readFileSync(`${__dirname}/config.json`));
 var app = require("./expressApp")([
   ...testRoutes,
   {
+    method: "post",
+    path: "/api/floor/create",
+    fn: (req, res, next) => {
+      r.table("floor")
+        .insert(req.body)
+        .run(app._rdbConn, (err, result) => {
+          if (err) {
+            console.log("could no insert new floor.");
+            console.error(err);
+          } else {
+            console.log("Insert floor complete. sending result...");
+            res.json(result);
+          }
+        });
+      //  console.log("req.body.data", req.body);
+    },
+  },
+  {
     method: "all",
     path: "/test",
     fn: (req, res, next) => {

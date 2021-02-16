@@ -1,8 +1,9 @@
 const axios = require("axios");
-axios.defaults.baseURL = "http://172.25.19.198:3000";
+axios.defaults.baseURL = "http://172.25.20.74:3000";
 async function createNewFloor(floorName) {
+  console.log("Creating Floor");
   try {
-    const resp = await axios.post("/api/testBody", {
+    const resp = await axios.post("/api/floor/create", {
       name: floorName,
     });
     console.log("resp", resp);
