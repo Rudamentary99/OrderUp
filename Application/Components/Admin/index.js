@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 
 const AdminComponent = () => {
   return (
-    <Stack.Navigator initialRouteName="Manage House">
+    <Stack.Navigator initialRouteName="admin-overview">
       <Stack.Screen name="admin-overview" component={AdminOverview} />
       <Stack.Screen name="Manage Menu" component={ManageMenu} />
       <Stack.Screen name="Manage House" component={ManageHouse} />

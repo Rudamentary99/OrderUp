@@ -12,13 +12,14 @@ var app = require("./expressApp")([
   {
     method: "post",
     path: "/api/floor/create",
-    fn: (req, res, next) => {
+    fn: (req, res) => {
       r.table("floor")
         .insert(req.body)
-        .run(app._rdbConn, (err, result) => {
+        .run(app._rdbConn, (err, result, next) => {
           if (err) {
             console.log("could no insert new floor.");
             console.error(err);
+            next(err);
           } else {
             console.log("Insert floor complete. sending result...");
             res.json(result);
@@ -28,13 +29,17 @@ var app = require("./expressApp")([
     },
   },
   {
-    method: "all",
-    path: "/test",
-    fn: (req, res, next) => {
-      r.table("testTable").run(app._rdbConn, (err, result) => {
-        if (err) return next(err);
-
-        res.json(result);
+    method: "get",
+    path: "/api/floor",
+    fn: (req, res) => {
+      r.table("floor").run(app._rdbConn, (err, result, next) => {
+        if (err) {
+          console.log("could no get floors");
+          console.error(err);
+          next(err);
+        } else {
+          res.json(result._responses[0]);
+        }
       });
     },
   },

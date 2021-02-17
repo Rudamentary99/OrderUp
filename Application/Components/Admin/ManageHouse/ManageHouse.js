@@ -1,9 +1,10 @@
 import React from "react";
+
 import { Text, BottomNavigation } from "react-native-paper";
 import ManageFloor from "./ManageFloor/ManageFloor";
 import ManageWaiters from "./ManageWaiters/ManageWaiters";
 
-const ManageHouse = (props) => {
+const ManageHouse = ({ navigation }) => {
   const [index, setIndex] = React.useState(1);
   const [routes] = React.useState([
     { key: "manageWaiters", title: "Manage Servers", icon: "account-multiple" },
