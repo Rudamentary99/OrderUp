@@ -1,21 +1,13 @@
-var async = require("async");
-const fs = require("fs");
 var r = require("rethinkdb");
-const testRoutes = require("./routes/testRoutes");
 
-//get App Config
-const config = JSON.parse(fs.readFileSync(`${__dirname}/config.json`));
-
-//get express app
-var app = require("./expressApp")([
-  ...testRoutes,
+module.exports = (dbConn) => [
   {
     method: "post",
     path: "/api/floor/create",
     fn: (req, res) => {
       r.table("floor")
         .insert(req.body)
-        .run(app._rdbConn, (err, result, next) => {
+        .run(dbConn, (err, result, next) => {
           if (err) {
             console.log("could no insert new floor.");
             console.error(err);
@@ -32,7 +24,7 @@ var app = require("./expressApp")([
     method: "get",
     path: "/api/floor",
     fn: (req, res) => {
-      r.table("floor").run(app._rdbConn, (err, result, next) => {
+      r.table("floor").run(dbConn, (err, result, next) => {
         if (err) {
           console.log("could no get floors");
           console.error(err);
@@ -49,35 +41,18 @@ var app = require("./expressApp")([
     fn: (req, res) => {
       r.table("floor")
         .get(req.params.id)
-        .run(app._rdbConn, (err, result, next) => {
+        .run(dbConn, (err, result, next) => {
           if (err) {
             console.log("could no get floors");
             console.error(err);
             next(err);
           } else {
-            // console.log("result", result);
-            res.json(result);
+            console.log("result", result);
+            //res.json(result._responses[0]);
           }
         });
 
       console.log("req.params", req.params);
     },
   },
-]);
-
-//connect to rethinkDB and start express
-async.waterfall([
-  function connect(callback) {
-    console.log("conecting to rdb");
-    r.connect(config.rethinkdb, callback);
-  },
-  function startExpress(connection) {
-    console.log("starting express");
-    app._rdbConn = connection;
-    app.listen(config.express.port, () =>
-      console.log(
-        `Express API listening on http://localhost:${config.express.port}`
-      )
-    );
-  },
-]);
+];

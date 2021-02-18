@@ -38,11 +38,7 @@ async function getFloors() {
 async function getFloor(id) {
   console.log("getting a floor");
   try {
-    const resp = await axios.get("/api/floor", {
-      params: {
-        id: id,
-      },
-    });
+    const resp = await axios.get(`/api/floor/${id}`);
     if (resp.status == 200) return resp.data;
 
     console.error("Could not get Floor");
