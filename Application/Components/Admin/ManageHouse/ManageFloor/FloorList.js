@@ -19,7 +19,7 @@ function Floor(props) {
   return (
     <Card
       onPress={() => {
-        navigation.navigate("temp");
+        navigation.navigate("floor-details", { id: props.id });
       }}
       style={{
         width: 250,

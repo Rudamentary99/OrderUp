@@ -21,7 +21,7 @@ async function createNewFloor(floorName) {
 }
 
 async function getFloors() {
-  console.log("fetching floors");
+  console.log("getting all floors");
   try {
     const resp = await axios.get("/api/floor");
     if (resp.status == 200) {
@@ -35,7 +35,25 @@ async function getFloors() {
   }
 }
 
+async function getFloor(id) {
+  console.log("getting a floor");
+  try {
+    const resp = await axios.get("/api/floor", {
+      params: {
+        id: id,
+      },
+    });
+    if (resp.status == 200) return resp.data;
+
+    console.error("Could not get Floor");
+  } catch (error) {
+    console.log("Gould not get floor. View stacktrace for details");
+    console.error(error);
+  }
+}
+
 module.exports = {
   createNewFloor,
   getFloors,
+  getFloor,
 };
