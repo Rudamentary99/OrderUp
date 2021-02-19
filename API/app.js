@@ -63,6 +63,23 @@ var app = require("./expressApp")([
       console.log("req.params", req.params);
     },
   },
+  {
+    method: "post",
+    path: "/api/floor/:id",
+    fn: (req, res) => {
+      const tables = req.body.data;
+      r.table("floor")
+        .get(req.params.id)
+        .update({ tables })
+        .run(app._rdbConn, (err, result) => {
+          if (err) {
+            console.error(err);
+          } else if (result.replaced)
+            res.end(); 
+          }
+        });
+    },
+  },
 ]);
 
 //connect to rethinkDB and start express

@@ -10,8 +10,9 @@ import {
   Headline,
   TextInput,
   Modal,
+  Button,
 } from "react-native-paper";
-import { getFloor } from "./FloorController";
+import { getFloor, updateTables } from "./FloorController";
 export default class FloorDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -22,6 +23,7 @@ export default class FloorDetails extends React.Component {
       newTable: { number: "", name: "" },
       isAddingTable: false,
     };
+    this._numberInput = React.createRef();
   }
   componentDidMount() {
     //console.log("props", this.props);
@@ -35,7 +37,19 @@ export default class FloorDetails extends React.Component {
       });
   }
   render() {
-    const { name, tables, isAddingTable, newTable } = this.state;
+    const { id, name, tables, isAddingTable, newTable } = this.state;
+
+    const addTable = () => {
+      const newTables = [...tables, newTable];
+      updateTables(id, newTables)
+        .then((result) => {
+          //console.log("result", result);
+          this.setState({ tables: newTables });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    };
 
     const listTables = () => {
       if (tables && tables.length) {
@@ -49,9 +63,13 @@ export default class FloorDetails extends React.Component {
         </Caption>
       );
     };
+
     const styles = StyleSheet.create({
       p10: {
         padding: 10,
+      },
+      m10: {
+        margin: 10,
       },
     });
     return (
@@ -66,7 +84,7 @@ export default class FloorDetails extends React.Component {
               onPress={() => {
                 this.setState({ isAddingTable: true });
               }}
-              style={{ marginHorizontal: 50 }}
+              style={{ marginHorizontal: 100 }}
             ></FAB>
           </List.Section>
         </Surface>
@@ -78,26 +96,39 @@ export default class FloorDetails extends React.Component {
           animationType="fade"
           presentationStyle="formSheet"
           contentContainerStyle={{
+            position: "relative",
+            top: -200,
             backgroundColor: "white",
             padding: 50,
             margin: 50,
           }}
         >
-          <Title>New Table</Title>
+          <Title style={StyleSheet.m10}>New Table</Title>
           <TextInput
+            ref={this._numberInput}
             label="Table Number"
             value={newTable.number}
             onChangeText={(text) => {
-              this.setState({ newTable: { ...newFloor, number: text } });
+              this.setState({ newTable: { ...newTable, number: text } });
             }}
+            style={styles.m10}
           />
           <TextInput
             label="Name"
             value={newTable.name}
             onChangeText={(text) => {
-              this.setState({ newTable: { ...newFloor, name: text } });
+              this.setState({ newTable: { ...newTable, name: text } });
             }}
+            style={styles.m10}
           />
+          <Button
+            onPress={() => {
+              addTable();
+            }}
+            style={{ marginTop: 20 }}
+          >
+            Add
+          </Button>
         </Modal>
       </View>
     );

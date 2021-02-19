@@ -34,7 +34,10 @@ async function getFloors() {
     console.error(errror);
   }
 }
-
+/**
+ *
+ * @param {string} id
+ */
 async function getFloor(id) {
   console.log("getting a floor");
   try {
@@ -47,9 +50,27 @@ async function getFloor(id) {
     console.error(error);
   }
 }
+/**
+ * @param {string} tableID the ID of the accociatedTable
+ * @param {Object[]} table
+ * table must be of the form {number, name}
+ */
+async function updateTables(tableID, tables) {
+  console.log("saving table");
+  console.log("tables", tables);
+  try {
+    const resp = await axios.post(`/api/floor/${tableID}`, {
+      data: tables,
+    });
+  } catch (error) {
+    console.log("Could not save table");
+    console.error(error);
+  }
+}
 
 module.exports = {
   createNewFloor,
   getFloors,
   getFloor,
+  updateTables,
 };
