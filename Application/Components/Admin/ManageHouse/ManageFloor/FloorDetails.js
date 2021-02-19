@@ -1,4 +1,4 @@
-import { loadPartialConfig } from "@babel/core";
+//import { loadPartialConfig } from "@babel/core";
 import React from "react";
 import { View, Text } from "react-native";
 import { getFloor } from "./FloorController";
