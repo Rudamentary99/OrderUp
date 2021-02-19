@@ -1,5 +1,5 @@
 const axios = require("axios");
-axios.defaults.baseURL = "http://172.25.20.146:3000";
+axios.defaults.baseURL = "http://172.25.20.108:3000";
 async function createNewFloor(floorName) {
   console.log("Creating Floor");
   try {
