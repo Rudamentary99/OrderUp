@@ -53,9 +53,13 @@ export default class FloorDetails extends React.Component {
 
     const listTables = () => {
       if (tables && tables.length) {
-        return tables.map(({ number, name }) => {
-          <List.Item key={number} title={number} description={name} />;
-        });
+        return tables.map(({ number, name }, index) => (
+          <List.Item
+            key={`${number}-${index}`}
+            title={number}
+            description={name}
+          />
+        ));
       }
       return (
         <Caption style={{ padding: 40, textAlign: "center" }}>
