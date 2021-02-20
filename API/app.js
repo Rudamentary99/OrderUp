@@ -2,25 +2,24 @@ var async = require("async");
 const fs = require("fs");
 var r = require("rethinkdb");
 const testRoutes = require("./routes/testRoutes");
-
+const expressApp = require("./expressApp");
 //get App Config
 const config = JSON.parse(fs.readFileSync(`${__dirname}/config.json`));
 
-//get express app
-var app = require("./expressApp")([
+const getRoutes = (dbConn) => [
   ...testRoutes,
   {
     method: "all",
     path: "/test",
     fn: (req, res, next) => {
-      r.table("testTable").run(app._rdbConn, (err, result) => {
+      r.table("testTable").run(dbConn, (err, result) => {
         if (err) return next(err);
 
         res.json(result);
       });
     },
   },
-]);
+];
 
 //connect to rethinkDB and start express
 async.waterfall([
@@ -29,6 +28,8 @@ async.waterfall([
     r.connect(config.rethinkdb, callback);
   },
   function startExpress(connection) {
+    //get express app
+    var app = expressApp(getRoutes(connection));
     console.log("starting express");
     app._rdbConn = connection;
     app.listen(config.express.port, () =>

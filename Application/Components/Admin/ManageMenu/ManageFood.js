@@ -1,5 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import {
   FAB,
   Headline,
@@ -8,6 +9,7 @@ import {
   Button,
   Title,
   TextInput,
+  Card,
 } from "react-native-paper";
 
 export default class ManageFood extends React.Component {
@@ -28,9 +30,34 @@ export default class ManageFood extends React.Component {
     const { foodItems, createFoodItem, newFoodItem } = this.state;
 
     const addFoodItem = () => {
-      this.setState({ foodItems: [...foodItems, newFoodItem] });
+      this.setState({
+        foodItems: [...foodItems, newFoodItem],
+        newFoodItem: null,
+      });
     };
 
+    const listFoodItems = () => {
+      if (foodItems && foodItems.length) {
+        return foodItems.map(({ name, prepTime }) => (
+          <Card>
+            <Card.Title title={name} subtitle={prepTime}></Card.Title>
+          </Card>
+        ));
+      }
+
+      return (
+        <View
+          style={{
+            padding: 50,
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Headline>Looks like you don't have any food yet...</Headline>
+        </View>
+      );
+    };
     const styles = StyleSheet.create({
       input: {
         margin: 10,
@@ -39,7 +66,8 @@ export default class ManageFood extends React.Component {
 
     return (
       <View style={{ ...StyleSheet.absoluteFill, padding: 50 }}>
-        <Headline>Food Items</Headline>
+        <Title>Food Items</Title>
+        <ScrollView>{listFoodItems()}</ScrollView>
         <FAB
           icon="plus"
           onPress={() => {
@@ -73,7 +101,7 @@ export default class ManageFood extends React.Component {
           />
           <TextInput
             label="Prep Time"
-            value={(newFoodItem && newFoodItem.name) || ""}
+            value={(newFoodItem && newFoodItem.prepTime) || ""}
             onChangeText={(text) => {
               this.setState({
                 newFoodItem: { ...newFoodItem, prepTime: text },
