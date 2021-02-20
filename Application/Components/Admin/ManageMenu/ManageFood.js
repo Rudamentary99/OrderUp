@@ -27,7 +27,14 @@ export default class ManageFood extends React.Component {
     };
   }
   componentDidMount() {
-    this.setState({ foodItems: getFoodItems() });
+    getFoodItems()
+      .then((result) => {
+        //console.log("result", result);
+        this.setState({ foodItems: result });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
   render() {
     const { foodItems, doCreateFoodItem, newFoodItem } = this.state;

@@ -9,7 +9,8 @@ module.exports = (rdbConn) => [
         if (err) {
           console.error(err);
         } else {
-          console.log("result", result);
+          res.json(result._responses[0]);
+          //console.log("result", result._responses);
         }
       });
     },

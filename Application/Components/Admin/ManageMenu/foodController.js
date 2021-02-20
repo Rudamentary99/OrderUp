@@ -2,18 +2,18 @@ const axios = require("axios");
 const ip = "172.25.17.99";
 axios.defaults.baseURL = `http://${ip}:3000`;
 
-/**
- * @returns {Object[]} foodItems
- */
-function getFoodItems() {
-  axios
+async function getFoodItems() {
+  const result = await axios
     .get("/api/food")
     .then((result) => {
-      console.log("result.data", result.data);
+      console.log("result.data", result.data.r);
+      return result.data.r;
     })
     .catch((err) => {
       console.error(err);
     });
+  return result;
+  //console.log("result", result);
 }
 
 /**
