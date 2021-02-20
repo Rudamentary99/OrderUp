@@ -2,12 +2,14 @@ var async = require("async");
 const fs = require("fs");
 var r = require("rethinkdb");
 const testRoutes = require("./routes/testRoutes");
+const foodRoutes = require("./routes/food");
 const expressApp = require("./expressApp");
 //get App Config
 const config = JSON.parse(fs.readFileSync(`${__dirname}/config.json`));
 
 const getRoutes = (dbConn) => [
   ...testRoutes,
+  ...foodRoutes(dbConn),
   {
     method: "all",
     path: "/test",
