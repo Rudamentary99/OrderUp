@@ -13,6 +13,7 @@ import {
   Card,
   Menu,
 } from "react-native-paper";
+import TagInput from "../../helpers/TagInput";
 import { getFoodItems, createFoodItem } from "./foodController";
 const Stack = createStackNavigator();
 const MenuBar = ({ navigation }) => {
@@ -35,6 +36,7 @@ const MenuBar = ({ navigation }) => {
         }}
         anchor={
           <IconButton
+            disabled
             compact
             icon="cog"
             onPress={() => setIsMenuOpen(true)}

@@ -4,19 +4,22 @@ import { StyleSheet, Text, View } from "react-native";
 import {
   DefaultTheme,
   Button,
+  Portal,
   Provider as PaperProvider,
 } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AdminComponent from "./Components/Admin/index";
+import TagInput from "./Components/helpers/TagInput";
 const Stack = createStackNavigator();
 
 const tempScreen = ({ navigation }) => (
   <View style={styles.container}>
     <Text>Open up App.js to start working on your app!</Text>
     <StatusBar style="auto" />
+
+    <TagInput></TagInput>
     <Button
-      mode="contained"
       onPress={() => {
         navigation.navigate("admin");
       }}
@@ -27,13 +30,16 @@ const tempScreen = ({ navigation }) => (
 );
 
 export default function App() {
+  // console.log("DefaultTheme", DefaultTheme);
   return (
     <PaperProvider>
       <NavigationContainer theme={DefaultTheme}>
-        <Stack.Navigator headerMode="none" initialRouteName="admin">
-          <Stack.Screen name="temp" component={tempScreen} />
-          <Stack.Screen name="admin" component={AdminComponent} />
-        </Stack.Navigator>
+        <Portal.Host>
+          <Stack.Navigator headerMode="none" initialRouteName="temp">
+            <Stack.Screen name="temp" component={tempScreen} />
+            <Stack.Screen name="admin" component={AdminComponent} />
+          </Stack.Navigator>
+        </Portal.Host>
       </NavigationContainer>
     </PaperProvider>
   );
