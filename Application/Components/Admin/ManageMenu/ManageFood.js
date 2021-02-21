@@ -1,18 +1,58 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { View, StyleSheet, ScrollView } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
 import {
   FAB,
   Headline,
   Modal,
   Text,
   Button,
+  IconButton,
   Title,
   TextInput,
   Card,
+  Menu,
 } from "react-native-paper";
 import { getFoodItems, createFoodItem } from "./foodController";
-export default class ManageFood extends React.Component {
+const Stack = createStackNavigator();
+const MenuBar = ({ navigation }) => {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+  return (
+    <View
+      style={{
+        position: "relative",
+        flexDirection: "row",
+      }}
+    >
+      <IconButton compact disabled icon="magnify"></IconButton>
+      <IconButton icon="filter" compact disabled></IconButton>
+      <Menu
+        visible={isMenuOpen}
+        onDismiss={() => setIsMenuOpen(false)}
+        style={{
+          marginLeft: "auto",
+        }}
+        anchor={
+          <IconButton
+            compact
+            icon="cog"
+            onPress={() => setIsMenuOpen(true)}
+          ></IconButton>
+        }
+      >
+        <Menu.Item
+          title="Manage Food Types"
+          onPress={() => {
+            setIsMenuOpen(false);
+            navigation.navigate("temp");
+          }}
+        ></Menu.Item>
+      </Menu>
+    </View>
+  );
+};
+class FoodMain extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,8 +89,8 @@ export default class ManageFood extends React.Component {
 
     const listFoodItems = () => {
       if (foodItems && foodItems.length) {
-        return foodItems.map(({ name, prepTime }) => (
-          <Card>
+        return foodItems.map(({ id, name, prepTime }) => (
+          <Card key={id}>
             <Card.Title title={name} subtitle={prepTime}></Card.Title>
           </Card>
         ));
@@ -77,45 +117,7 @@ export default class ManageFood extends React.Component {
 
     return (
       <View style={{ ...StyleSheet.absoluteFill, padding: 50, paddingTop: 0 }}>
-        <View
-          style={{
-            position: "relative",
-            flexDirection: "row",
-          }}
-        >
-          <Button
-            compact
-            disabled
-            icon="magnify"
-            contentStyle={{
-              width: 50,
-              height: 50,
-            }}
-            labelStyle={{ fontSize: 25 }}
-          ></Button>
-          <Button
-            compact
-            disabled
-            icon="filter"
-            contentStyle={{
-              width: 50,
-              height: 50,
-            }}
-            labelStyle={{ fontSize: 25 }}
-          ></Button>
-          <Button
-            style={{
-              marginLeft: "auto",
-            }}
-            compact
-            contentStyle={{
-              width: 50,
-              height: 50,
-            }}
-            labelStyle={{ fontSize: 25 }}
-            icon="cog"
-          ></Button>
-        </View>
+        <MenuBar navigation={this.props.navigation}></MenuBar>
         <Title>Food Items</Title>
         <ScrollView>{listFoodItems()}</ScrollView>
         <FAB
@@ -171,4 +173,12 @@ export default class ManageFood extends React.Component {
       </View>
     );
   }
+}
+
+export default function ManageFood(props) {
+  return (
+    <Stack.Navigator initialRouteName="main" headerMode="none">
+      <Stack.Screen name="main" component={FoodMain} />
+    </Stack.Navigator>
+  );
 }

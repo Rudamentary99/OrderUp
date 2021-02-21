@@ -1,5 +1,5 @@
 const axios = require("axios");
-const ip = "192.168.1.159";
+const ip = "172.25.18.207";
 axios.defaults.baseURL = `http://${ip}:3000`;
 
 async function getFoodItems() {
