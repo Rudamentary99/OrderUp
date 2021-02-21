@@ -76,7 +76,46 @@ export default class ManageFood extends React.Component {
     });
 
     return (
-      <View style={{ ...StyleSheet.absoluteFill, padding: 50 }}>
+      <View style={{ ...StyleSheet.absoluteFill, padding: 50, paddingTop: 0 }}>
+        <View
+          style={{
+            position: "relative",
+            flexDirection: "row",
+          }}
+        >
+          <Button
+            compact
+            disabled
+            icon="magnify"
+            contentStyle={{
+              width: 50,
+              height: 50,
+            }}
+            labelStyle={{ fontSize: 25 }}
+          ></Button>
+          <Button
+            compact
+            disabled
+            icon="filter"
+            contentStyle={{
+              width: 50,
+              height: 50,
+            }}
+            labelStyle={{ fontSize: 25 }}
+          ></Button>
+          <Button
+            style={{
+              marginLeft: "auto",
+            }}
+            compact
+            contentStyle={{
+              width: 50,
+              height: 50,
+            }}
+            labelStyle={{ fontSize: 25 }}
+            icon="cog"
+          ></Button>
+        </View>
         <Title>Food Items</Title>
         <ScrollView>{listFoodItems()}</ScrollView>
         <FAB

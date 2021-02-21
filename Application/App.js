@@ -29,7 +29,7 @@ const tempScreen = ({ navigation }) => (
 export default function App() {
   return (
     <PaperProvider>
-      <NavigationContainer>
+      <NavigationContainer theme={DefaultTheme}>
         <Stack.Navigator headerMode="none" initialRouteName="admin">
           <Stack.Screen name="temp" component={tempScreen} />
           <Stack.Screen name="admin" component={AdminComponent} />
