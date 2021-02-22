@@ -1,5 +1,5 @@
 const axios = require("axios");
-const ip = "172.25.18.207";
+const ip = "172.25.21.143";
 axios.defaults.baseURL = `http://${ip}:3000`;
 
 async function getFoodItems() {
@@ -33,10 +33,10 @@ async function createFoodItem(foodItem) {
     });
 }
 async function updateFoodItem(foodItem) {
-  axios
+  const result = await axios
     .post("/api/food/" + foodItem.id + "/update", foodItem)
     .then((result) => {
-      console.log("result.status", result.status);
+      //console.log("result.status", result.status);
       if (result.status == 200) return true;
       else return false;
       //console.log("result.data", result.data);
@@ -44,6 +44,7 @@ async function updateFoodItem(foodItem) {
     .catch((err) => {
       console.error(err);
     });
+  return result;
 }
 
 module.exports = {

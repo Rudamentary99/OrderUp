@@ -35,6 +35,7 @@ export default function FoodItems(props) {
         title="Archive"
         onPress={() => {
           onArchive(id);
+          setShow(false);
         }}
       />
     </Menu>

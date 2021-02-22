@@ -92,7 +92,9 @@ class FoodMain extends React.Component {
         newFoodItem: null,
       });
     };
-
+    const removeFoodItem = (pID) => {
+      this.setState({ foodItems: foodItems.filter(({ id }) => id != pID) });
+    };
     const listFoodItems = () => {
       if (foodItems && foodItems.length) {
         return foodItems.map((food) => (
@@ -100,9 +102,16 @@ class FoodMain extends React.Component {
             {...food}
             onArchive={(pID) => {
               const archivee = foodItems.find(({ id }) => id == pID);
-              updateFoodItem({ ...archivee, archived: true }).then((result) => {
-                console.log("result", result);
-              });
+              updateFoodItem({ ...archivee, archived: true })
+                .then((result) => {
+                  console.log("result", result);
+                  if (result) {
+                    removeFoodItem(pID);
+                  }
+                })
+                .catch((err) => {
+                  console.error(err);
+                });
             }}
             style={{ margin: 10 }}
           />
