@@ -12,9 +12,12 @@ import {
   TextInput,
   Card,
   Menu,
+  HelperText,
 } from "react-native-paper";
 import TagInput from "../../helpers/TagInput";
-import { getFoodItems, createFoodItem } from "./foodController";
+import { getFoodItems, createFoodItem, updateFoodItem } from "./foodController";
+import foodItem from "./FoodItem";
+import FoodItem from "./FoodItem";
 const Stack = createStackNavigator();
 const MenuBar = ({ navigation }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -66,6 +69,7 @@ class FoodMain extends React.Component {
         ingredients: [],
         tags: [],
       },
+      hasError: false,
     };
   }
   componentDidMount() {
@@ -79,7 +83,7 @@ class FoodMain extends React.Component {
       });
   }
   render() {
-    const { foodItems, doCreateFoodItem, newFoodItem } = this.state;
+    const { foodItems, doCreateFoodItem, newFoodItem, hasError } = this.state;
 
     const addFoodItem = () => {
       const newID = createFoodItem(newFoodItem);
@@ -91,10 +95,17 @@ class FoodMain extends React.Component {
 
     const listFoodItems = () => {
       if (foodItems && foodItems.length) {
-        return foodItems.map(({ id, name, prepTime }) => (
-          <Card key={id}>
-            <Card.Title title={name} subtitle={prepTime}></Card.Title>
-          </Card>
+        return foodItems.map((food) => (
+          <FoodItem
+            {...food}
+            onArchive={(pID) => {
+              const archivee = foodItems.find(({ id }) => id == pID);
+              updateFoodItem({ ...archivee, archived: true }).then((result) => {
+                console.log("result", result);
+              });
+            }}
+            style={{ margin: 10 }}
+          />
         ));
       }
 
@@ -154,15 +165,22 @@ class FoodMain extends React.Component {
             style={styles.input}
           />
           <TextInput
-            label="Prep Time"
+            label="Prep Time (minuets)"
             value={(newFoodItem && newFoodItem.prepTime) || ""}
+            error={hasError}
             onChangeText={(text) => {
+              let er = false;
+              if (isNaN(text)) er = true;
               this.setState({
                 newFoodItem: { ...newFoodItem, prepTime: text },
+                hasError: er,
               });
             }}
             style={styles.input}
           />
+          <HelperText type="error" visible={hasError}>
+            Prep time must be a number.
+          </HelperText>
           <Button
             onPress={() => {
               addFoodItem();

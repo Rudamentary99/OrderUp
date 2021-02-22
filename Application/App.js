@@ -35,7 +35,7 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer theme={DefaultTheme}>
         <Portal.Host>
-          <Stack.Navigator headerMode="none" initialRouteName="temp">
+          <Stack.Navigator headerMode="none" initialRouteName="admin">
             <Stack.Screen name="temp" component={tempScreen} />
             <Stack.Screen name="admin" component={AdminComponent} />
           </Stack.Navigator>

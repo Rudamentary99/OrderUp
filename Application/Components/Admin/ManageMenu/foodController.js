@@ -21,7 +21,7 @@ async function getFoodItems() {
  * @param {Object} foodItem
  * @returns {Object} data (reaturns object containing the id of new food)
  */
-function createFoodItem(foodItem) {
+async function createFoodItem(foodItem) {
   axios
     .post("/api/food/", foodItem)
     .then((result) => {
@@ -32,8 +32,22 @@ function createFoodItem(foodItem) {
       console.error(err);
     });
 }
+async function updateFoodItem(foodItem) {
+  axios
+    .post("/api/food/" + foodItem.id + "/update", foodItem)
+    .then((result) => {
+      console.log("result.status", result.status);
+      if (result.status == 200) return true;
+      else return false;
+      //console.log("result.data", result.data);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
 
 module.exports = {
   getFoodItems,
   createFoodItem,
+  updateFoodItem,
 };

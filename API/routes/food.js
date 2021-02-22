@@ -32,4 +32,17 @@ module.exports = (rdbConn) => [
         });
     },
   },
+  {
+    method: "post",
+    path: "/api/food/:id/update",
+    fn: (req, res) => {
+      r.table("food")
+        .get(req.params.id)
+        .update(req.body)
+        .run(rdbConn, (err, result) => {
+          if (err) console.error(err);
+          else res.end();
+        });
+    },
+  },
 ];
