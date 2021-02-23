@@ -13,6 +13,8 @@ import {
   Card,
   Menu,
   HelperText,
+  Snackbar,
+  Portal,
 } from "react-native-paper";
 import TagInput from "../../helpers/TagInput";
 import { getFoodItems, createFoodItem, updateFoodItem } from "./foodController";
@@ -68,12 +70,14 @@ class FoodMain extends React.Component {
         prepTime: "",
         ingredients: [],
         tags: [],
+        archived: false,
       },
       hasError: false,
+      archived: null,
     };
   }
   componentDidMount() {
-    getFoodItems()
+    getFoodItems(false)
       .then((result) => {
         //console.log("result", result);
         this.setState({ foodItems: result });
@@ -83,7 +87,13 @@ class FoodMain extends React.Component {
       });
   }
   render() {
-    const { foodItems, doCreateFoodItem, newFoodItem, hasError } = this.state;
+    const {
+      foodItems,
+      doCreateFoodItem,
+      newFoodItem,
+      hasError,
+      archived,
+    } = this.state;
 
     const addFoodItem = () => {
       const newID = createFoodItem(newFoodItem);
@@ -97,25 +107,30 @@ class FoodMain extends React.Component {
     };
     const listFoodItems = () => {
       if (foodItems && foodItems.length) {
-        return foodItems.map((food) => (
-          <FoodItem
-            {...food}
-            onArchive={(pID) => {
-              const archivee = foodItems.find(({ id }) => id == pID);
-              updateFoodItem({ ...archivee, archived: true })
-                .then((result) => {
-                  console.log("result", result);
-                  if (result) {
-                    removeFoodItem(pID);
-                  }
-                })
-                .catch((err) => {
-                  console.error(err);
-                });
-            }}
-            style={{ margin: 10 }}
-          />
-        ));
+        return foodItems
+          .sort(({ name: aName }, { name: bName }) =>
+            aName < bName ? -1 : aName > bName ? 1 : 0
+          )
+          .map((food) => (
+            <FoodItem
+              {...food}
+              onArchive={(pID) => {
+                const archivee = foodItems.find(({ id }) => id == pID);
+                updateFoodItem({ ...archivee, archived: true })
+                  .then((result) => {
+                    console.log("result", result);
+                    if (result) {
+                      removeFoodItem(pID);
+                      this.setState({ archived: archivee });
+                    }
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                  });
+              }}
+              style={{ margin: 10 }}
+            />
+          ));
       }
 
       return (
@@ -199,6 +214,33 @@ class FoodMain extends React.Component {
             Add
           </Button>
         </Modal>
+        <Portal>
+          <Snackbar
+            visible={Boolean(archived)}
+            onDismiss={() => {
+              this.setState({ archived: null });
+            }}
+            action={{
+              label: "Undo",
+              onPress: () => {
+                updateFoodItem(archived.id, {
+                  ...archived,
+                  archived: false,
+                }).then((result) => {
+                  if (result) {
+                    this.setState({
+                      foodItems: [...foodItems, archived],
+                      archived: null,
+                    });
+                  }
+                });
+                // Do something
+              },
+            }}
+          >
+            Food Item has been archived.
+          </Snackbar>
+        </Portal>
       </View>
     );
   }

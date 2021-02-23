@@ -3,16 +3,18 @@ const r = require("rethinkdb");
 module.exports = (rdbConn) => [
   {
     method: "get",
-    path: "/api/food",
+    path: "/api/food/:archived",
     fn: (req, res) => {
-      r.table("food").run(rdbConn, (err, result) => {
-        if (err) {
-          console.error(err);
-        } else {
-          res.json(result._responses[0]);
-          //console.log("result", result._responses);
-        }
-      });
+      console.log("req.params", req.params);
+      r.table("food")
+        .filter((row) => row("archived").eq(req.params.archived == "true"))
+        .run(rdbConn, (err, result) => {
+          if (err) {
+            console.error(err);
+          } else {
+            res.json(result._responses[0]);
+          }
+        });
     },
   },
   {
