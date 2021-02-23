@@ -5,7 +5,7 @@ module.exports = (rdbConn) => [
     method: "get",
     path: "/api/food/:archived",
     fn: (req, res) => {
-      console.log("req.params", req.params);
+      // console.log("req.params", req.params);
       r.table("food")
         .filter((row) => row("archived").eq(req.params.archived == "true"))
         .run(rdbConn, (err, result) => {

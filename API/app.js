@@ -3,6 +3,7 @@ const fs = require("fs");
 var r = require("rethinkdb");
 const testRoutes = require("./routes/testRoutes");
 const foodRoutes = require("./routes/food");
+const foodTypeRoutes = require("./routes/foodType");
 const expressApp = require("./expressApp");
 //get App Config
 const config = JSON.parse(fs.readFileSync(`${__dirname}/config.json`));
@@ -10,6 +11,7 @@ const config = JSON.parse(fs.readFileSync(`${__dirname}/config.json`));
 const getRoutes = (dbConn) => [
   ...testRoutes,
   ...foodRoutes(dbConn),
+  ...foodTypeRoutes(dbConn),
   {
     method: "all",
     path: "/test",

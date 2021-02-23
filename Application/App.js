@@ -1,9 +1,17 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { KeyboardAvoidingView, StyleSheet, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+} from "react-native";
 import {
   DefaultTheme,
   Button,
+  useTheme,
+  TextInput,
   Portal,
   Provider as PaperProvider,
 } from "react-native-paper";
@@ -11,6 +19,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AdminComponent from "./Components/Admin/index";
 import TagInput from "./Components/helpers/TagInput";
+
+import DropDown from "react-native-paper-dropdown";
 const Stack = createStackNavigator();
 
 const testItems = [
@@ -18,21 +28,47 @@ const testItems = [
   { name: "food 2", key: 2 },
 ];
 
-const tempScreen = ({ navigation }) => (
-  <KeyboardAvoidingView behavior="padding" style={styles.container}>
-    <Text>Open up App.js to start working on your app!</Text>
-    <StatusBar style="auto" />
+const tempScreen = ({ navigation }) => {
+  const [showDropDown, setShowDropDown] = React.useState(false);
+  const [gender, setGender] = React.useState();
+  const genderList = [
+    { label: "Male", value: "male" },
+    { label: "Female", value: "female" },
+    { label: "Others", value: "others" },
+  ];
+  const theme = useTheme();
+  return (
+    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <Text>Open up App.js to start working on your app!</Text>
+      <SafeAreaView style={styles.containerStyle}>
+        <DropDown
+          label={"Gender"}
+          mode={"flat"}
+          value={gender}
+          setValue={setGender}
+          list={genderList}
+          visible={showDropDown}
+          showDropDown={() => setShowDropDown(true)}
+          onDismiss={() => setShowDropDown(false)}
+          inputProps={{
+            right: <TextInput.Icon name={"menu-down"} />,
+          }}
+          theme={theme}
+        />
+      </SafeAreaView>
+      <StatusBar style="auto" />
 
-    <TagInput items={testItems} itemsKey="key" itemsTitle="name"></TagInput>
-    <Button
-      onPress={() => {
-        navigation.navigate("admin");
-      }}
-    >
-      go to admin
-    </Button>
-  </KeyboardAvoidingView>
-);
+      {/* <TagInput items={testItems} itemsKey="key" itemsTitle="name"></TagInput> */}
+      <Button
+        onPress={() => {
+          navigation.navigate("admin");
+        }}
+      >
+        go to admin
+      </Button>
+    </KeyboardAvoidingView>
+  );
+};
 
 export default function App() {
   // console.log("DefaultTheme", DefaultTheme);
