@@ -72,7 +72,7 @@ class FoodMain extends React.Component {
         tags: [],
         archived: false,
       },
-      hasError: false,
+      prepTimeHasError: false,
       archived: null,
     };
   }
@@ -91,7 +91,7 @@ class FoodMain extends React.Component {
       foodItems,
       doCreateFoodItem,
       newFoodItem,
-      hasError,
+      prepTimeHasError,
       archived,
     } = this.state;
 
@@ -191,24 +191,33 @@ class FoodMain extends React.Component {
           <TextInput
             label="Prep Time (minuets)"
             value={(newFoodItem && newFoodItem.prepTime) || ""}
-            error={hasError}
+            error={prepTimeHasError}
             onChangeText={(text) => {
               let er = false;
               if (isNaN(text)) er = true;
               this.setState({
                 newFoodItem: { ...newFoodItem, prepTime: text },
-                hasError: er,
+                prepTimeHasError: er,
               });
             }}
             style={styles.input}
           />
-          <HelperText type="error" visible={hasError}>
+          <HelperText type="error" visible={prepTimeHasError}>
             Prep time must be a number.
           </HelperText>
           <Button
             onPress={() => {
-              addFoodItem();
-              this.setState({ doCreateFoodItem: false });
+              let go = true;
+              for (const key in foodItem) {
+                if (!foodItem[key]) {
+                  go = false;
+                  break;
+                }
+              }
+              if (go) {
+                addFoodItem();
+                this.setState({ doCreateFoodItem: false });
+              }
             }}
           >
             Add

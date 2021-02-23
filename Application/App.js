@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { KeyboardAvoidingView, StyleSheet, Text, View } from "react-native";
 import {
   DefaultTheme,
   Button,
@@ -13,12 +13,17 @@ import AdminComponent from "./Components/Admin/index";
 import TagInput from "./Components/helpers/TagInput";
 const Stack = createStackNavigator();
 
+const testItems = [
+  { name: "food 1", key: 1 },
+  { name: "food 2", key: 2 },
+];
+
 const tempScreen = ({ navigation }) => (
-  <View style={styles.container}>
+  <KeyboardAvoidingView behavior="padding" style={styles.container}>
     <Text>Open up App.js to start working on your app!</Text>
     <StatusBar style="auto" />
 
-    <TagInput></TagInput>
+    <TagInput items={testItems} itemsKey="key" itemsTitle="name"></TagInput>
     <Button
       onPress={() => {
         navigation.navigate("admin");
@@ -26,7 +31,7 @@ const tempScreen = ({ navigation }) => (
     >
       go to admin
     </Button>
-  </View>
+  </KeyboardAvoidingView>
 );
 
 export default function App() {
@@ -35,7 +40,7 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer theme={DefaultTheme}>
         <Portal.Host>
-          <Stack.Navigator headerMode="none" initialRouteName="admin">
+          <Stack.Navigator headerMode="none" initialRouteName="temp">
             <Stack.Screen name="temp" component={tempScreen} />
             <Stack.Screen name="admin" component={AdminComponent} />
           </Stack.Navigator>
