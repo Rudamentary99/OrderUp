@@ -1,7 +1,13 @@
 import React from "react";
-import { KeyboardAvoidingView, ScrollView, StyleSheet } from "react-native";
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 import { Text, Button, TextInput, HelperText } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
+import { createFoodItem } from "./foodController";
 export default function CreateFoodItem(props) {
   // export default function App() {
   const { handleSubmit, control, errors } = useForm({
@@ -21,7 +27,7 @@ export default function CreateFoodItem(props) {
           required: { value: true, message: "Name is required" },
         }}
         render={({ onChange, value }) => (
-          <>
+          <View style={styles.controller}>
             <TextInput
               error={errors.name}
               errorText={errors?.name?.message}
@@ -29,10 +35,10 @@ export default function CreateFoodItem(props) {
               value={value}
               label="Name"
             />
-            <HelperText visible={errors.name}>
+            <HelperText type="error" visible={errors.name}>
               {errors?.name?.message}
             </HelperText>
-          </>
+          </View>
         )}
       />
       <Controller
@@ -45,7 +51,7 @@ export default function CreateFoodItem(props) {
         }}
         render={({ onChange, value }) => {
           return (
-            <>
+            <View style={styles.controller}>
               <TextInput
                 error={errors.prepTime}
                 onChangeText={(text) => onChange(text)}
@@ -55,13 +61,20 @@ export default function CreateFoodItem(props) {
               <HelperText type="error" visible={errors.prepTime}>
                 {errors?.prepTime?.message}
               </HelperText>
-            </>
+            </View>
           );
         }}
       />
       <Button
         onPress={handleSubmit((data) => {
-          console.log(data, "data");
+          createFoodItem({ ...data, archived: false })
+            .then((result) => {
+              // console.log("result", result);
+              props.navigation.navigate("main", { ...data, ...result });
+            })
+            .catch((err) => {
+              console.error(err);
+            });
         })}
         label="Submit"
       >
@@ -72,22 +85,9 @@ export default function CreateFoodItem(props) {
 }
 const styles = StyleSheet.create({
   containerStyle: {
-    flex: 1,
+    padding: 50,
   },
-
-  scrollViewStyle: {
-    flex: 1,
-
-    padding: 15,
-
-    justifyContent: "center",
-  },
-
-  headingStyle: {
-    fontSize: 30,
-
-    textAlign: "center",
-
-    marginBottom: 40,
+  controller: {
+    marginVertical: 10,
   },
 });

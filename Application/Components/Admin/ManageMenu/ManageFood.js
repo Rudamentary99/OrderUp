@@ -1,5 +1,6 @@
 import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import {
   FAB,
@@ -12,7 +13,6 @@ import {
   TextInput,
   Card,
   Menu,
-  HelperText,
   Snackbar,
   Portal,
 } from "react-native-paper";
@@ -59,6 +59,7 @@ const MenuBar = ({ navigation }) => {
     </View>
   );
 };
+
 class FoodMain extends React.Component {
   constructor(props) {
     super(props);
@@ -77,6 +78,20 @@ class FoodMain extends React.Component {
     };
   }
   componentDidMount() {
+    this.focusListener = this.props.navigation.addListener("focus", () => {
+      if (this.props?.route?.params) {
+        this.setState({
+          foodItems: [...this.state.foodItems, this.props?.route?.params],
+        });
+      }
+    });
+    console.log("this.focusListener", this.focusListener);
+    this.loadFood();
+  }
+  componentWillUnmount() {
+    this.focusListener.remove;
+  }
+  loadFood() {
     getFoodItems(false)
       .then((result) => {
         //console.log("result", result);
@@ -87,21 +102,8 @@ class FoodMain extends React.Component {
       });
   }
   render() {
-    const {
-      foodItems,
-      doCreateFoodItem,
-      newFoodItem,
-      prepTimeHasError,
-      archived,
-    } = this.state;
+    const { foodItems, archived } = this.state;
 
-    const addFoodItem = () => {
-      const newID = createFoodItem(newFoodItem);
-      this.setState({
-        foodItems: [...foodItems, { ...newFoodItem, id: newID }],
-        newFoodItem: null,
-      });
-    };
     const removeFoodItem = (pID) => {
       this.setState({ foodItems: foodItems.filter(({ id }) => id != pID) });
     };
@@ -152,7 +154,6 @@ class FoodMain extends React.Component {
         margin: 10,
       },
     });
-
     return (
       <View style={{ ...StyleSheet.absoluteFill, padding: 50, paddingTop: 0 }}>
         <MenuBar navigation={this.props.navigation}></MenuBar>

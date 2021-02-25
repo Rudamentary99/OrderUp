@@ -21,7 +21,7 @@ async function getFoodItems(archived) {
  * @returns {Object} data (reaturns object containing the id of new food)
  */
 async function createFoodItem(foodItem) {
-  axios
+  return await axios
     .post("/api/food/", foodItem)
     .then((result) => {
       return result.data;
