@@ -18,7 +18,7 @@ import {
 } from "react-native-paper";
 import TagInput from "../../helpers/TagInput";
 import { getFoodItems, createFoodItem, updateFoodItem } from "./foodController";
-import foodItem from "./FoodItem";
+import CreateFoodItem from "./CreateFoodItem";
 import FoodItem from "./FoodItem";
 const Stack = createStackNavigator();
 const MenuBar = ({ navigation }) => {
@@ -113,6 +113,7 @@ class FoodMain extends React.Component {
           )
           .map((food) => (
             <FoodItem
+              key={food.id}
               {...food}
               onArchive={(pID) => {
                 const archivee = foodItems.find(({ id }) => id == pID);
@@ -160,69 +161,10 @@ class FoodMain extends React.Component {
         <FAB
           icon="plus"
           onPress={() => {
-            this.setState({ doCreateFoodItem: true });
+            this.props.navigation.navigate("create-food");
           }}
           style={{ position: "absolute", right: 0, bottom: 0, margin: 50 }}
         />
-        <Modal
-          visible={doCreateFoodItem}
-          onDismiss={() => {
-            this.setState({
-              newFoodItem: null,
-              doCreateFoodItem: false,
-            });
-          }}
-          contentContainerStyle={{
-            position: "relative",
-            top: -200,
-            backgroundColor: "white",
-            padding: 50,
-          }}
-        >
-          <Title>{(newFoodItem && newFoodItem.name) || "New Food Item"}</Title>
-          <TextInput
-            label="Name"
-            value={(newFoodItem && newFoodItem.name) || ""}
-            onChangeText={(text) => {
-              this.setState({ newFoodItem: { ...newFoodItem, name: text } });
-            }}
-            style={styles.input}
-          />
-          <TextInput
-            label="Prep Time (minuets)"
-            value={(newFoodItem && newFoodItem.prepTime) || ""}
-            error={prepTimeHasError}
-            onChangeText={(text) => {
-              let er = false;
-              if (isNaN(text)) er = true;
-              this.setState({
-                newFoodItem: { ...newFoodItem, prepTime: text },
-                prepTimeHasError: er,
-              });
-            }}
-            style={styles.input}
-          />
-          <HelperText type="error" visible={prepTimeHasError}>
-            Prep time must be a number.
-          </HelperText>
-          <Button
-            onPress={() => {
-              let go = true;
-              for (const key in foodItem) {
-                if (!foodItem[key]) {
-                  go = false;
-                  break;
-                }
-              }
-              if (go) {
-                addFoodItem();
-                this.setState({ doCreateFoodItem: false });
-              }
-            }}
-          >
-            Add
-          </Button>
-        </Modal>
         <Portal>
           <Snackbar
             visible={Boolean(archived)}
@@ -259,6 +201,7 @@ export default function ManageFood(props) {
   return (
     <Stack.Navigator initialRouteName="main" headerMode="none">
       <Stack.Screen name="main" component={FoodMain} />
+      <Stack.Screen name="create-food" component={CreateFoodItem} />
     </Stack.Navigator>
   );
 }

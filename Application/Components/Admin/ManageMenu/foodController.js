@@ -1,7 +1,6 @@
 const axios = require("axios");
-const ip = "172.25.19.235";
-axios.defaults.baseURL = `http://${ip}:3000`;
-
+import config from "../../../config";
+axios.defaults.baseURL = config.axios.baseURL;
 async function getFoodItems(archived) {
   const result = await axios
     .get("/api/food/" + archived)
