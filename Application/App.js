@@ -38,7 +38,11 @@ const tempScreen = ({ navigation }) => {
   ];
   const theme = useTheme();
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+    <KeyboardAvoidingView
+      behavior="padding"
+      style={styles.container}
+      headerMode="float"
+    >
       <Text>Open up App.js to start working on your app!</Text>
       <SafeAreaView style={styles.containerStyle}>
         <DropDown

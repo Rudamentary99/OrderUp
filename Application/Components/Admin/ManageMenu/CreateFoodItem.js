@@ -1,7 +1,6 @@
 import React from "react";
 import { KeyboardAvoidingView, ScrollView, StyleSheet } from "react-native";
 import { Text, Button, TextInput, HelperText } from "react-native-paper";
-import FormBuilder from "react-native-paper-form-builder";
 import { useForm, Controller } from "react-hook-form";
 export default function CreateFoodItem(props) {
   // export default function App() {
@@ -22,13 +21,18 @@ export default function CreateFoodItem(props) {
           required: { value: true, message: "Name is required" },
         }}
         render={({ onChange, value }) => (
-          <TextInput
-            error={errors.name}
-            errorText={errors?.name?.message}
-            onChangeText={(text) => onChange(text)}
-            value={value}
-            label="Name"
-          />
+          <>
+            <TextInput
+              error={errors.name}
+              errorText={errors?.name?.message}
+              onChangeText={(text) => onChange(text)}
+              value={value}
+              label="Name"
+            />
+            <HelperText visible={errors.name}>
+              {errors?.name?.message}
+            </HelperText>
+          </>
         )}
       />
       <Controller

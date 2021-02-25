@@ -11,6 +11,7 @@ const AdminComponent = () => {
   return (
     <Stack.Navigator
       initialRouteName="admin-overview"
+      headerMode="none"
       // screenOptions={{
       //   header: MyAppbar,
       // }}

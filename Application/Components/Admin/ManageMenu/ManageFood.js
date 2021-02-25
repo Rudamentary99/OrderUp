@@ -199,7 +199,7 @@ class FoodMain extends React.Component {
 
 export default function ManageFood(props) {
   return (
-    <Stack.Navigator initialRouteName="main" headerMode="none">
+    <Stack.Navigator initialRouteName="main" headerMode="float">
       <Stack.Screen name="main" component={FoodMain} />
       <Stack.Screen name="create-food" component={CreateFoodItem} />
     </Stack.Navigator>
