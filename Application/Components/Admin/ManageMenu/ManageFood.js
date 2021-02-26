@@ -18,8 +18,8 @@ import {
 } from "react-native-paper";
 import TagInput from "../../helpers/TagInput";
 import { getFoodItems, createFoodItem, updateFoodItem } from "./foodController";
-import CreateFoodItem from "./CreateFoodItem";
-import FoodItem from "./FoodItem";
+import { CreateFoodItem, EditFoodItem } from "./CreateFoodItem";
+import { FoodItem, FoodDetails } from "./FoodItem";
 const Stack = createStackNavigator();
 const MenuBar = ({ navigation }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -203,6 +203,8 @@ export default function ManageFood(props) {
     <Stack.Navigator initialRouteName="main" headerMode="float">
       <Stack.Screen name="main" component={FoodMain} />
       <Stack.Screen name="create-food" component={CreateFoodItem} />
+      <Stack.Screen name="Food Details" component={FoodDetails} />
+      <Stack.Screen name="Edit Food" component={EditFoodItem} />
     </Stack.Navigator>
   );
 }

@@ -3,7 +3,7 @@ import config from "../../../config";
 axios.defaults.baseURL = config.axios.baseURL;
 async function getFoodItems(archived) {
   const result = await axios
-    .get("/api/food/" + archived)
+    .get("/api/foods/" + archived)
     .then((result) => {
       //console.log("result.data", result.data.r);
       return result.data.r;
@@ -13,6 +13,16 @@ async function getFoodItems(archived) {
     });
   return result;
   //console.log("result", result);
+}
+async function getFoodItem(id) {
+  return await axios
+    .get(`api/food/${id}`)
+    .then((result) => {
+      return result.data;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 }
 
 /**
@@ -48,6 +58,7 @@ async function updateFoodItem(foodItem) {
 
 module.exports = {
   getFoodItems,
+  getFoodItem,
   createFoodItem,
   updateFoodItem,
 };

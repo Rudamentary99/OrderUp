@@ -3,7 +3,7 @@ const r = require("rethinkdb");
 module.exports = (rdbConn) => [
   {
     method: "get",
-    path: "/api/food/:archived",
+    path: "/api/foods/:archived",
     fn: (req, res) => {
       // console.log("req.params", req.params);
       r.table("food")
@@ -13,6 +13,22 @@ module.exports = (rdbConn) => [
             console.error(err);
           } else {
             res.json(result._responses[0]);
+          }
+        });
+    },
+  },
+  {
+    method: "get",
+    path: "/api/food/:id",
+    fn: (req, res) => {
+      console.log("req.params", req.params);
+      r.table("food")
+        .get(req?.params?.id)
+        .run(rdbConn, (err, result) => {
+          if (err) {
+            console.error(err);
+          } else {
+            res.json(result);
           }
         });
     },
