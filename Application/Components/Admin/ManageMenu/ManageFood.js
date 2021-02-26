@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, RefreshControl } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import {
@@ -73,6 +73,7 @@ class FoodMain extends React.Component {
         tags: [],
         archived: false,
       },
+      refreshing: false,
       prepTimeHasError: false,
       archived: null,
     };
@@ -92,17 +93,18 @@ class FoodMain extends React.Component {
     this.focusListener.remove;
   }
   loadFood() {
+    this.setState({ refreshing: true });
     getFoodItems(false)
       .then((result) => {
         //console.log("result", result);
-        this.setState({ foodItems: result });
+        this.setState({ foodItems: result, refreshing: false });
       })
       .catch((err) => {
         console.error(err);
       });
   }
   render() {
-    const { foodItems, archived } = this.state;
+    const { foodItems, archived, refreshing } = this.state;
 
     const removeFoodItem = (pID) => {
       this.setState({ foodItems: foodItems.filter(({ id }) => id != pID) });
@@ -158,7 +160,18 @@ class FoodMain extends React.Component {
       <View style={{ ...StyleSheet.absoluteFill, padding: 50, paddingTop: 0 }}>
         <MenuBar navigation={this.props.navigation}></MenuBar>
         <Title>Food Items</Title>
-        <ScrollView>{listFoodItems()}</ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                this.loadFood();
+              }}
+            ></RefreshControl>
+          }
+        >
+          {listFoodItems()}
+        </ScrollView>
         <FAB
           icon="plus"
           onPress={() => {
