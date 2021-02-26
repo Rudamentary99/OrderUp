@@ -7,11 +7,9 @@ import {
 } from "react-native";
 import { Text, Button, TextInput, HelperText } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
-import { createFoodItem } from "./foodController";
+import { createFoodItem, updateFoodItem } from "./foodController";
 function CreateFoodItem(props) {
   // export default function App() {
-  console.log("props.route.params", props.route.params);
-  const item = props.route?.params;
   const { handleSubmit, control, errors } = useForm({
     defaultValues: {
       name: "",
@@ -88,8 +86,6 @@ function CreateFoodItem(props) {
 
 function EditFoodItem(props) {
   // export default function App() {
-  console.log("props.route.params", props.route.params);
-  const item = props.route?.params;
   const { handleSubmit, control, errors } = useForm({
     defaultValues: props.route.params,
     mode: "onChange",
@@ -144,14 +140,19 @@ function EditFoodItem(props) {
       />
       <Button
         onPress={handleSubmit((data) => {
-          // createFoodItem({ ...data, archived: false })
-          //   .then((result) => {
-          //     // console.log("result", result);
-          //     props.navigation.navigate("main", { ...data, ...result });
-          //   })
-          //   .catch((err) => {
-          //     console.error(err);
-          //   });
+          const newItem = { ...data, id: props.route.params.id };
+          updateFoodItem(newItem)
+            .then((success) => {
+              // console.log("result", result);
+              if (success) props.navigation.navigate("Food Details", newItem);
+              else
+                console.error(
+                  "something went wrong. could not update FoodItem"
+                );
+            })
+            .catch((err) => {
+              console.error(err);
+            });
         })}
         label="Submit"
       >

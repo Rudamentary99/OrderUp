@@ -29,7 +29,7 @@ function FoodItem(props) {
           style={style}
           key={id}
           onPress={() => {
-            navigation.navigate("Food Details", { id });
+            navigation.navigate("Food Details", { id, name, prepTime });
           }}
           onLongPress={() => {
             Vibration.vibrate(1000);
@@ -59,24 +59,24 @@ function FoodItem(props) {
 class FoodDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { foodItem: {}, edit: false };
   }
-  componentDidMount() {
-    const itemID = this.props?.route?.params?.id;
-    if (itemID)
-      getFoodItem(itemID)
-        .then((result) => {
-          this.setState({ foodItem: result });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-  }
+  // componentDidMount() {
+  //   const itemID = this.props?.route?.params?.id;
+  //   if (itemID)
+  //     getFoodItem(itemID)
+  //       .then((result) => {
+  //         this.setState({ foodItem: result });
+  //       })
+  //       .catch((err) => {
+  //         console.error(err);
+  //       });
+  // }
   render() {
     const {
-      foodItem: { name, prepTime },
-      edit,
-    } = this.state;
+      route: {
+        params: { name, prepTime },
+      },
+    } = this.props;
     return (
       <View
         style={{
@@ -96,7 +96,10 @@ class FoodDetails extends React.Component {
         <FAB
           icon="pencil"
           onPress={() => {
-            this.props.navigation.navigate("Edit Food", this.state.foodItem);
+            this.props.navigation.navigate(
+              "Edit Food",
+              this.props.route.params
+            );
           }}
           style={{ position: "absolute", bottom: 0, right: 0, margin: 50 }}
         ></FAB>

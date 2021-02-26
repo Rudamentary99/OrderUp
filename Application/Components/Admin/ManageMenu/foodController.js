@@ -1,6 +1,11 @@
 const axios = require("axios");
 import config from "../../../config";
 axios.defaults.baseURL = config.axios.baseURL;
+/**
+ * @description Gets all FoodItems
+ * @param {Boolean} archived get archived or non-archived
+ * @returns {Object[]}
+ */
 async function getFoodItems(archived) {
   const result = await axios
     .get("/api/foods/" + archived)
@@ -14,6 +19,11 @@ async function getFoodItems(archived) {
   return result;
   //console.log("result", result);
 }
+/**
+ * Gets a single food item;
+ * @param {string} id
+ * @returns {object} FoodItem
+ */
 async function getFoodItem(id) {
   return await axios
     .get(`api/food/${id}`)
@@ -41,6 +51,11 @@ async function createFoodItem(foodItem) {
       console.error(err);
     });
 }
+/**
+ *
+ * @param {Object} foodItem
+ * @returns {Boolean} success
+ */
 async function updateFoodItem(foodItem) {
   const result = await axios
     .post("/api/food/" + foodItem.id + "/update", foodItem)
