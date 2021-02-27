@@ -16,6 +16,12 @@ import {
 import { getFoodItem, getFoodTypes } from "./foodController";
 function FoodItem(props) {
   const { id, name, prepTime, foodType, style, onArchive } = props;
+  const item = {
+    id,
+    name,
+    prepTime,
+    foodType,
+  };
   const [show, setShow] = React.useState(false);
   const navigation = useNavigation();
   return (
@@ -29,15 +35,9 @@ function FoodItem(props) {
           style={style}
           key={id}
           onPress={() => {
-            navigation.navigate("Food Details", {
-              id,
-              name,
-              prepTime,
-              foodType,
-            });
+            navigation.navigate("Food Details", item);
           }}
           onLongPress={() => {
-            Vibration.vibrate(1000);
             setShow(true);
           }}
         >
@@ -48,7 +48,14 @@ function FoodItem(props) {
         </Card>
       }
     >
-      <Menu.Item icon="pencil" title="Edit" />
+      <Menu.Item
+        icon="pencil"
+        title="Edit"
+        onPress={() => {
+          setShow(false);
+          navigation.navigate("Edit Food", item);
+        }}
+      />
       <Divider />
       <Menu.Item
         icon="archive"
