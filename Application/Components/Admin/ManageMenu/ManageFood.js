@@ -15,9 +15,10 @@ import {
   Menu,
   Snackbar,
   Portal,
+  Subheading,
 } from "react-native-paper";
 import TagInput from "../../helpers/TagInput";
-import { getFoodItems, createFoodItem, updateFoodItem } from "./foodController";
+import { getFoodItems, getFoodTypes, updateFoodItem } from "./foodController";
 import { CreateFoodItem, EditFoodItem } from "./CreateFoodItem";
 import { FoodItem, FoodDetails } from "./FoodItem";
 const Stack = createStackNavigator();
@@ -88,6 +89,13 @@ class FoodMain extends React.Component {
     });
     console.log("this.focusListener", this.focusListener);
     this.loadFood();
+    getFoodTypes()
+      .then((result) => {
+        this.setState({ foodTypes: result });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
   componentWillUnmount() {
     this.focusListener.remove;
@@ -104,13 +112,55 @@ class FoodMain extends React.Component {
       });
   }
   render() {
-    const { foodItems, archived, refreshing } = this.state;
+    const { foodItems, archived, refreshing, foodTypes } = this.state;
 
     const removeFoodItem = (pID) => {
       this.setState({ foodItems: foodItems.filter(({ id }) => id != pID) });
     };
     const listFoodItems = () => {
-      if (foodItems && foodItems.length) {
+      if (foodItems?.length && foodTypes?.length) {
+        return foodTypes
+          .sort(({ name: aName }, { name: bName }) =>
+            aName < bName ? -1 : aName > bName ? 1 : 0
+          )
+          .map(({ id, name }) => {
+            if (foodItems.find(({ foodType }) => name == foodType)) {
+              return (
+                <>
+                  <Subheading key={id}>{name}</Subheading>
+                  {foodItems
+                    .filter(({ foodType }) => foodType == name)
+                    .sort(({ name: aName }, { name: bName }) =>
+                      aName < bName ? -1 : aName > bName ? 1 : 0
+                    )
+                    .map((food) => (
+                      <FoodItem
+                        key={food.id}
+                        {...food}
+                        onArchive={(pID) => {
+                          const archivee = foodItems.find(
+                            ({ id }) => id == pID
+                          );
+                          updateFoodItem({ ...archivee, archived: true })
+                            .then((result) => {
+                              console.log("result", result);
+                              if (result) {
+                                removeFoodItem(pID);
+                                this.setState({ archived: archivee });
+                              }
+                            })
+                            .catch((err) => {
+                              console.error(err);
+                            });
+                        }}
+                        style={{ margin: 10 }}
+                      />
+                    ))}
+                </>
+              );
+            }
+          });
+
         return foodItems
           .sort(({ name: aName }, { name: bName }) =>
             aName < bName ? -1 : aName > bName ? 1 : 0
