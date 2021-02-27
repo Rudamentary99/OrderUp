@@ -67,6 +67,39 @@ function CreateFoodItem(props) {
           );
         }}
       />
+      <Controller
+        name="foodType"
+        control={control}
+        rules={{ required: true }}
+        render={({ onChange, value }) => {
+          return (
+            <>
+              <DropDown
+                label="Food Type"
+                value={value}
+                setValue={(value) => {
+                  onChange(value);
+                }}
+                visible={selectingFoodType}
+                onDismiss={() => {
+                  setSelectingFoodType(false);
+                }}
+                showDropDown={() => {
+                  setSelectingFoodType(true);
+                }}
+                inputProps={{ error: errors?.foodType }}
+                list={foodTypes.map((foodType) => {
+                  console.log("foodType", foodType);
+                  return { value: foodType.name, label: foodType.name };
+                })}
+              />
+              <HelperText type="error" visible={errors?.foodType}>
+                Food type is required!
+              </HelperText>
+            </>
+          );
+        }}
+      />
       <Button
         onPress={handleSubmit((data) => {
           createFoodItem({ ...data, archived: false })
@@ -155,26 +188,33 @@ function EditFoodItem(props) {
       <Controller
         name="foodType"
         control={control}
+        rules={{ required: true }}
         render={({ onChange, value }) => {
           return (
-            <DropDown
-              label="Food Type"
-              value={value}
-              setValue={(value) => {
-                onChange(value);
-              }}
-              visible={selectingFoodType}
-              onDismiss={() => {
-                setSelectingFoodType(false);
-              }}
-              showDropDown={() => {
-                setSelectingFoodType(true);
-              }}
-              list={foodTypes.map((foodType) => {
-                console.log("foodType", foodType);
-                return { value: foodType.name, label: foodType.name };
-              })}
-            />
+            <>
+              <DropDown
+                label="Food Type"
+                value={value}
+                setValue={(value) => {
+                  onChange(value);
+                }}
+                visible={selectingFoodType}
+                onDismiss={() => {
+                  setSelectingFoodType(false);
+                }}
+                showDropDown={() => {
+                  setSelectingFoodType(true);
+                }}
+                inputProps={{ error: errors?.foodType }}
+                list={foodTypes.map((foodType) => {
+                  console.log("foodType", foodType);
+                  return { value: foodType.name, label: foodType.name };
+                })}
+              />
+              <HelperText type="error" visible={errors?.foodType}>
+                Food type is required!
+              </HelperText>
+            </>
           );
         }}
       />
