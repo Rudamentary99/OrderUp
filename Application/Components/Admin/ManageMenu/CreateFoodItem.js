@@ -7,13 +7,15 @@ import {
 } from "react-native";
 import { Text, Button, TextInput, HelperText } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
-import { createFoodItem, updateFoodItem } from "./foodController";
+import { createFoodItem, updateFoodItem, getFoodTypes } from "./foodController";
+import DropDown from "react-native-paper-dropdown";
 function CreateFoodItem(props) {
   // export default function App() {
   const { handleSubmit, control, errors } = useForm({
     defaultValues: {
       name: "",
       prepTime: "",
+      foodType: "",
     },
     mode: "onChange",
   });
@@ -85,9 +87,21 @@ function CreateFoodItem(props) {
 }
 
 function EditFoodItem(props) {
-  // export default function App() {
+  const [selectingFoodType, setSelectingFoodType] = React.useState(false);
+  const [foodTypes, setFoodTypes] = React.useState([]);
+  React.useEffect(() => {
+    if (!foodTypes.length)
+      getFoodTypes()
+        .then((result) => {
+          setFoodTypes(result);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+  });
+
   const { handleSubmit, control, errors } = useForm({
-    defaultValues: props.route.params,
+    defaultValues: { ...props.route.params, foodType: "" },
     mode: "onChange",
   });
   return (
@@ -135,6 +149,32 @@ function EditFoodItem(props) {
                 {errors?.prepTime?.message}
               </HelperText>
             </View>
+          );
+        }}
+      />
+      <Controller
+        name="foodType"
+        control={control}
+        render={({ onChange, value }) => {
+          return (
+            <DropDown
+              label="Food Type"
+              value={value}
+              setValue={(value) => {
+                onChange(value);
+              }}
+              visible={selectingFoodType}
+              onDismiss={() => {
+                setSelectingFoodType(false);
+              }}
+              showDropDown={() => {
+                setSelectingFoodType(true);
+              }}
+              list={foodTypes.map((foodType) => {
+                console.log("foodType", foodType);
+                return { value: foodType.name, label: foodType.name };
+              })}
+            />
           );
         }}
       />

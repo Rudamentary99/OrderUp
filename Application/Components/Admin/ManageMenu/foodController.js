@@ -71,9 +71,23 @@ async function updateFoodItem(foodItem) {
   return result;
 }
 
+/**
+ * @returns {Array} FoodTypes
+ */
+async function getFoodTypes() {
+  return await axios
+    .get("/api/foodTypes/")
+    .then((result) => {
+      return result.data;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
 module.exports = {
   getFoodItems,
   getFoodItem,
   createFoodItem,
   updateFoodItem,
+  getFoodTypes,
 };

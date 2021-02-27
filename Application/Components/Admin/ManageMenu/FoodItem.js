@@ -13,7 +13,7 @@ import {
   Button,
   TextInput,
 } from "react-native-paper";
-import { getFoodItem } from "./foodController";
+import { getFoodItem, getFoodTypes } from "./foodController";
 function FoodItem(props) {
   const { id, name, prepTime, style, onArchive } = props;
   const [show, setShow] = React.useState(false);
