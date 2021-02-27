@@ -15,7 +15,7 @@ import {
 } from "react-native-paper";
 import { getFoodItem, getFoodTypes } from "./foodController";
 function FoodItem(props) {
-  const { id, name, prepTime, style, onArchive } = props;
+  const { id, name, prepTime, foodType, style, onArchive } = props;
   const [show, setShow] = React.useState(false);
   const navigation = useNavigation();
   return (
@@ -29,7 +29,12 @@ function FoodItem(props) {
           style={style}
           key={id}
           onPress={() => {
-            navigation.navigate("Food Details", { id, name, prepTime });
+            navigation.navigate("Food Details", {
+              id,
+              name,
+              prepTime,
+              foodType,
+            });
           }}
           onLongPress={() => {
             Vibration.vibrate(1000);
@@ -74,7 +79,7 @@ class FoodDetails extends React.Component {
   render() {
     const {
       route: {
-        params: { name, prepTime },
+        params: { name, prepTime, foodType },
       },
     } = this.props;
     return (
@@ -87,6 +92,7 @@ class FoodDetails extends React.Component {
       >
         <Headline>{name || "Food Details!"}</Headline>
         <Subheading>Prep Time: {prepTime}</Subheading>
+        <Subheading>Food Type: {foodType}</Subheading>
         {/* <View>
           <Subheading>Ingredients:</Subheading>
         </View>

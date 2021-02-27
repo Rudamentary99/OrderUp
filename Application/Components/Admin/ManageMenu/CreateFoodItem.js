@@ -10,6 +10,18 @@ import { useForm, Controller } from "react-hook-form";
 import { createFoodItem, updateFoodItem, getFoodTypes } from "./foodController";
 import DropDown from "react-native-paper-dropdown";
 function CreateFoodItem(props) {
+  const [selectingFoodType, setSelectingFoodType] = React.useState(false);
+  const [foodTypes, setFoodTypes] = React.useState([]);
+  React.useEffect(() => {
+    if (!foodTypes.length)
+      getFoodTypes()
+        .then((result) => {
+          setFoodTypes(result);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+  });
   // export default function App() {
   const { handleSubmit, control, errors } = useForm({
     defaultValues: {
@@ -70,7 +82,7 @@ function CreateFoodItem(props) {
       <Controller
         name="foodType"
         control={control}
-        rules={{ required: true }}
+        rules={{ required: { value: true, message: "Food Type is required" } }}
         render={({ onChange, value }) => {
           return (
             <>
@@ -94,7 +106,7 @@ function CreateFoodItem(props) {
                 })}
               />
               <HelperText type="error" visible={errors?.foodType}>
-                Food type is required!
+                {errors?.foodType?.message}
               </HelperText>
             </>
           );
