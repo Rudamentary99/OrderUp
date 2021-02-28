@@ -1,5 +1,5 @@
 var indexRouter = require("./index");
-var usersRouter = require("./routes/users");
+var usersRouter = require("./users");
 var r = require("rethinkdb");
 /**
  * The list of routes for testing

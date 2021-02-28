@@ -3,7 +3,7 @@
     "host": "localhost",
     "port": 28015,
     "authKey": "",
-    "db": "test"
+    "db": "que-ue-rn-Dev"
   },
   "express": {
     "port": 3000

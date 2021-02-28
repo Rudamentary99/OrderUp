@@ -28,7 +28,7 @@ app.use(function (err, req, res, next) {
  * @param {Object[]} pRoutes
  * @returns {object} returns an express app
  */
-module.exports = (pRoutes) => {
+const getExpressApp = (pRoutes) => {
   //create each route
   pRoutes.forEach((route) => {
     const { method, path, fn } = route;
@@ -41,5 +41,7 @@ module.exports = (pRoutes) => {
   });
   return app;
 };
+
+module.exports = getExpressApp;
 
 //module.exports = getExpressApp;
