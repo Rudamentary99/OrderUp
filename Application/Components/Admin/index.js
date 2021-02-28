@@ -7,7 +7,7 @@ import ManageMenu from "./ManageMenu/ManageMenu";
 import ManageHouse from "./ManageHouse";
 const Stack = createStackNavigator();
 
-const AdminComponent = () => {
+const AdminNav = () => {
   return (
     <Stack.Navigator
       initialRouteName="admin-overview"
@@ -22,4 +22,4 @@ const AdminComponent = () => {
     </Stack.Navigator>
   );
 };
-export default AdminComponent;
+export default AdminNav;

@@ -17,7 +17,8 @@ import {
 } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import AdminComponent from "./Components/Admin/index";
+import AdminNav from "./Components/Admin/index";
+import WaiterNav from "./Components/Waiter/index";
 import TagInput from "./Components/helpers/TagInput";
 
 import DropDown from "react-native-paper-dropdown";
@@ -80,9 +81,10 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer theme={DefaultTheme}>
         <Portal.Host>
-          <Stack.Navigator headerMode="none" initialRouteName="admin">
+          <Stack.Navigator headerMode="none" initialRouteName="waiter">
             <Stack.Screen name="temp" component={tempScreen} />
-            <Stack.Screen name="admin" component={AdminComponent} />
+            <Stack.Screen name="admin" component={AdminNav} />
+            <Stack.Screen name="waiter" component={WaiterNav} />
           </Stack.Navigator>
         </Portal.Host>
       </NavigationContainer>
