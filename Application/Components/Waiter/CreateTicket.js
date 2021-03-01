@@ -13,7 +13,12 @@ import {
   Headline,
   Surface,
   TextInput,
+  ToggleButton,
 } from "react-native-paper";
+
+const FoodListPane = (props) => {
+  return <View></View>;
+};
 
 export default class CreatTicket extends React.Component {
   constructor(props) {
@@ -25,6 +30,7 @@ export default class CreatTicket extends React.Component {
       getTableNumber: false,
     };
   }
+  componentDidMount() {}
   render() {
     return (
       <KeyboardAvoidingView
@@ -47,7 +53,9 @@ export default class CreatTicket extends React.Component {
             position: "relative",
             width: Dimensions.get("window").width / 2,
           }}
-        ></View>
+        >
+          <FoodListPane />
+        </View>
         <Dialog visible={this.state.getTableNumber}>
           <Dialog.Content>
             <TextInput

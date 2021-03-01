@@ -18,7 +18,11 @@ import {
   Subheading,
 } from "react-native-paper";
 import TagInput from "../../helpers/TagInput";
-import { getFoodItems, getFoodTypes, updateFoodItem } from "./foodController";
+import {
+  getFoodItems,
+  getFoodTypes,
+  updateFoodItem,
+} from "../../../DB/foodController";
 import { CreateFoodItem, EditFoodItem } from "./CreateFoodItem";
 import { FoodItem, FoodDetails } from "./FoodItem";
 const Stack = createStackNavigator();
