@@ -4,10 +4,15 @@ import {
   Text,
   StyleSheet,
   Dimensions,
+  Animated,
   KeyboardAvoidingView,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { RectButton } from "react-native-gesture-handler";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 import {
   Button,
+  Card,
   Dialog,
   Divider,
   Headline,
@@ -19,30 +24,100 @@ import {
 import { getFoodItems, getFoodTypes } from "../../DB/foodController";
 
 const FoodListPane = (props) => {
-  const { foodTypes, foodItems, onSelect } = props;
-  const [selectedFoodType, setSelectedFoodType] = React.useState("");
+  const { foodTypes, foodItems, onSelect, onLongSelect } = props;
+  const [selectedFoodType, setSelectedFoodType] = React.useState("Entree");
 
   return (
-    <View
-      style={{
-        position: "absolute",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        margin: 20,
-      }}
-    >
-      {foodTypes?.map((type) => {
-        return (
-          <Button disabled={selectedFoodType == type.id} compact>
-            {type.name}
-          </Button>
-        );
-      })}
+    <>
+      <View style={{ padding: 20 }}>
+        <Headline style={{ textAlign: "center" }}>{selectedFoodType}s</Headline>
+        <ScrollView>
+          {foodItems
+            .filter(({ foodType }) => foodType == selectedFoodType)
+            .sort(({ name: a }, { name: b }) => {
+              return a < b ? -1 : a > b ? 1 : 0;
+            })
+            .map((food, index) => (
+              <Card
+                style={{ margin: 10 }}
+                onPress={() => {
+                  if (onSelect) onSelect(food);
+                }}
+                onLongPress={() => {
+                  if (onLongSelect) onLongSelect(food);
+                }}
+              >
+                <Card.Title title={food.name}></Card.Title>
+              </Card>
+            ))}
+        </ScrollView>
+      </View>
+      <View
+        style={{
+          position: "absolute",
+          display: "flex",
+          flexWrap: "wrap",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          margin: 20,
+        }}
+      >
+        {foodTypes?.map((type, index) => {
+          //   if (index > 3) return;
+          return (
+            <Button
+              disabled={selectedFoodType == type.name}
+              compact
+              onPress={() => {
+                setSelectedFoodType(type.name);
+              }}
+              labelStyle={{ fontSize: 18 }}
+            >
+              {type.name}
+            </Button>
+          );
+        })}
+      </View>
+    </>
+  );
+};
+
+const TicketListPane = (props) => {
+  const { ticketItems } = props;
+  const renderLeftActions = (progress, dragX) => {
+    const trans = dragX.interpolate({
+      inputRange: [0, 50, 100, 101],
+      outputRange: [-20, 0, 0, 1],
+    });
+    return (
+      <RectButton
+      // style={styles.leftAction}
+      // onPress={this.close}
+      >
+        <Animated.Text
+          style={[
+            // styles.actionText,
+            {
+              transform: [{ translateX: trans }],
+            },
+          ]}
+        >
+          Archive
+        </Animated.Text>
+      </RectButton>
+    );
+  };
+  return (
+    <View>
+      {ticketItems.map((item) => (
+        <Swipeable renderLeftActions={renderLeftActions}>
+          <Text>{item.name}</Text>
+        </Swipeable>
+      ))}
     </View>
   );
 };
@@ -75,6 +150,7 @@ export default class CreatTicket extends React.Component {
       });
   }
   render() {
+    const { ticketItems } = this.state;
     return (
       <KeyboardAvoidingView
         behavior="height"
@@ -82,21 +158,28 @@ export default class CreatTicket extends React.Component {
       >
         <Surface
           style={{
-            width: Dimensions.get("window").width / 2,
+            width: (Dimensions.get("window").width / 10) * 4,
             padding: 20,
           }}
         >
           <Headline>{`Order for table #${this.state.table}:`}</Headline>
           <Divider />
+          <TicketListPane ticketItems={ticketItems} />
         </Surface>
         <View
           style={{
             position: "relative",
-            width: Dimensions.get("window").width / 2,
+            width: (Dimensions.get("window").width / 10) * 6,
             margin: 5,
           }}
         >
-          <FoodListPane foodTypes={this.state.foodTypes} />
+          <FoodListPane
+            foodTypes={this.state.foodTypes}
+            foodItems={this.state.foodItems}
+            onSelect={(food) => {
+              this.setState({ ticketItems: [...ticketItems, food] });
+            }}
+          />
         </View>
         <Dialog visible={this.state.getTableNumber}>
           <Dialog.Content>
