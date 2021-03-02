@@ -91,24 +91,27 @@ const TicketListPane = (props) => {
   const [openSwipable, setOpenSwipable] = React.useState(null);
   return (
     <SwipeList
-      renderItem={(data) => (
-        <TouchableHighlight
-          onPress={() => console.log("You touched me")}
-          style={{
-            alignItems: "center",
-            backgroundColor: "#CCC",
-            borderBottomColor: "black",
-            borderBottomWidth: 1,
-            justifyContent: "center",
-            height: 50,
-          }}
-          underlayColor={"#AAA"}
-        >
-          <View>
-            <Text>I am {data.item.text} in a SwipeListView</Text>
-          </View>
-        </TouchableHighlight>
-      )}
+      renderItem={(data) => {
+        console.log("data", data);
+        return (
+          <TouchableHighlight
+            onPress={() => console.log("You touched me")}
+            style={{
+              alignItems: "center",
+              backgroundColor: "white",
+              borderBottomColor: "black",
+              borderBottomWidth: 1,
+              justifyContent: "center",
+              height: 50,
+            }}
+            underlayColor={"#AAA"}
+          >
+            <View>
+              <Text>{data.item.name}</Text>
+            </View>
+          </TouchableHighlight>
+        );
+      }}
       renderHiddenItem={(data, rowMap) => (
         <View
           style={{
@@ -161,9 +164,7 @@ const TicketListPane = (props) => {
           </TouchableOpacity>
         </View>
       )}
-      data={Array(20)
-        .fill("")
-        .map((_, i) => ({ key: `${i}`, text: `item #${i}` }))}
+      data={ticketItems}
     />
   );
 };

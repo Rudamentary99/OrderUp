@@ -12,7 +12,7 @@ import { SwipeListView } from "react-native-swipe-list-view";
 export default function SwipeList(props) {
   const { renderItem, renderHiddenItem, data } = props;
   const [listData, setListData] = useState(data);
-
+  console.log("listData", listData);
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
       rowMap[rowKey].closeRow();
@@ -34,7 +34,7 @@ export default function SwipeList(props) {
   return (
     <View style={styles.container}>
       <SwipeListView
-        data={listData}
+        data={data}
         renderItem={renderItem}
         renderHiddenItem={renderHiddenItem}
         leftOpenValue={75}
