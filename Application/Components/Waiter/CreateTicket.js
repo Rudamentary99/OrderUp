@@ -6,10 +6,10 @@ import {
   Dimensions,
   Animated,
   KeyboardAvoidingView,
+  TouchableHighlight,
+  TouchableOpacity,
+  ScrollView,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { RectButton } from "react-native-gesture-handler";
-import Swipeable from "react-native-gesture-handler/Swipeable";
 import {
   Button,
   Card,
@@ -20,7 +20,7 @@ import {
   TextInput,
   ToggleButton,
 } from "react-native-paper";
-
+import SwipeList from "../helpers/SwipeList";
 import { getFoodItems, getFoodTypes } from "../../DB/foodController";
 
 const FoodListPane = (props) => {
@@ -88,37 +88,83 @@ const FoodListPane = (props) => {
 
 const TicketListPane = (props) => {
   const { ticketItems } = props;
-  const renderLeftActions = (progress, dragX) => {
-    const trans = dragX.interpolate({
-      inputRange: [0, 50, 100, 101],
-      outputRange: [-20, 0, 0, 1],
-    });
-    return (
-      <RectButton
-      // style={styles.leftAction}
-      // onPress={this.close}
-      >
-        <Animated.Text
-          style={[
-            // styles.actionText,
-            {
-              transform: [{ translateX: trans }],
-            },
-          ]}
-        >
-          Archive
-        </Animated.Text>
-      </RectButton>
-    );
-  };
+  const [openSwipable, setOpenSwipable] = React.useState(null);
   return (
-    <View>
-      {ticketItems.map((item) => (
-        <Swipeable renderLeftActions={renderLeftActions}>
-          <Text>{item.name}</Text>
-        </Swipeable>
-      ))}
-    </View>
+    <SwipeList
+      renderItem={(data) => (
+        <TouchableHighlight
+          onPress={() => console.log("You touched me")}
+          style={{
+            alignItems: "center",
+            backgroundColor: "#CCC",
+            borderBottomColor: "black",
+            borderBottomWidth: 1,
+            justifyContent: "center",
+            height: 50,
+          }}
+          underlayColor={"#AAA"}
+        >
+          <View>
+            <Text>I am {data.item.text} in a SwipeListView</Text>
+          </View>
+        </TouchableHighlight>
+      )}
+      renderHiddenItem={(data, rowMap) => (
+        <View
+          style={{
+            alignItems: "center",
+            backgroundColor: "#DDD",
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingLeft: 15,
+          }}
+        >
+          <Text>Left</Text>
+          <TouchableOpacity
+            style={[
+              {
+                alignItems: "center",
+                bottom: 0,
+                justifyContent: "center",
+                position: "absolute",
+                top: 0,
+                width: 75,
+              },
+              {
+                backgroundColor: "blue",
+                right: 75,
+              },
+            ]}
+            onPress={() => closeRow(rowMap, data.item.key)}
+          >
+            <Text style={{ color: "#FFF" }}>Close</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              {
+                alignItems: "center",
+                bottom: 0,
+                justifyContent: "center",
+                position: "absolute",
+                top: 0,
+                width: 75,
+              },
+              {
+                backgroundColor: "red",
+                right: 0,
+              },
+            ]}
+            onPress={() => deleteRow(rowMap, data.item.key)}
+          >
+            <Text style={{ color: "#FFF" }}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      data={Array(20)
+        .fill("")
+        .map((_, i) => ({ key: `${i}`, text: `item #${i}` }))}
+    />
   );
 };
 

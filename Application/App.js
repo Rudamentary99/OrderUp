@@ -21,7 +21,7 @@ import AdminNav from "./Components/Admin/index";
 import WaiterNav from "./Components/Waiter/index";
 import TagInput from "./Components/helpers/TagInput";
 
-import DropDown from "react-native-paper-dropdown";
+import SwipeList from "./Components/helpers/SwipeList";
 const Stack = createStackNavigator();
 
 const testItems = [
@@ -30,13 +30,6 @@ const testItems = [
 ];
 
 const tempScreen = ({ navigation }) => {
-  const [showDropDown, setShowDropDown] = React.useState(false);
-  const [gender, setGender] = React.useState();
-  const genderList = [
-    { label: "Male", value: "male" },
-    { label: "Female", value: "female" },
-    { label: "Others", value: "others" },
-  ];
   const theme = useTheme();
   return (
     <KeyboardAvoidingView
@@ -45,22 +38,7 @@ const tempScreen = ({ navigation }) => {
       headerMode="float"
     >
       <Text>Open up App.js to start working on your app!</Text>
-      <SafeAreaView style={styles.containerStyle}>
-        <DropDown
-          label={"Gender"}
-          mode={"flat"}
-          value={gender}
-          setValue={setGender}
-          list={genderList}
-          visible={showDropDown}
-          showDropDown={() => setShowDropDown(true)}
-          onDismiss={() => setShowDropDown(false)}
-          inputProps={{
-            right: <TextInput.Icon name={"menu-down"} />,
-          }}
-          theme={theme}
-        />
-      </SafeAreaView>
+      {/* <SwipeList /> */}
       <StatusBar style="auto" />
 
       {/* <TagInput items={testItems} itemsKey="key" itemsTitle="name"></TagInput> */}
