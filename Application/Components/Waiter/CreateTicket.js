@@ -6,7 +6,6 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  Animated,
   KeyboardAvoidingView,
   TouchableHighlight,
   TouchableOpacity,
@@ -20,11 +19,10 @@ import {
   Headline,
   Surface,
   TextInput,
-  ToggleButton,
 } from "react-native-paper";
 import SwipeList from "../helpers/SwipeList";
 import { getFoodItems, getFoodTypes } from "../../DB/foodController";
-
+import { createOrder } from "../../DB/orderController";
 const FoodListPane = (props) => {
   const { foodTypes, foodItems, onSelect, onLongSelect } = props;
   const [selectedFoodType, setSelectedFoodType] = React.useState("Entree");
@@ -105,7 +103,7 @@ const TicketListPane = (props) => {
             underlayColor={"#AAA"}
           >
             <View key={data.item.key}>
-              <Text>{data.item.name}</Text>
+              <Text style={{ fontSize: 19 }}>- {data.item.name}</Text>
             </View>
           </TouchableHighlight>
         );
@@ -183,6 +181,7 @@ export default class CreatTicket extends React.Component {
       >
         <Surface
           style={{
+            marginTop: 25,
             width: (Dimensions.get("window").width / 10) * 4,
             padding: 20,
           }}
@@ -199,6 +198,25 @@ export default class CreatTicket extends React.Component {
               });
             }}
           />
+          <Button
+            onPress={() => {
+              createOrder({
+                table: this.state.table,
+                ticketItems: ticketItems,
+              })
+                .then((result) => {
+                  if (result) {
+                    this.props.navigation.navigate("waiter-overview");
+                  }
+                })
+                .catch((err) => {
+                  console.error(err);
+                });
+            }}
+            labelStyle={{ fontSize: 20 }}
+          >
+            Submit
+          </Button>
         </Surface>
         <View
           style={{
