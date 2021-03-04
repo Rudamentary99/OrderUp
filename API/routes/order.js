@@ -3,6 +3,19 @@ const async = require("async");
 const r = require("rethinkdb");
 module.exports = (rdbConn) => [
   {
+    method: "get",
+    path: "/api/order",
+    fn: (req, res) => {
+      r.table("order").run(rdbConn, (err, result) => {
+        if (err) {
+          console.error(err);
+        } else {
+          res.json(result._responses[0].r);
+        }
+      });
+    },
+  },
+  {
     method: "post",
     path: "/api/order",
     fn: (req, res) => {

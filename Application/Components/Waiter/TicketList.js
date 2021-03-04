@@ -1,7 +1,8 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Text, Headline, FAB } from "react-native-paper";
-
+import { ScrollView } from "react-native-gesture-handler";
+import { Text, Headline, FAB, Card } from "react-native-paper";
+import { getOpenOrders } from "../../DB/orderController";
 export default class TicketList extends React.Component {
   constructor(props) {
     super(props);
@@ -9,11 +10,27 @@ export default class TicketList extends React.Component {
       tickets: [],
     };
   }
-
+  componentDidMount() {
+    getOpenOrders()
+      .then((result) => {
+        this.setState({ tickets: result });
+        // console.log("result", result);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
   render() {
     return (
       <View style={StyleSheet.absoluteFill}>
         <Headline>Hello from list</Headline>
+        <ScrollView>
+          {this.state.tickets.map((ticket) => (
+            <Card key={ticket.id}>
+              <Card.Title title={ticket.table}></Card.Title>
+            </Card>
+          ))}
+        </ScrollView>
         <FAB
           icon="plus"
           onPress={() => {

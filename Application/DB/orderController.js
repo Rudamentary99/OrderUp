@@ -3,6 +3,21 @@ import config from "../config";
 axios.default.baseURL = config.axios.baseURL;
 
 /**
+ * Gets all open orders
+ * @returns {Array<Object>} orders
+ */
+async function getOpenOrders() {
+  return await axios
+    .get("api/order/")
+    .then((result) => {
+      return result.data;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
+/**
  * creates order with the attributes of the passed object
  * @param {Object} order
  * @returns {boolean} declares success or failure
@@ -21,5 +36,6 @@ async function createOrder(order) {
 }
 
 module.exports = {
+  getOpenOrders,
   createOrder,
 };

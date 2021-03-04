@@ -152,8 +152,8 @@ export default class CreatTicket extends React.Component {
       foodItems: [],
       foodTypes: [],
       ticketItems: [],
-      table: "45",
-      getTableNumber: false,
+      table: "",
+      getTableNumber: true,
     };
   }
   componentDidMount() {
@@ -213,6 +213,7 @@ export default class CreatTicket extends React.Component {
                   console.error(err);
                 });
             }}
+            disabled={!this.state.ticketItems.length}
             labelStyle={{ fontSize: 20 }}
           >
             Submit
