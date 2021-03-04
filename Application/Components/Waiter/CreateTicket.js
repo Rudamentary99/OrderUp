@@ -1,4 +1,6 @@
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
+import "react-native-get-random-values";
 import {
   View,
   Text,
@@ -87,26 +89,22 @@ const FoodListPane = (props) => {
 };
 
 const TicketListPane = (props) => {
-  const { ticketItems } = props;
+  const { ticketItems, onRemove } = props;
   const [openSwipable, setOpenSwipable] = React.useState(null);
   return (
     <SwipeList
       renderItem={(data) => {
-        console.log("data", data);
         return (
           <TouchableHighlight
             onPress={() => console.log("You touched me")}
             style={{
-              alignItems: "center",
               backgroundColor: "white",
-              borderBottomColor: "black",
-              borderBottomWidth: 1,
               justifyContent: "center",
               height: 50,
             }}
             underlayColor={"#AAA"}
           >
-            <View>
+            <View key={data.item.key}>
               <Text>{data.item.name}</Text>
             </View>
           </TouchableHighlight>
@@ -116,33 +114,13 @@ const TicketListPane = (props) => {
         <View
           style={{
             alignItems: "center",
-            backgroundColor: "#DDD",
+            backgroundColor: "white",
             flex: 1,
             flexDirection: "row",
             justifyContent: "space-between",
             paddingLeft: 15,
           }}
         >
-          <Text>Left</Text>
-          <TouchableOpacity
-            style={[
-              {
-                alignItems: "center",
-                bottom: 0,
-                justifyContent: "center",
-                position: "absolute",
-                top: 0,
-                width: 75,
-              },
-              {
-                backgroundColor: "blue",
-                right: 75,
-              },
-            ]}
-            onPress={() => closeRow(rowMap, data.item.key)}
-          >
-            <Text style={{ color: "#FFF" }}>Close</Text>
-          </TouchableOpacity>
           <TouchableOpacity
             style={[
               {
@@ -158,9 +136,9 @@ const TicketListPane = (props) => {
                 right: 0,
               },
             ]}
-            onPress={() => deleteRow(rowMap, data.item.key)}
+            onPress={() => onRemove(data.item)}
           >
-            <Text style={{ color: "#FFF" }}>Delete</Text>
+            <Text style={{ color: "#FFF" }}>Remove</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -211,7 +189,16 @@ export default class CreatTicket extends React.Component {
         >
           <Headline>{`Order for table #${this.state.table}:`}</Headline>
           <Divider />
-          <TicketListPane ticketItems={ticketItems} />
+          <TicketListPane
+            ticketItems={ticketItems}
+            onRemove={({ key }) => {
+              this.setState({
+                ticketItems: ticketItems.filter(
+                  ({ key: itemKey }) => itemKey != key
+                ),
+              });
+            }}
+          />
         </Surface>
         <View
           style={{
@@ -224,7 +211,12 @@ export default class CreatTicket extends React.Component {
             foodTypes={this.state.foodTypes}
             foodItems={this.state.foodItems}
             onSelect={(food) => {
-              this.setState({ ticketItems: [...ticketItems, food] });
+              this.setState({
+                ticketItems: [
+                  ...ticketItems,
+                  { ...food, key: food.id + "-" + uuidv4() },
+                ],
+              });
             }}
           />
         </View>
