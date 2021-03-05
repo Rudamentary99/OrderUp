@@ -49,6 +49,17 @@ async function createOrder(order) {
     });
 }
 
+async function updateOrder(order) {
+  return await axios
+    .post("/api/order/" + order.id, order)
+    .then((result) => {
+      console.log("result", result);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
 module.exports = {
   getOpenOrders,
   getOrderItems,

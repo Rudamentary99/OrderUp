@@ -12,11 +12,9 @@ export default class TicketList extends React.Component {
     };
   }
   componentDidMount() {
-    this.intervalID = setInterval(() => this.tick(), 1000);
+    this.intervalID = setInterval(() => this.tick(), 10 * 1000);
   }
-  componentDidMount() {
-    this.intervalID = setInterval(() => this.tick(), 1000);
-  }
+
   componentWillUnmount() {
     clearInterval(this.intervalID);
   }

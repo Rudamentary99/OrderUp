@@ -89,4 +89,27 @@ module.exports = (rdbConn) => [
       ]);
     },
   },
+  {
+    method: "post",
+    path: "/api/order/:id",
+    fn: (req, res) => {
+      const newItems = req.body.ticketItems; 
+      //delete removed ticket items
+      r.table("orderItem")
+        .filter((row) => row("orderID").eq(req.params.id) &&)
+        .run(rdbConn, (err, result) => {
+          if (err) console.error(err);
+          else {
+            const data = result?._responses[0]?.r;
+            if (data) res.json(data);
+            else
+              res
+                .status(400)
+                .send({ message: "Could not get Order's Items :(" });
+          }
+        });
+      //if not in new ticketList remove
+      //if not in old ticketList add
+    },
+  },
 ];

@@ -10,6 +10,7 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   ScrollView,
+  NativeModules,
 } from "react-native";
 import {
   Button,
@@ -22,7 +23,7 @@ import {
 } from "react-native-paper";
 import SwipeList from "../helpers/SwipeList";
 import { getFoodItems, getFoodTypes } from "../../DB/foodController";
-import { createOrder } from "../../DB/orderController";
+import { createOrder, getOrderItems } from "../../DB/orderController";
 const FoodListPane = (props) => {
   const { foodTypes, foodItems, onSelect, onLongSelect } = props;
   const [selectedFoodType, setSelectedFoodType] = React.useState("Entree");
@@ -144,8 +145,7 @@ const TicketListPane = (props) => {
     />
   );
 };
-
-export default class CreatTicket extends React.Component {
+class CreateTicket extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -266,3 +266,118 @@ export default class CreatTicket extends React.Component {
     );
   }
 }
+class EditTicket extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      foodItems: [],
+      foodTypes: [],
+      ticketItems: [],
+      removedItems: [],
+      table: "",
+    };
+  }
+  componentDidMount() {
+    this.setState({ table: this.props.route.params.table });
+    getFoodTypes()
+      .then((result) => {
+        this.setState({ foodTypes: result });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    getFoodItems(false)
+      .then((result) => {
+        this.setState({ foodItems: result });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    getOrderItems(this.props.route.params.id)
+      .then((result) => {
+        if (result) this.setState({ ticketItems: result });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+  render() {
+    const { ticketItems, removedItems } = this.state;
+    return (
+      <KeyboardAvoidingView
+        behavior="height"
+        style={[StyleSheet.absoluteFill, { flex: 1, flexDirection: "row" }]}
+      >
+        <Surface
+          style={{
+            marginTop: 25,
+            width: (Dimensions.get("window").width / 10) * 4,
+            padding: 20,
+          }}
+        >
+          <Headline>{`Order for table #${this.state.table}:`}</Headline>
+          <Divider />
+          <TicketListPane
+            ticketItems={ticketItems}
+            onRemove={(item) => {
+              this.setState({
+                ticketItems: ticketItems.filter(
+                  ({ key: itemKey }) => itemKey != item.key
+                ),
+              });
+              if (item.id) {
+                this.setState({ removedItems: [...removedItems, item] });
+              }
+            }}
+          />
+          <Button
+            onPress={() => {
+              // createOrder({
+              //   table: this.state.table,
+              //   ticketItems: ticketItems,
+              //   created: Date.now(),
+              //   open: true,
+              // })
+              //   .then((result) => {
+              //     if (result) {
+              //       this.props.navigation.navigate("waiter-overview");
+              //     }
+              //   })
+              //   .catch((err) => {
+              //     console.error(err);
+              //   });
+            }}
+            disabled={!this.state.ticketItems.length}
+            labelStyle={{ fontSize: 20 }}
+          >
+            Submit
+          </Button>
+        </Surface>
+        <View
+          style={{
+            position: "relative",
+            width: (Dimensions.get("window").width / 10) * 6,
+            margin: 5,
+          }}
+        >
+          <FoodListPane
+            foodTypes={this.state.foodTypes}
+            foodItems={this.state.foodItems}
+            onSelect={(food) => {
+              this.setState({
+                ticketItems: [
+                  ...ticketItems,
+                  { ...food, key: food.id + "-" + uuidv4() },
+                ],
+              });
+            }}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    );
+  }
+}
+module.exports = {
+  CreateTicket,
+  EditTicket,
+};
