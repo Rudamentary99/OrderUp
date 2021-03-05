@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Text, Headline, FAB, Card } from "react-native-paper";
 import { getOpenOrders } from "../../DB/orderController";
+const moment = require("moment"); // require
 export default class TicketList extends React.Component {
   constructor(props) {
     super(props);
@@ -30,6 +31,10 @@ export default class TicketList extends React.Component {
       });
   }
   render() {
+    const getDate = (dateInMilli) => {
+      return new moment(dateInMilli).format("hh:mm A, MMM DD, yyyy");
+    };
+
     return (
       <View style={StyleSheet.absoluteFill}>
         <Headline>Hello from list</Headline>
@@ -58,6 +63,9 @@ export default class TicketList extends React.Component {
                 style={{ height: 200, width: 200, margin: 20 }}
               >
                 <Card.Title title={ticket.table}></Card.Title>
+                <Card.Content>
+                  <Text>{getDate(ticket.created)}</Text>
+                </Card.Content>
               </Card>
             ))}
           </View>
