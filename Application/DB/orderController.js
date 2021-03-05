@@ -16,6 +16,20 @@ async function getOpenOrders() {
       console.error(err);
     });
 }
+/**
+ * Gets all orderItems for a specific order
+ * @param {string} orderID
+ */
+async function getOrderItems(orderID) {
+  return await axios
+    .get("/api/orderItems/" + orderID)
+    .then((result) => {
+      return result.data;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
 
 /**
  * creates order with the attributes of the passed object
@@ -37,5 +51,6 @@ async function createOrder(order) {
 
 module.exports = {
   getOpenOrders,
+  getOrderItems,
   createOrder,
 };

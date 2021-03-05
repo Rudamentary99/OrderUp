@@ -30,6 +30,25 @@ module.exports = (rdbConn) => [
     },
   },
   {
+    method: "get",
+    path: "/api/orderItems/:id",
+    fn: (req, res) => {
+      r.table("orderItem")
+        .filter((row) => row("orderID").eq(req.params.id))
+        .run(rdbConn, (err, result) => {
+          if (err) console.error(err);
+          else {
+            const data = result?._responses[0]?.r;
+            if (data) res.json(data);
+            else
+              res
+                .status(400)
+                .send({ message: "Could not get Order's Items :(" });
+          }
+        });
+    },
+  },
+  {
     method: "post",
     path: "/api/order",
     fn: (req, res) => {

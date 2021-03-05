@@ -60,6 +60,12 @@ export default class TicketList extends React.Component {
             {this.state.tickets.map((ticket) => (
               <Card
                 key={ticket.id}
+                onPress={() => {
+                  this.props.navigation.navigate("Ticket Details", {
+                    id: ticket.id,
+                    table: ticket.table,
+                  });
+                }}
                 style={{ height: 200, width: 200, margin: 20 }}
               >
                 <Card.Title title={ticket.table}></Card.Title>
