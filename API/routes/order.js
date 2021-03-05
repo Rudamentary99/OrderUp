@@ -4,15 +4,29 @@ const r = require("rethinkdb");
 module.exports = (rdbConn) => [
   {
     method: "get",
-    path: "/api/order",
+    path: "/api/order/:type",
     fn: (req, res) => {
-      r.table("order").run(rdbConn, (err, result) => {
-        if (err) {
-          console.error(err);
-        } else {
-          res.json(result._responses[0].r);
-        }
-      });
+      let filter = (row) => {
+        // console.log("row", row("open").eq(true));
+        return row("open").eq(true);
+      };
+      // if (req.params.type == "open") {
+      //   filter = (row) => row("open").eq(true);
+      // }
+      console.log("filter", filter);
+      try {
+        r.table("order")
+          .filter((row) => filter(row))
+          .run(rdbConn, (err, result) => {
+            if (err) {
+              console.error(err);
+            } else {
+              res.json(result?._responses[0]?.r);
+            }
+          });
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
   {
@@ -23,7 +37,11 @@ module.exports = (rdbConn) => [
         function createOrder(callback) {
           console.log("creating order");
           r.table("order")
-            .insert({ table: req.body.table })
+            .insert({
+              table: req.body.table,
+              created: req.body.created,
+              open: req.body.open,
+            })
             .run(rdbConn, callback);
         },
         function createOrderItems(result, callback) {
@@ -38,7 +56,7 @@ module.exports = (rdbConn) => [
               orderID: result.generated_keys[0],
             }));
 
-            r.table("orderItems").insert(orderItems).run(rdbConn, callback);
+            r.table("orderItem").insert(orderItems).run(rdbConn, callback);
           }
         },
         function returnResult(result) {

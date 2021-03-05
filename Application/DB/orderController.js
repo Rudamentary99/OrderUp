@@ -8,7 +8,7 @@ axios.default.baseURL = config.axios.baseURL;
  */
 async function getOpenOrders() {
   return await axios
-    .get("api/order/")
+    .get("api/order/open")
     .then((result) => {
       return result.data;
     })

@@ -11,9 +11,18 @@ export default class TicketList extends React.Component {
     };
   }
   componentDidMount() {
+    this.intervalID = setInterval(() => this.tick(), 1000);
+  }
+  componentDidMount() {
+    this.intervalID = setInterval(() => this.tick(), 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.intervalID);
+  }
+  tick() {
     getOpenOrders()
       .then((result) => {
-        this.setState({ tickets: result });
+        if (result) this.setState({ tickets: result });
         // console.log("result", result);
       })
       .catch((err) => {
@@ -24,12 +33,34 @@ export default class TicketList extends React.Component {
     return (
       <View style={StyleSheet.absoluteFill}>
         <Headline>Hello from list</Headline>
-        <ScrollView>
-          {this.state.tickets.map((ticket) => (
-            <Card key={ticket.id}>
-              <Card.Title title={ticket.table}></Card.Title>
-            </Card>
-          ))}
+        <ScrollView
+          style={{
+            position: "relative",
+            top: 0,
+            bottom: 0,
+            right: 0,
+            left: 0,
+          }}
+        >
+          <View
+            style={{
+              position: "relative",
+              right: 0,
+              left: 0,
+              flexWrap: "wrap",
+              flexDirection: "row",
+              //backgroundColor: "#f59042",
+            }}
+          >
+            {this.state.tickets.map((ticket) => (
+              <Card
+                key={ticket.id}
+                style={{ height: 200, width: 200, margin: 20 }}
+              >
+                <Card.Title title={ticket.table}></Card.Title>
+              </Card>
+            ))}
+          </View>
         </ScrollView>
         <FAB
           icon="plus"

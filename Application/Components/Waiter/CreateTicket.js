@@ -203,6 +203,8 @@ export default class CreatTicket extends React.Component {
               createOrder({
                 table: this.state.table,
                 ticketItems: ticketItems,
+                created: Date.now(),
+                open: true,
               })
                 .then((result) => {
                   if (result) {
