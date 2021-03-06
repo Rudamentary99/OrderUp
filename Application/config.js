@@ -1,5 +1,5 @@
 export default {
   axios: {
-    baseURL: "http://192.168.1.160:3000",
+    baseURL: "http://172.25.19.143:3000",
   },
 };

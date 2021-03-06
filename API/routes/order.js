@@ -35,6 +35,9 @@ module.exports = (rdbConn) => [
     fn: (req, res) => {
       r.table("orderItem")
         .filter((row) => row("orderID").eq(req.params.id))
+        .eqJoin("foodID", r.table("food"))
+        .without({ right: "id" })
+        .zip()
         .run(rdbConn, (err, result) => {
           if (err) console.error(err);
           else {
@@ -69,9 +72,10 @@ module.exports = (rdbConn) => [
             console.log("result", result);
           } else {
             const orderItems = req.body.ticketItems.map((item) => ({
-              name: item.name,
-              foodType: item.foodType,
-              prepTime: item.prepTime,
+              //name: item.name,
+              // foodType: item.foodType,
+              // prepTime: item.prepTime,
+              foodID: item.id,
               orderID: result.generated_keys[0],
             }));
 
@@ -93,21 +97,58 @@ module.exports = (rdbConn) => [
     method: "post",
     path: "/api/order/:id",
     fn: (req, res) => {
-      const newItems = req.body.ticketItems; 
       //delete removed ticket items
-      r.table("orderItem")
-        .filter((row) => row("orderID").eq(req.params.id) &&)
-        .run(rdbConn, (err, result) => {
-          if (err) console.error(err);
-          else {
-            const data = result?._responses[0]?.r;
-            if (data) res.json(data);
-            else
-              res
-                .status(400)
-                .send({ message: "Could not get Order's Items :(" });
+      async.waterfall([
+        function deleteRemoveditems(callback) {
+          console.log(
+            "req.body.removedItems.map(({ id }) => id)",
+            req.body.removedItems.map(({ id }) => id)
+          );
+          r.table("orderItem")
+            .getAll(r.args(req.body.removedItems.map(({ id }) => id)))
+            .delete()
+            .run(rdbConn, callback);
+        },
+        function addNewItems(result, callback) {
+          console.log("result", result);
+          if (!result.errors) {
+            r.table("orderItem")
+              .insert(
+                req.body.ticketItems
+                  .filter(({ orderID }) => !orderID)
+                  .map((item) => ({
+                    foodID: item.id,
+                    orderID: req.params.id,
+                  }))
+              )
+              .run(rdbConn, callback);
           }
-        });
+        },
+        function wrapUp(result) {
+          if (result.errors) {
+            res
+              .status(400)
+              .send({ message: "Could not add new order items :\\" });
+          } else {
+            res.end();
+          }
+          // console.log("result", result);
+        },
+      ]);
+
+      // r.table("orderItem")
+      //   .filter((row) => row("orderID").eq(req.params.id))
+      //   .run(rdbConn, (err, result) => {
+      //     if (err) console.error(err);
+      //     else {
+      //       const data = result?._responses[0]?.r;
+      //       if (data) res.json(data);
+      //       else
+      //         res
+      //           .status(400)
+      //           .send({ message: "Could not get Order's Items :(" });
+      //     }
+      //   });
       //if not in new ticketList remove
       //if not in old ticketList add
     },

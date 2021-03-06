@@ -23,7 +23,11 @@ import {
 } from "react-native-paper";
 import SwipeList from "../helpers/SwipeList";
 import { getFoodItems, getFoodTypes } from "../../DB/foodController";
-import { createOrder, getOrderItems } from "../../DB/orderController";
+import {
+  createOrder,
+  getOrderItems,
+  updateOrder,
+} from "../../DB/orderController";
 const FoodListPane = (props) => {
   const { foodTypes, foodItems, onSelect, onLongSelect } = props;
   const [selectedFoodType, setSelectedFoodType] = React.useState("Entree");
@@ -95,6 +99,7 @@ const TicketListPane = (props) => {
       renderItem={(data) => {
         return (
           <TouchableHighlight
+            key={data.item.key}
             onPress={() => console.log("You touched me")}
             style={{
               backgroundColor: "white",
@@ -103,7 +108,7 @@ const TicketListPane = (props) => {
             }}
             underlayColor={"#AAA"}
           >
-            <View key={data.item.key}>
+            <View>
               <Text style={{ fontSize: 19 }}>- {data.item.name}</Text>
             </View>
           </TouchableHighlight>
@@ -274,11 +279,10 @@ class EditTicket extends React.Component {
       foodTypes: [],
       ticketItems: [],
       removedItems: [],
-      table: "",
+      table: this.props.route.params.table,
     };
   }
   componentDidMount() {
-    this.setState({ table: this.props.route.params.table });
     getFoodTypes()
       .then((result) => {
         this.setState({ foodTypes: result });
@@ -295,7 +299,13 @@ class EditTicket extends React.Component {
       });
     getOrderItems(this.props.route.params.id)
       .then((result) => {
-        if (result) this.setState({ ticketItems: result });
+        if (result)
+          this.setState({
+            ticketItems: result.map((item) => ({
+              ...item,
+              key: item.id + "-" + uuidv4(),
+            })),
+          });
       })
       .catch((err) => {
         console.error(err);
@@ -303,6 +313,7 @@ class EditTicket extends React.Component {
   }
   render() {
     const { ticketItems, removedItems } = this.state;
+    console.log("removedItems", removedItems);
     return (
       <KeyboardAvoidingView
         behavior="height"
@@ -332,20 +343,23 @@ class EditTicket extends React.Component {
           />
           <Button
             onPress={() => {
-              // createOrder({
-              //   table: this.state.table,
-              //   ticketItems: ticketItems,
-              //   created: Date.now(),
-              //   open: true,
-              // })
-              //   .then((result) => {
-              //     if (result) {
-              //       this.props.navigation.navigate("waiter-overview");
-              //     }
-              //   })
-              //   .catch((err) => {
-              //     console.error(err);
-              //   });
+              updateOrder({
+                id: this.props.route.params.id,
+                table: this.state.table,
+                ticketItems: ticketItems,
+                removedItems: removedItems,
+              })
+                .then((result) => {
+                  if (result)
+                    this.props.navigation.navigate(
+                      "Ticket Details",
+                      this.props.route.params
+                    );
+                  // console.log("result", result);
+                })
+                .catch((err) => {
+                  console.error(err);
+                });
             }}
             disabled={!this.state.ticketItems.length}
             labelStyle={{ fontSize: 20 }}

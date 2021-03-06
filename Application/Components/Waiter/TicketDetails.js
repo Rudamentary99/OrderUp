@@ -3,6 +3,9 @@ import { View, ScrollView, StyleSheet } from "react-native";
 import { FAB, Headline, List, Subheading, Text } from "react-native-paper";
 import { getOrderItems } from "../../DB/orderController";
 import moment from "moment";
+
+import { v4 as uuidv4 } from "uuid";
+import "react-native-get-random-values";
 export default class TicketDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -11,6 +14,20 @@ export default class TicketDetails extends React.Component {
     };
   }
   componentDidMount() {
+    this.willFocusSubscription = this.props.navigation.addListener(
+      "willFocus",
+      () => {
+        this.loadData();
+      }
+    );
+    this.loadData();
+  }
+  componentWillUnmount() {
+    this.willFocusSubscription.remove;
+  }
+
+  loadData() {
+    console.log("loading data");
     getOrderItems(this.props.route.params.id)
       .then((result) => {
         if (result) {
@@ -32,7 +49,7 @@ export default class TicketDetails extends React.Component {
         <ScrollView>
           <List.Section>
             {this.state.ticketItems.map((item) => (
-              <List.Item title={"- " + item.name}></List.Item>
+              <List.Item key={uuidv4()} title={"- " + item.name}></List.Item>
             ))}
           </List.Section>
         </ScrollView>

@@ -53,7 +53,9 @@ async function updateOrder(order) {
   return await axios
     .post("/api/order/" + order.id, order)
     .then((result) => {
-      console.log("result", result);
+      if (result.status == 200) return true;
+      else return false;
+      //console.log("result", result.status);
     })
     .catch((err) => {
       console.error(err);
@@ -64,4 +66,5 @@ module.exports = {
   getOpenOrders,
   getOrderItems,
   createOrder,
+  updateOrder,
 };
