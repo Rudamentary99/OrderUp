@@ -12,7 +12,11 @@ import {
   Text,
   Portal,
 } from "react-native-paper";
-import { getOrderItems, cancelOrder } from "../../DB/orderController";
+import {
+  getOrderItems,
+  closeOrder,
+  cancelOrder,
+} from "../../DB/orderController";
 import moment from "moment";
 
 import { v4 as uuidv4 } from "uuid";
@@ -83,7 +87,21 @@ export default class TicketDetails extends React.Component {
               icon: "check",
               label: "Close",
               onPress: () => {
-                console.log("close");
+                closeOrder(id)
+                  .then((result) => {
+                    if (result) {
+                      this.setState({
+                        actionMessage: "Order has been closed",
+                        action: {
+                          label: "Undo",
+                          onPress: () => {
+                            // Do something
+                          },
+                        },
+                      });
+                    }
+                  })
+                  .catch((err) => {});
               },
             },
             {

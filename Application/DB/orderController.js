@@ -49,13 +49,43 @@ async function createOrder(order) {
     });
 }
 
-async function updateOrder(order) {
+async function updateOrderItems(order) {
   return await axios
     .post("/api/order/" + order.id, order)
     .then((result) => {
       if (result.status == 200) return true;
       else return false;
       //console.log("result", result.status);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+async function closeOrder(orderID) {
+  return await axios
+    .post(`/api/order/${orderID}/close`)
+    .then((result) => {
+      if (result.status == 200) {
+        return true;
+      } else {
+        console.log("result", result);
+        return false;
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+async function openOrder(orderID) {
+  return await axios
+    .post(`/api/order/${orderID}/open`)
+    .then((result) => {
+      if (result.status == 200) {
+        return true;
+      } else {
+        console.log("result", result);
+        return false;
+      }
     })
     .catch((err) => {
       console.error(err);
@@ -79,6 +109,7 @@ module.exports = {
   getOpenOrders,
   getOrderItems,
   createOrder,
-  updateOrder,
+  updateOrderItems,
+  closeOrder,
   cancelOrder,
 };

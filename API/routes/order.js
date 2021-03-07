@@ -140,7 +140,6 @@ module.exports = (rdbConn) => [
     method: "post",
     path: "/api/order/:id/cancel",
     fn: (req, res) => {
-      console.log("req.params", req.params);
       async.waterfall([
         function deleteOrderItems(callback) {
           r.table("orderItem")
@@ -167,6 +166,47 @@ module.exports = (rdbConn) => [
           }
         },
       ]);
+    },
+  },
+
+  {
+    method: "post",
+    path: "/api/order/:id/close",
+    fn: (req, res) => {
+      r.table("order")
+        .get(req.params.id)
+        .update({ closeDate: Date.now() })
+        .run(rdbConn, (err, result) => {
+          if (err || result.errors) {
+            console.error(err);
+            res
+              .status(400)
+              .send({ message: "Could not close order :|", error: err });
+          } else {
+            console.log("result", result);
+            res.end();
+          }
+        });
+    },
+  },
+  {
+    method: "post",
+    path: "/api/order/:id/open",
+    fn: (req, res) => {
+      r.table("order")
+        .get(req.params.id)
+        .update({ closeDate: undefined })
+        .run(rdbConn, (err, result) => {
+          if (err || result.errors) {
+            console.error(err);
+            res
+              .status(400)
+              .send({ message: "Could not close order :|", error: err });
+          } else {
+            console.log("result", result);
+            res.end();
+          }
+        });
     },
   },
 ];

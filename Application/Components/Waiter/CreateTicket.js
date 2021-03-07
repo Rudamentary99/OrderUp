@@ -26,7 +26,7 @@ import { getFoodItems, getFoodTypes } from "../../DB/foodController";
 import {
   createOrder,
   getOrderItems,
-  updateOrder,
+  updateOrderItems,
 } from "../../DB/orderController";
 const FoodListPane = (props) => {
   const { foodTypes, foodItems, onSelect, onLongSelect } = props;
@@ -343,7 +343,7 @@ class EditTicket extends React.Component {
           />
           <Button
             onPress={() => {
-              updateOrder({
+              updateOrderItems({
                 id: this.props.route.params.id,
                 table: this.state.table,
                 ticketItems: ticketItems,
