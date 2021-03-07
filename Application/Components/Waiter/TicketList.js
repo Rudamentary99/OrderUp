@@ -1,6 +1,13 @@
 import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { Text, Headline, FAB, Card } from "react-native-paper";
+import {
+  Text,
+  Headline,
+  FAB,
+  Card,
+  Snackbar,
+  Subheading,
+} from "react-native-paper";
 import { getOpenOrders } from "../../DB/orderController";
 const moment = require("moment"); // require
 export default class TicketList extends React.Component {
@@ -11,21 +18,24 @@ export default class TicketList extends React.Component {
     };
   }
   componentDidMount() {
+    this.willFocusSubscription = this.props.navigation.addListener(
+      "focus",
+      () => {
+        this.setState({ snackMessage: this.props.route?.params?.snackMessage });
+        this.loadData();
+      }
+    );
     this.intervalID = setInterval(() => this.tick(), 10 * 1000);
-    getOpenOrders()
-      .then((result) => {
-        if (result) this.setState({ tickets: result });
-        // console.log("result", result);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    this.loadData();
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
   }
   tick() {
+    this.loadData;
+  }
+  loadData() {
     getOpenOrders()
       .then((result) => {
         if (result) this.setState({ tickets: result });
@@ -42,7 +52,6 @@ export default class TicketList extends React.Component {
 
     return (
       <View style={StyleSheet.absoluteFill}>
-        <Headline>Hello from list</Headline>
         <ScrollView
           style={{
             position: "relative",
@@ -62,23 +71,29 @@ export default class TicketList extends React.Component {
               //backgroundColor: "#f59042",
             }}
           >
-            {this.state.tickets.map((ticket) => (
-              <Card
-                key={ticket.id}
-                onPress={() => {
-                  this.props.navigation.navigate("Ticket Details", {
-                    id: ticket.id,
-                    table: ticket.table,
-                  });
-                }}
-                style={{ height: 200, width: 200, margin: 20 }}
-              >
-                <Card.Title title={ticket.table}></Card.Title>
-                <Card.Content>
-                  <Text>{getDate(ticket.created)}</Text>
-                </Card.Content>
-              </Card>
-            ))}
+            {this.state?.tickets?.length ? (
+              this.state.tickets.map((ticket) => (
+                <Card
+                  key={ticket.id}
+                  onPress={() => {
+                    this.props.navigation.navigate("Ticket Details", {
+                      id: ticket.id,
+                      table: ticket.table,
+                    });
+                  }}
+                  style={{ height: 200, width: 200, margin: 20 }}
+                >
+                  <Card.Title title={ticket.table}></Card.Title>
+                  <Card.Content>
+                    <Text>{getDate(ticket.created)}</Text>
+                  </Card.Content>
+                </Card>
+              ))
+            ) : (
+              <Subheading style={{ margin: 50 }}>
+                You have no open orders.
+              </Subheading>
+            )}
           </View>
         </ScrollView>
         <FAB
@@ -88,6 +103,14 @@ export default class TicketList extends React.Component {
           }}
           style={{ position: "absolute", bottom: 0, right: 0, margin: 50 }}
         />
+        <Snackbar
+          visible={this.state.snackMessage}
+          onDismiss={() => {
+            this.setState({ snackMessage: null });
+          }}
+        >
+          {this.state.snackMessage}
+        </Snackbar>
       </View>
     );
   }

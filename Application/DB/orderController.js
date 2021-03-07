@@ -65,16 +65,20 @@ async function cancelOrder(orderID) {
   return await axios
     .post(`/api/order/${orderID}/cancel`)
     .then((result) => {
-      console.log("result", result);
+      if (result.status == 200) return true;
+      else {
+        console.log("result", result);
+        return false;
+      }
     })
     .catch((err) => {
       console.error(err);
     });
-  return true;
 }
 module.exports = {
   getOpenOrders,
   getOrderItems,
   createOrder,
   updateOrder,
+  cancelOrder,
 };

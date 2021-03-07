@@ -31,10 +31,10 @@ module.exports = (rdbConn) => [
   },
   {
     method: "get",
-    path: "/api/orderItems/:id",
+    path: "/api/orderItems/:orderID",
     fn: (req, res) => {
       r.table("orderItem")
-        .filter((row) => row("orderID").eq(req.params.id))
+        .filter((row) => row("orderID").eq(req.params.orderID))
         .eqJoin("foodID", r.table("food"))
         .without({ right: "id" })
         .zip()
@@ -140,8 +140,33 @@ module.exports = (rdbConn) => [
     method: "post",
     path: "/api/order/:id/cancel",
     fn: (req, res) => {
-      console.log("req.body", req.body);
-      res.end();
+      console.log("req.params", req.params);
+      async.waterfall([
+        function deleteOrderItems(callback) {
+          r.table("orderItem")
+            .getAll(req.params.id, { index: "orderID" })
+            .delete()
+            .run(rdbConn, callback);
+        },
+        function deleteOrder(result, callback) {
+          if (result.errors) {
+            res
+              .status(400)
+              .send({ message: "Could not delete OrderItems: :|" });
+          } else {
+            r.table("order").get(req.params.id).delete().run(rdbConn, callback);
+          }
+        },
+        function wrapUp(result) {
+          if (result.errors) {
+            res.status(400).send({
+              message: "Something went wrong deleteing the order. :O",
+            });
+          } else {
+            res.end();
+          }
+        },
+      ]);
     },
   },
 ];

@@ -1,14 +1,18 @@
 import React from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 import {
+  Dialog,
   FAB,
   Headline,
   List,
+  Button,
+  Paragraph,
   Snackbar,
   Subheading,
   Text,
+  Portal,
 } from "react-native-paper";
-import { getOrderItems } from "../../DB/orderController";
+import { getOrderItems, cancelOrder } from "../../DB/orderController";
 import moment from "moment";
 
 import { v4 as uuidv4 } from "uuid";
@@ -72,14 +76,14 @@ export default class TicketDetails extends React.Component {
               icon: "delete",
               label: "Cancel",
               onPress: () => {
-                console.log("archive");
+                this.setState({ confirm: true });
               },
             },
             {
               icon: "check",
               label: "Close",
               onPress: () => {
-                console.log("archive");
+                console.log("close");
               },
             },
             {
@@ -99,13 +103,58 @@ export default class TicketDetails extends React.Component {
           }}
           style={{ position: "absolute", bottom: 0, right: 0, padding: 50 }}
         />
-        <Snackbar
-          visible={Boolean(this.state.actionMessage)}
+        <Dialog
+          visible={this.state.confirm}
           onDismiss={() => {
-            this.setState({ actionMessage: null });
+            this.setState({ confirm: false });
           }}
-          action={getAction()}
-        />
+        >
+          <Dialog.Title>Cancel Ticket</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>
+              Are you sure you want to do this action?
+              <Text> This cannot be undone.</Text>
+            </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              onPress={() => {
+                this.setState({ confirm: false });
+                cancelOrder(id)
+                  .then((result) => {
+                    if (result) {
+                      this.props.navigation.navigate("Open Tickets", {
+                        snackMessage: "Order has been canceled.",
+                      });
+                    } else
+                      this.setState({ actionMessage: "Something went wrong!" });
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                  });
+              }}
+            >
+              Do it
+            </Button>
+            <Button
+              onPress={() => {
+                this.setState({ confirm: false });
+              }}
+            >
+              Nevermind
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+        <Portal>
+          <Snackbar
+            visible={Boolean(this.state.actionMessage)}
+            onDismiss={() => {
+              this.setState({ actionMessage: null });
+            }}
+          >
+            {this.state.actionMessage}
+          </Snackbar>
+        </Portal>
       </View>
     );
   }
