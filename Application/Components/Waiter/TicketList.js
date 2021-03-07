@@ -86,6 +86,7 @@ export default class TicketList extends React.Component {
                   <Card.Title title={ticket.table}></Card.Title>
                   <Card.Content>
                     <Text>{getDate(ticket.created)}</Text>
+                    {ticket.closeDate && <Text>Closed</Text>}
                   </Card.Content>
                 </Card>
               ))

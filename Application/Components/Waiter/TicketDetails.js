@@ -15,6 +15,7 @@ import {
 import {
   getOrderItems,
   closeOrder,
+  openOrder,
   cancelOrder,
 } from "../../DB/orderController";
 import moment from "moment";
@@ -91,14 +92,35 @@ export default class TicketDetails extends React.Component {
                   .then((result) => {
                     if (result) {
                       this.setState({
-                        actionMessage: "Order has been closed",
+                        actionMessage: "Ticket has been closed",
                         action: {
                           label: "Undo",
                           onPress: () => {
-                            // Do something
+                            openOrder(id)
+                              .then((res) => {
+                                if (res.status == 200) {
+                                  this.setState({
+                                    actionMessage: "Ticket has been re-opened",
+                                  });
+                                } else {
+                                  this.setState({
+                                    actionMessage: "Could not undo",
+                                  });
+                                  console.error(res);
+                                }
+                              })
+                              .catch((err) => {
+                                console.error(err);
+                                this.setState({
+                                  actionMessage: "Could not undo",
+                                });
+                              });
                           },
                         },
                       });
+                    } else {
+                      this.setState({ actionMessage: "Could not close. :(" });
+                      console.error(result);
                     }
                   })
                   .catch((err) => {});
@@ -142,7 +164,7 @@ export default class TicketDetails extends React.Component {
                   .then((result) => {
                     if (result) {
                       this.props.navigation.navigate("Open Tickets", {
-                        snackMessage: "Order has been canceled.",
+                        snackMessage: "Ticket has been canceled.",
                       });
                     } else
                       this.setState({ actionMessage: "Something went wrong!" });
@@ -169,6 +191,7 @@ export default class TicketDetails extends React.Component {
             onDismiss={() => {
               this.setState({ actionMessage: null });
             }}
+            action={this.state.action}
           >
             {this.state.actionMessage}
           </Snackbar>

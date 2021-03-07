@@ -111,5 +111,6 @@ module.exports = {
   createOrder,
   updateOrderItems,
   closeOrder,
+  openOrder,
   cancelOrder,
 };
