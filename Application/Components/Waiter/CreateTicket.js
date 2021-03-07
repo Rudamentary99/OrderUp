@@ -213,7 +213,7 @@ class CreateTicket extends React.Component {
               })
                 .then((result) => {
                   if (result) {
-                    this.props.navigation.navigate("waiter-overview");
+                    this.props.navigation.navigate("Open Tickets");
                   }
                 })
                 .catch((err) => {

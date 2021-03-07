@@ -61,7 +61,17 @@ async function updateOrder(order) {
       console.error(err);
     });
 }
-
+async function cancelOrder(orderID) {
+  return await axios
+    .post(`/api/order/${orderID}/cancel`)
+    .then((result) => {
+      console.log("result", result);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  return true;
+}
 module.exports = {
   getOpenOrders,
   getOrderItems,

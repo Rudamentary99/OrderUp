@@ -16,8 +16,8 @@ const temp = (props) => {
 
 const WaiterNav = () => {
   return (
-    <Stack.Navigator initialRouteName="waiter-overview">
-      <Stack.Screen name="waiter-overview" component={TicketList} />
+    <Stack.Navigator initialRouteName="Open Tickets">
+      <Stack.Screen name="Open Tickets" component={TicketList} />
       <Stack.Screen name="New Ticket" component={CreateTicket} />
       <Stack.Screen name="Ticket Details" component={TicketDetails} />
       <Stack.Screen name="Edit Ticket" component={EditTicket} />

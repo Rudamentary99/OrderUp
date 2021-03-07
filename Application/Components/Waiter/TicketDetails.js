@@ -1,16 +1,25 @@
 import React from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
-import { FAB, Headline, List, Subheading, Text } from "react-native-paper";
+import {
+  FAB,
+  Headline,
+  List,
+  Snackbar,
+  Subheading,
+  Text,
+} from "react-native-paper";
 import { getOrderItems } from "../../DB/orderController";
 import moment from "moment";
 
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
+import { getActionFromState } from "@react-navigation/native";
 export default class TicketDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       ticketItems: [],
+      editOpen: false,
     };
   }
   componentDidMount() {
@@ -40,6 +49,9 @@ export default class TicketDetails extends React.Component {
   }
   render() {
     const { id, table, created } = this.props.route.params;
+    const getAction = () => {
+      return {};
+    };
     return (
       <View style={{ ...StyleSheet.absoluteFillObject, padding: 50 }}>
         <Subheading>
@@ -53,15 +65,46 @@ export default class TicketDetails extends React.Component {
             ))}
           </List.Section>
         </ScrollView>
-        <FAB
-          icon="pencil"
-          onPress={() => {
-            this.props.navigation.navigate(
-              "Edit Ticket",
-              this.props.route.params
-            );
+        <FAB.Group
+          icon="dots-vertical"
+          actions={[
+            {
+              icon: "delete",
+              label: "Cancel",
+              onPress: () => {
+                console.log("archive");
+              },
+            },
+            {
+              icon: "check",
+              label: "Close",
+              onPress: () => {
+                console.log("archive");
+              },
+            },
+            {
+              icon: "pencil",
+              label: "Edit",
+              onPress: () => {
+                this.props.navigation.navigate(
+                  "Edit Ticket",
+                  this.props.route.params
+                );
+              },
+            },
+          ]}
+          open={this.state.editOpen}
+          onStateChange={() => {
+            this.setState({ editOpen: !this.state.editOpen });
           }}
-          style={{ position: "absolute", bottom: 0, right: 0, margin: 50 }}
+          style={{ position: "absolute", bottom: 0, right: 0, padding: 50 }}
+        />
+        <Snackbar
+          visible={Boolean(this.state.actionMessage)}
+          onDismiss={() => {
+            this.setState({ actionMessage: null });
+          }}
+          action={getAction()}
         />
       </View>
     );

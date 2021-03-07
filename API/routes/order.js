@@ -132,25 +132,16 @@ module.exports = (rdbConn) => [
           } else {
             res.end();
           }
-          // console.log("result", result);
         },
       ]);
-
-      // r.table("orderItem")
-      //   .filter((row) => row("orderID").eq(req.params.id))
-      //   .run(rdbConn, (err, result) => {
-      //     if (err) console.error(err);
-      //     else {
-      //       const data = result?._responses[0]?.r;
-      //       if (data) res.json(data);
-      //       else
-      //         res
-      //           .status(400)
-      //           .send({ message: "Could not get Order's Items :(" });
-      //     }
-      //   });
-      //if not in new ticketList remove
-      //if not in old ticketList add
+    },
+  },
+  {
+    method: "post",
+    path: "/api/order/:id/cancel",
+    fn: (req, res) => {
+      console.log("req.body", req.body);
+      res.end();
     },
   },
 ];

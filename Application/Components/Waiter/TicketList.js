@@ -1,6 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { Text, Headline, FAB, Card } from "react-native-paper";
 import { getOpenOrders } from "../../DB/orderController";
 const moment = require("moment"); // require
@@ -13,6 +12,14 @@ export default class TicketList extends React.Component {
   }
   componentDidMount() {
     this.intervalID = setInterval(() => this.tick(), 10 * 1000);
+    getOpenOrders()
+      .then((result) => {
+        if (result) this.setState({ tickets: result });
+        // console.log("result", result);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   componentWillUnmount() {
