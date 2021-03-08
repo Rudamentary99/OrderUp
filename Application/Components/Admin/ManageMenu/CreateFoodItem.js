@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { Text, Button, TextInput, HelperText } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
-import { createFoodItem, updateFoodItem, getFoodTypes } from "./foodController";
+import { createFoodItem, updateFoodItem, getFoodTypes } from "../../../DB/foodController";
 import DropDown from "react-native-paper-dropdown";
 function CreateFoodItem(props) {
   const [selectingFoodType, setSelectingFoodType] = React.useState(false);

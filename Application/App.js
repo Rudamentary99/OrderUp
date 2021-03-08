@@ -15,12 +15,14 @@ import {
   Portal,
   Provider as PaperProvider,
 } from "react-native-paper";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, StackActions } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import AdminComponent from "./Components/Admin/index";
+import AdminNav from "./Components/Admin/index";
+import WaiterNav from "./Components/Waiter/index";
+import KitchenNav from "./Components/Kitchen/index";
 import TagInput from "./Components/helpers/TagInput";
 
-import DropDown from "react-native-paper-dropdown";
+import SwipeList from "./Components/helpers/SwipeList";
 const Stack = createStackNavigator();
 
 const testItems = [
@@ -29,13 +31,6 @@ const testItems = [
 ];
 
 const tempScreen = ({ navigation }) => {
-  const [showDropDown, setShowDropDown] = React.useState(false);
-  const [gender, setGender] = React.useState();
-  const genderList = [
-    { label: "Male", value: "male" },
-    { label: "Female", value: "female" },
-    { label: "Others", value: "others" },
-  ];
   const theme = useTheme();
   return (
     <KeyboardAvoidingView
@@ -44,22 +39,7 @@ const tempScreen = ({ navigation }) => {
       headerMode="float"
     >
       <Text>Open up App.js to start working on your app!</Text>
-      <SafeAreaView style={styles.containerStyle}>
-        <DropDown
-          label={"Gender"}
-          mode={"flat"}
-          value={gender}
-          setValue={setGender}
-          list={genderList}
-          visible={showDropDown}
-          showDropDown={() => setShowDropDown(true)}
-          onDismiss={() => setShowDropDown(false)}
-          inputProps={{
-            right: <TextInput.Icon name={"menu-down"} />,
-          }}
-          theme={theme}
-        />
-      </SafeAreaView>
+      {/* <SwipeList /> */}
       <StatusBar style="auto" />
 
       {/* <TagInput items={testItems} itemsKey="key" itemsTitle="name"></TagInput> */}
@@ -80,9 +60,11 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer theme={DefaultTheme}>
         <Portal.Host>
-          <Stack.Navigator headerMode="none" initialRouteName="admin">
+          <Stack.Navigator headerMode="none" initialRouteName="kitchen">
             <Stack.Screen name="temp" component={tempScreen} />
-            <Stack.Screen name="admin" component={AdminComponent} />
+            <Stack.Screen name="admin" component={AdminNav} />
+            <Stack.Screen name="waiter" component={WaiterNav} />
+            <Stack.Screen name="kitchen" component={KitchenNav} />
           </Stack.Navigator>
         </Portal.Host>
       </NavigationContainer>
