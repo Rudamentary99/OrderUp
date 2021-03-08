@@ -93,30 +93,30 @@ export default class TicketDetails extends React.Component {
                     if (result) {
                       this.setState({
                         actionMessage: "Ticket has been closed",
-                        action: {
-                          label: "Undo",
-                          onPress: () => {
-                            openOrder(id)
-                              .then((res) => {
-                                if (res.status == 200) {
-                                  this.setState({
-                                    actionMessage: "Ticket has been re-opened",
-                                  });
-                                } else {
-                                  this.setState({
-                                    actionMessage: "Could not undo",
-                                  });
-                                  console.error(res);
-                                }
-                              })
-                              .catch((err) => {
-                                console.error(err);
-                                this.setState({
-                                  actionMessage: "Could not undo",
-                                });
-                              });
-                          },
-                        },
+                        // action: {
+                        //   label: "Undo",
+                        //   onPress: () => {
+                        //     openOrder(id)
+                        //       .then((res) => {
+                        //         if (res.status == 200) {
+                        //           this.setState({
+                        //             actionMessage: "Ticket has been re-opened",
+                        //           });
+                        //         } else {
+                        //           this.setState({
+                        //             actionMessage: "Could not undo",
+                        //           });
+                        //           console.error(res);
+                        //         }
+                        //       })
+                        //       .catch((err) => {
+                        //         console.error(err);
+                        //         this.setState({
+                        //           actionMessage: "Could not undo",
+                        //         });
+                        //       });
+                        //   },
+                        // },
                       });
                     } else {
                       this.setState({ actionMessage: "Could not close. :(" });

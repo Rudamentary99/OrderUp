@@ -15,10 +15,11 @@ import {
   Portal,
   Provider as PaperProvider,
 } from "react-native-paper";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, StackActions } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AdminNav from "./Components/Admin/index";
 import WaiterNav from "./Components/Waiter/index";
+import KitchenNav from "./Components/Kitchen/index";
 import TagInput from "./Components/helpers/TagInput";
 
 import SwipeList from "./Components/helpers/SwipeList";
@@ -59,10 +60,11 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer theme={DefaultTheme}>
         <Portal.Host>
-          <Stack.Navigator headerMode="none" initialRouteName="waiter">
+          <Stack.Navigator headerMode="none" initialRouteName="kitchen">
             <Stack.Screen name="temp" component={tempScreen} />
             <Stack.Screen name="admin" component={AdminNav} />
             <Stack.Screen name="waiter" component={WaiterNav} />
+            <Stack.Screen name="kitchen" component={KitchenNav} />
           </Stack.Navigator>
         </Portal.Host>
       </NavigationContainer>
