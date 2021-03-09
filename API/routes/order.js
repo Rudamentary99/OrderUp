@@ -7,12 +7,11 @@ module.exports = (rdbConn) => [
     path: "/api/order/:type",
     fn: (req, res) => {
       let filter = (row) => {
-        // console.log("row", row("open").eq(true));
-        return row("open").eq(true);
+        return true;
       };
-      // if (req.params.type == "open") {
-      //   filter = (row) => row("open").eq(true);
-      // }
+      if (req.params.type == "open") {
+        filter = (row) => row.hasFields("closeDate");
+      }
       console.log("filter", filter);
       try {
         r.table("order")
@@ -27,6 +26,44 @@ module.exports = (rdbConn) => [
       } catch (error) {
         console.error(error);
       }
+    },
+  },
+  {
+    method: "get",
+    path: "/api/order/full/:type",
+    fn: (req, res) => {
+      let filter = (row) => {
+        return true;
+      };
+      if (req?.params?.type == "open") {
+        filter = (row) => row.hasFields("closeDate");
+      }
+      r.table("order")
+        .filter(filter)
+        .map((order) => {
+          return order.merge({
+            orderItems: r
+              .table("orderItem")
+              .getAll(order("id"), { index: "orderID" })
+              .eqJoin("foodID", r.table("food"))
+              .without({ right: "id" })
+              .zip()
+              .coerceTo("array"),
+          });
+        })
+        .run(rdbConn, (err, result) => {
+          if (err) {
+            console.error(err);
+            res.status(400).send({ error: err });
+          } else if (result.errors) {
+            console.error("Something went wrong! Could not get full order");
+            res
+              .status(400)
+              .send({ error: "something went wrong", result: result });
+          } else {
+            res.json(result?._responses[0]?.r);
+          }
+        });
     },
   },
   {

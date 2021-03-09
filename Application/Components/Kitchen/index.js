@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import { Text } from "react-native-paper";
 import { createStackNavigator } from "@react-navigation/stack";
+import TicketList from "./TicketList";
 const Stack = createStackNavigator();
 const temp = (props) => {
   return (
@@ -13,8 +14,8 @@ const temp = (props) => {
 
 export default KitchenNav = (props) => {
   return (
-    <Stack.Navigator initialRouteName="temp">
-      <Stack.Screen name="temp" component={temp} />
+    <Stack.Navigator initialRouteName="Open Tickets">
+      <Stack.Screen name="Open Tickets" component={TicketList} />
     </Stack.Navigator>
   );
 };
