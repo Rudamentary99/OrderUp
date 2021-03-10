@@ -139,6 +139,7 @@ export default class TicketList extends React.Component {
         )}
         <Snackbar
           visible={this.state.snackMessage}
+          duration={3000}
           onDismiss={() => {
             this.setState({ snackMessage: null });
           }}
