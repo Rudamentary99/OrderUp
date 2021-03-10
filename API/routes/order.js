@@ -7,10 +7,10 @@ module.exports = (rdbConn) => [
     path: "/api/order/:type",
     fn: (req, res) => {
       let filter = (row) => {
-        return true;
+        return row.hasFields("id");
       };
       if (req.params.type == "open") {
-        filter = (row) => row.hasFields("closeDate");
+        filter = (row) => row.hasFields("closeDate").not();
       }
       console.log("filter", filter);
       try {
@@ -33,10 +33,10 @@ module.exports = (rdbConn) => [
     path: "/api/order/full/:type",
     fn: (req, res) => {
       let filter = (row) => {
-        return true;
+        return row.hasFields("id");
       };
       if (req?.params?.type == "open") {
-        filter = (row) => !row.hasFields("closeDate");
+        filter = (row) => row.hasFields("closeDate").not();
       }
       r.table("order")
         .filter(filter)
