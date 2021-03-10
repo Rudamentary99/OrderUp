@@ -20,37 +20,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 import AdminNav from "./Components/Admin/index";
 import WaiterNav from "./Components/Waiter/index";
 import KitchenNav from "./Components/Kitchen/index";
-import TagInput from "./Components/helpers/TagInput";
-
-import SwipeList from "./Components/helpers/SwipeList";
 const Stack = createStackNavigator();
-
-const testItems = [
-  { name: "food 1", key: 1 },
-  { name: "food 2", key: 2 },
-];
 
 const tempScreen = ({ navigation }) => {
   const theme = useTheme();
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      style={styles.container}
-      headerMode="float"
-    >
-      <Text>Open up App.js to start working on your app!</Text>
-      {/* <SwipeList /> */}
-      <StatusBar style="auto" />
-
-      {/* <TagInput items={testItems} itemsKey="key" itemsTitle="name"></TagInput> */}
-      <Button
-        onPress={() => {
-          navigation.navigate("admin");
-        }}
-      >
-        go to admin
-      </Button>
-    </KeyboardAvoidingView>
+    <View style={styles.container}>
+      <Text>Test</Text>
+    </View>
   );
 };
 

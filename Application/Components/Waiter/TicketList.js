@@ -33,7 +33,7 @@ export default class TicketList extends React.Component {
     clearInterval(this.intervalID);
   }
   tick() {
-    this.loadData;
+    this.loadData();
   }
   loadData() {
     getOpenOrders()

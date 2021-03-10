@@ -36,7 +36,7 @@ module.exports = (rdbConn) => [
         return true;
       };
       if (req?.params?.type == "open") {
-        filter = (row) => row.hasFields("closeDate");
+        filter = (row) => !row.hasFields("closeDate");
       }
       r.table("order")
         .filter(filter)

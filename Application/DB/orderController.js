@@ -139,6 +139,7 @@ async function cancelOrder(orderID) {
       console.error(err);
     });
 }
+
 module.exports = {
   getOpenOrders,
   getOpenOrdersFull,
