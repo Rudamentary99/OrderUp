@@ -57,7 +57,7 @@ export default class TicketDetails extends React.Component {
       });
   }
   render() {
-    const { id, table, created } = this.props.route.params;
+    const { id, table, created, closeDate } = this.props.route.params;
     const getAction = () => {
       return {};
     };
@@ -66,6 +66,12 @@ export default class TicketDetails extends React.Component {
         <Subheading>
           {moment(created).format("hh:mm A, MMM DD, yyyy")}
         </Subheading>
+        {closeDate && (
+          <Subheading style={{ color: "green" }}>
+            <Headline style={{ color: "green" }}>Closed: </Headline>
+            {moment(closeDate).format("hh:mm A, MMM DD, yyyy")}
+          </Subheading>
+        )}
         <Headline style={{ marginBottom: 15 }}>Table #{table}'s order</Headline>
         <ScrollView>
           <List.Section>
@@ -86,44 +92,62 @@ export default class TicketDetails extends React.Component {
             },
             {
               icon: "check",
-              label: "Close",
+              label: closeDate ? "Open" : "Close",
               onPress: () => {
-                closeOrder(id)
-                  .then((result) => {
-                    if (result) {
-                      this.setState({
-                        actionMessage: "Ticket has been closed",
-                        // action: {
-                        //   label: "Undo",
-                        //   onPress: () => {
-                        //     openOrder(id)
-                        //       .then((res) => {
-                        //         if (res.status == 200) {
-                        //           this.setState({
-                        //             actionMessage: "Ticket has been re-opened",
-                        //           });
-                        //         } else {
-                        //           this.setState({
-                        //             actionMessage: "Could not undo",
-                        //           });
-                        //           console.error(res);
-                        //         }
-                        //       })
-                        //       .catch((err) => {
-                        //         console.error(err);
-                        //         this.setState({
-                        //           actionMessage: "Could not undo",
-                        //         });
-                        //       });
-                        //   },
-                        // },
-                      });
-                    } else {
-                      this.setState({ actionMessage: "Could not close. :(" });
-                      console.error(result);
-                    }
-                  })
-                  .catch((err) => {});
+                if (closeDate) {
+                  openOrder(id)
+                    .then((result) => {
+                      if (result) {
+                        this.props.navigation.navigate("Open", {
+                          snackMessage: "Ticket Reopened",
+                        });
+                      } else {
+                        console.log("nawfame");
+                      }
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                } else {
+                  closeOrder(id)
+                    .then((result) => {
+                      if (result) {
+                        this.setState({
+                          actionMessage: "Ticket has been closed",
+                          // action: {
+                          //   label: "Undo",
+                          //   onPress: () => {
+                          //     openOrder(id)
+                          //       .then((res) => {
+                          //         if (res.status == 200) {
+                          //           this.setState({
+                          //             actionMessage: "Ticket has been re-opened",
+                          //           });
+                          //         } else {
+                          //           this.setState({
+                          //             actionMessage: "Could not undo",
+                          //           });
+                          //           console.error(res);
+                          //         }
+                          //       })
+                          //       .catch((err) => {
+                          //         console.error(err);
+                          //         this.setState({
+                          //           actionMessage: "Could not undo",
+                          //         });
+                          //       });
+                          //   },
+                          // },
+                        });
+                      } else {
+                        this.setState({ actionMessage: "Could not close. :(" });
+                        console.error(result);
+                      }
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                }
               },
             },
             {

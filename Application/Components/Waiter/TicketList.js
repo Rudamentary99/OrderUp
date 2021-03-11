@@ -9,7 +9,7 @@ import {
   Subheading,
 } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { getOpenOrders } from "../../DB/orderController";
+import { getOrders } from "../../DB/orderController";
 const moment = require("moment"); // require
 const Tab = createMaterialTopTabNavigator();
 class TicketList extends React.Component {
@@ -23,6 +23,10 @@ class TicketList extends React.Component {
     this.willFocusSubscription = this.props.navigation.addListener(
       "focus",
       () => {
+        console.log(
+          " this.props.route?.params?.snackMessage ",
+          this.props.route?.params?.snackMessage
+        );
         this.setState({ snackMessage: this.props.route?.params?.snackMessage });
         this.loadData();
       }
@@ -38,7 +42,7 @@ class TicketList extends React.Component {
     this.loadData();
   }
   loadData() {
-    getOpenOrders()
+    getOrders(this.props.ticketType)
       .then((result) => {
         if (result) this.setState({ tickets: result });
         // console.log("result", result);
@@ -78,10 +82,7 @@ class TicketList extends React.Component {
                 <Card
                   key={ticket.id}
                   onPress={() => {
-                    this.props.navigation.navigate("Ticket Details", {
-                      id: ticket.id,
-                      table: ticket.table,
-                    });
+                    this.props.navigation.navigate("Ticket Details", ticket);
                   }}
                   style={{ height: 200, width: 200, margin: 20 }}
                 >
@@ -122,10 +123,10 @@ export default function WaiterTicketLists(props) {
   return (
     <Tab.Navigator initialRouteName="Open">
       <Tab.Screen name="Open">
-        {(props) => <TicketList {...props} />}
+        {(props) => <TicketList {...props} ticketType="open" />}
       </Tab.Screen>
       <Tab.Screen name="Closed">
-        {(props) => <TicketList {...props} />}
+        {(props) => <TicketList {...props} ticketType="closed" />}
       </Tab.Screen>
     </Tab.Navigator>
   );

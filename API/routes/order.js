@@ -6,12 +6,24 @@ module.exports = (rdbConn) => [
     method: "get",
     path: "/api/order/:type",
     fn: (req, res) => {
-      let filter = (row) => {
-        return row.hasFields("id");
-      };
-      if (req.params.type == "open") {
-        filter = (row) => row.hasFields("closeDate").not();
+      let filter;
+      switch (req.params.type) {
+        case "open": {
+          filter = (row) => row.hasFields("closeDate").not();
+          break;
+        }
+        case "closed": {
+          filter = (row) => row.hasFields("closeDate");
+          break;
+        }
+        default: {
+          filter = (row) => {
+            return row.hasFields("id");
+          };
+          break;
+        }
       }
+
       console.log("filter", filter);
       try {
         r.table("order")

@@ -3,12 +3,13 @@ import config from "../config";
 axios.default.baseURL = config.axios.baseURL;
 
 /**
- * Gets all open orders
+ * Gets all orders
+ * @param {string} type specifies filter {open, closed, all}
  * @returns {Array<Object>} orders
  */
-async function getOpenOrders() {
+async function getOrders(type) {
   return await axios
-    .get("api/order/open")
+    .get("api/order/" + type)
     .then((result) => {
       return result.data;
     })
@@ -141,7 +142,7 @@ async function cancelOrder(orderID) {
 }
 
 module.exports = {
-  getOpenOrders,
+  getOrders,
   getOpenOrdersFull,
   getOrderItems,
   createOrder,
