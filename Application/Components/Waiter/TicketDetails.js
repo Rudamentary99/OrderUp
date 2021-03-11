@@ -112,33 +112,36 @@ export default class TicketDetails extends React.Component {
                   closeOrder(id)
                     .then((result) => {
                       if (result) {
-                        this.setState({
-                          actionMessage: "Ticket has been closed",
-                          // action: {
-                          //   label: "Undo",
-                          //   onPress: () => {
-                          //     openOrder(id)
-                          //       .then((res) => {
-                          //         if (res.status == 200) {
-                          //           this.setState({
-                          //             actionMessage: "Ticket has been re-opened",
-                          //           });
-                          //         } else {
-                          //           this.setState({
-                          //             actionMessage: "Could not undo",
-                          //           });
-                          //           console.error(res);
-                          //         }
-                          //       })
-                          //       .catch((err) => {
-                          //         console.error(err);
-                          //         this.setState({
-                          //           actionMessage: "Could not undo",
-                          //         });
-                          //       });
-                          //   },
-                          // },
+                        this.props.navigation.navigate("Open", {
+                          snackMessage: "Ticket has been closed",
                         });
+                        // this.setState({
+                        //   actionMessage: "Ticket has been closed",
+                        //   // action: {
+                        //   //   label: "Undo",
+                        //   //   onPress: () => {
+                        //   //     openOrder(id)
+                        //   //       .then((res) => {
+                        //   //         if (res.status == 200) {
+                        //   //           this.setState({
+                        //   //             actionMessage: "Ticket has been re-opened",
+                        //   //           });
+                        //   //         } else {
+                        //   //           this.setState({
+                        //   //             actionMessage: "Could not undo",
+                        //   //           });
+                        //   //           console.error(res);
+                        //   //         }
+                        //   //       })
+                        //   //       .catch((err) => {
+                        //   //         console.error(err);
+                        //   //         this.setState({
+                        //   //           actionMessage: "Could not undo",
+                        //   //         });
+                        //   //       });
+                        //   //   },
+                        //   // },
+                        // });
                       } else {
                         this.setState({ actionMessage: "Could not close. :(" });
                         console.error(result);
@@ -187,7 +190,7 @@ export default class TicketDetails extends React.Component {
                 cancelOrder(id)
                   .then((result) => {
                     if (result) {
-                      this.props.navigation.navigate("Open Tickets", {
+                      this.props.navigation.navigate("Open", {
                         snackMessage: "Ticket has been canceled.",
                       });
                     } else
