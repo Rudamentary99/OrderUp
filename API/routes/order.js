@@ -232,7 +232,7 @@ module.exports = (rdbConn) => [
     fn: (req, res) => {
       r.table("order")
         .get(req.params.id)
-        .update({ closeDate: undefined })
+        .update({ closeDate: null })
         .run(rdbConn, (err, result) => {
           if (err || result.errors) {
             console.error(err);

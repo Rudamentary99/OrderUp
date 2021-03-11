@@ -43,13 +43,11 @@ export default function App() {
       card: "rgb(255, 255, 255)",
     },
   };
-  console.log("navTheme", navTheme);
-  // console.log("DefaultTheme", DefaultTheme);
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer theme={theme}>
         <Portal.Host>
-          <Drawer.Navigator initialRouteName="admin" conten>
+          <Drawer.Navigator initialRouteName="waiter" conten>
             <Drawer.Screen name="temp" component={tempScreen} />
             <Drawer.Screen name="admin" component={AdminNav} />
             <Drawer.Screen name="waiter" component={WaiterNav} />

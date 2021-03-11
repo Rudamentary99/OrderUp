@@ -8,9 +8,11 @@ import {
   Snackbar,
   Subheading,
 } from "react-native-paper";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { getOpenOrders } from "../../DB/orderController";
 const moment = require("moment"); // require
-export default class TicketList extends React.Component {
+const Tab = createMaterialTopTabNavigator();
+class TicketList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -115,4 +117,16 @@ export default class TicketList extends React.Component {
       </View>
     );
   }
+}
+export default function WaiterTicketLists(props) {
+  return (
+    <Tab.Navigator initialRouteName="Open">
+      <Tab.Screen name="Open">
+        {(props) => <TicketList {...props} />}
+      </Tab.Screen>
+      <Tab.Screen name="Closed">
+        {(props) => <TicketList {...props} />}
+      </Tab.Screen>
+    </Tab.Navigator>
+  );
 }
