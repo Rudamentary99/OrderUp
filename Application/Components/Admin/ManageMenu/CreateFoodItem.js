@@ -7,7 +7,11 @@ import {
 } from "react-native";
 import { Text, Button, TextInput, HelperText } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
-import { createFoodItem, updateFoodItem, getFoodTypes } from "../../../DB/foodController";
+import {
+  createFoodItem,
+  updateFoodItem,
+  getFoodTypes,
+} from "../../../DB/foodController";
 import DropDown from "react-native-paper-dropdown";
 function CreateFoodItem(props) {
   const [selectingFoodType, setSelectingFoodType] = React.useState(false);
@@ -27,6 +31,7 @@ function CreateFoodItem(props) {
     defaultValues: {
       name: "",
       prepTime: "",
+      price: "",
       foodType: "",
     },
     mode: "onChange",
@@ -61,6 +66,30 @@ function CreateFoodItem(props) {
         control={control}
         rules={{
           required: { value: true, message: "Prep Time is required" },
+          pattern: { value: /[0-9]+/, message: "not at number!" },
+        }}
+        render={({ onChange, value }) => {
+          return (
+            <View style={styles.controller}>
+              <TextInput
+                error={errors.prepTime}
+                onChangeText={(text) => onChange(text)}
+                value={value}
+                label="Prep Time"
+              />
+              <HelperText type="error" visible={errors.prepTime}>
+                {errors?.prepTime?.message}
+              </HelperText>
+            </View>
+          );
+        }}
+      />
+      <Controller
+        name="price"
+        error={errors.prepTime}
+        control={control}
+        rules={{
+          required: { value: true, message: "price is required" },
           pattern: { value: /[0-9]+/, message: "not at number!" },
         }}
         render={({ onChange, value }) => {

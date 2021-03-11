@@ -46,7 +46,7 @@ export default class TicketDetails extends React.Component {
 
   loadData() {
     console.log("loading data");
-    getOrderItems(this.props.route.params.id)
+    getOrderItems(this.props.route.params.ticket.id)
       .then((result) => {
         if (result) {
           this.setState({ ticketItems: result });
@@ -57,7 +57,10 @@ export default class TicketDetails extends React.Component {
       });
   }
   render() {
-    const { id, table, created, closeDate } = this.props.route.params;
+    const {
+      ticket: { id, table, created, closeDate },
+      onBack,
+    } = this.props.route.params;
     const getAction = () => {
       return {};
     };
@@ -190,9 +193,17 @@ export default class TicketDetails extends React.Component {
                 cancelOrder(id)
                   .then((result) => {
                     if (result) {
-                      this.props.navigation.navigate("Open", {
+                      this.props.navigation.goBack();
+                      this.props.navigation.setParams({
                         snackMessage: "Ticket has been canceled.",
                       });
+                      // onBack({
+                      //   snackMessage: "Ticket has been canceled.",
+                      // });
+
+                      // this.props.navigation.navigate("parent", {
+                      //   snackMessage: "Ticket has been canceled.",
+                      // });
                     } else
                       this.setState({ actionMessage: "Something went wrong!" });
                   })

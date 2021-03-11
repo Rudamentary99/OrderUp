@@ -23,10 +23,6 @@ class TicketList extends React.Component {
     this.willFocusSubscription = this.props.navigation.addListener(
       "focus",
       () => {
-        console.log(
-          " this.props.route?.params?.snackMessage ",
-          this.props.route?.params?.snackMessage
-        );
         this.setState({ snackMessage: this.props.route?.params?.snackMessage });
         this.loadData();
       }
@@ -41,6 +37,12 @@ class TicketList extends React.Component {
   tick() {
     this.loadData();
   }
+  onBack(params) {
+    console.log("running goBack");
+    console.log("params", params);
+    this.setState(params);
+  }
+
   loadData() {
     getOrders(this.props.ticketType)
       .then((result) => {
@@ -82,7 +84,10 @@ class TicketList extends React.Component {
                 <Card
                   key={ticket.id}
                   onPress={() => {
-                    this.props.navigation.navigate("Ticket Details", ticket);
+                    this.props.navigation.navigate("Ticket Details", {
+                      ticket,
+                      onBack: this.onBack,
+                    });
                   }}
                   style={{ height: 200, width: 200, margin: 20 }}
                 >
@@ -95,7 +100,7 @@ class TicketList extends React.Component {
               ))
             ) : (
               <Subheading style={{ margin: 50 }}>
-                You have no open orders.
+                You have no {this.props.ticketType} orders.
               </Subheading>
             )}
           </View>
