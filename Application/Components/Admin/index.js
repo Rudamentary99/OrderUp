@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 const AdminNav = () => {
   return (
     <Stack.Navigator
-      initialRouteName="admin-overview"
+      initialRouteName="Manage Menu"
       headerMode="none"
       // screenOptions={{
       //   header: MyAppbar,

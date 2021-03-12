@@ -165,31 +165,7 @@ class FoodMain extends React.Component {
             }
           });
 
-        return foodItems
-          .sort(({ name: aName }, { name: bName }) =>
-            aName < bName ? -1 : aName > bName ? 1 : 0
-          )
-          .map((food) => (
-            <FoodItem
-              key={food.id}
-              {...food}
-              onArchive={(pID) => {
-                const archivee = foodItems.find(({ id }) => id == pID);
-                updateFoodItem({ ...archivee, archived: true })
-                  .then((result) => {
-                    console.log("result", result);
-                    if (result) {
-                      removeFoodItem(pID);
-                      this.setState({ archived: archivee });
-                    }
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                  });
-              }}
-              style={{ margin: 10 }}
-            />
-          ));
+       
       }
 
       return (
