@@ -181,6 +181,7 @@ class CreateTicket extends React.Component {
     const { ticketItems } = this.state;
     return (
       <KeyboardAvoidingView
+        enabled={false}
         behavior="height"
         style={[StyleSheet.absoluteFill, { flex: 1, flexDirection: "row" }]}
       >
@@ -246,7 +247,10 @@ class CreateTicket extends React.Component {
             }}
           />
         </View>
-        <Dialog visible={this.state.getTableNumber}>
+        <Dialog
+          visible={this.state.getTableNumber}
+          style={{ marginBottom: 400 }}
+        >
           <Dialog.Content>
             <TextInput
               label="Table Number"
