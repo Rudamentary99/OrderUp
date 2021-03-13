@@ -192,7 +192,13 @@ class CreateTicket extends React.Component {
             padding: 20,
           }}
         >
-          <Headline>{`Order for table #${this.state.table}:`}</Headline>
+          <TouchableHighlight
+            onPress={() => {
+              this.setState({ getTableNumber: true });
+            }}
+          >
+            <Headline>{`Order for table #${this.state.table}:`}</Headline>
+          </TouchableHighlight>
           <Divider />
           <TicketListPane
             ticketItems={ticketItems}
@@ -283,6 +289,7 @@ class EditTicket extends React.Component {
       foodTypes: [],
       ticketItems: [],
       removedItems: [],
+      getTableNumber: false,
       table: this.props.route.params.table,
     };
   }
@@ -319,8 +326,7 @@ class EditTicket extends React.Component {
     const { ticketItems, removedItems } = this.state;
     console.log("removedItems", removedItems);
     return (
-      <KeyboardAvoidingView
-        behavior="height"
+      <View
         style={[StyleSheet.absoluteFill, { flex: 1, flexDirection: "row" }]}
       >
         <Surface
@@ -330,7 +336,13 @@ class EditTicket extends React.Component {
             padding: 20,
           }}
         >
-          <Headline>{`Order for table #${this.state.table}:`}</Headline>
+          <TouchableHighlight
+            onPress={() => {
+              this.setState({ getTableNumber: true });
+            }}
+          >
+            <Headline>{`Order for table #${this.state.table}:`}</Headline>
+          </TouchableHighlight>
           <Divider />
           <TicketListPane
             ticketItems={ticketItems}
@@ -391,7 +403,31 @@ class EditTicket extends React.Component {
             }}
           />
         </View>
-      </KeyboardAvoidingView>
+        <Dialog
+          visible={this.state.getTableNumber}
+          style={{ marginBottom: 400 }}
+        >
+          <Dialog.Content>
+            <TextInput
+              label="Table Number"
+              value={this.state.table}
+              onChangeText={(text) => {
+                this.setState({ table: text });
+              }}
+              autoFocus
+            ></TextInput>
+          </Dialog.Content>
+          <Dialog.Actions style={{ justifyContent: "center" }}>
+            <Button
+              onPress={() => {
+                this.setState({ getTableNumber: false });
+              }}
+            >
+              Enter
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </View>
     );
   }
 }
