@@ -98,18 +98,22 @@ class FoodDetails extends React.Component {
           ...StyleSheet.absoluteFill,
           padding: 50,
           paddingHorizontal: 80,
+          justifyContent: "space-between",
         }}
       >
-        <Headline>{name || "Food Details!"}</Headline>
-        <Subheading>Prep Time: {prepTime}</Subheading>
-        <Subheading>Food Type: {foodType}</Subheading>
+        <View>
+          <Headline>{name || "Food Details!"}</Headline>
+          <Subheading>Prep Time: {prepTime}</Subheading>
+          <Subheading>Food Type: {foodType}</Subheading>
+        </View>
+
         {/* <View>
           <Subheading>Ingredients:</Subheading>
         </View>
         <View>
           <Subheading>Tags:</Subheading>
         </View> */}
-        <Headline>Price: {price}</Headline>
+        <Headline style={{}}>Price: ${price}</Headline>
         <FAB
           icon="pencil"
           onPress={() => {

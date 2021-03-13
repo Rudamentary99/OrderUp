@@ -111,8 +111,8 @@ function CreateFoodItem(props) {
                   value={value}
                   label="Price ($)"
                 />
-                <HelperText type="error" visible={errors.price}>
-                  {errors?.price?.message}
+                <HelperText type="error" visible={Boolean(errors.price)}>
+                  {errors.price?.message}
                 </HelperText>
               </View>
             );
@@ -263,7 +263,7 @@ function EditFoodItem(props) {
                   value={value}
                   label="Price ($)"
                 />
-                <HelperText type="error" visible={errors.price}>
+                <HelperText type="error" visible={Boolean(errors.price)}>
                   {errors?.price?.message}
                 </HelperText>
               </View>
