@@ -92,7 +92,6 @@ class FoodDetails extends React.Component {
         params: { name, prepTime, foodType, price },
       },
     } = this.props;
-    console.log("this.props.route.params", this.props.route.params);
     return (
       <View
         style={{
