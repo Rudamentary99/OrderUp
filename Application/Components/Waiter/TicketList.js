@@ -10,6 +10,7 @@ import {
 } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { getOrders } from "../../DB/orderController";
+
 const moment = require("moment"); // require
 const Tab = createMaterialTopTabNavigator();
 class TicketList extends React.Component {

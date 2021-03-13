@@ -17,6 +17,8 @@ import {
   Portal,
   Subheading,
 } from "react-native-paper";
+import { v4 as uuidv4 } from "uuid";
+import "react-native-get-random-values";
 import TagInput from "../../helpers/TagInput";
 import {
   getFoodItems,
@@ -131,7 +133,7 @@ class FoodMain extends React.Component {
             if (foodItems.find(({ foodType }) => name == foodType)) {
               return (
                 <>
-                  <Subheading key={id}>{name}</Subheading>
+                  <Subheading key={id + "-" + uuidv4()}>{name}</Subheading>
                   {foodItems
                     .filter(({ foodType }) => foodType == name)
                     .sort(({ name: aName }, { name: bName }) =>
@@ -139,8 +141,8 @@ class FoodMain extends React.Component {
                     )
                     .map((food) => (
                       <FoodItem
-                        key={food.id}
-                        {...food}
+                        key={food.id + "-" + uuidv4()}
+                        item={food}
                         onArchive={(pID) => {
                           const archivee = foodItems.find(
                             ({ id }) => id == pID
@@ -164,8 +166,6 @@ class FoodMain extends React.Component {
               );
             }
           });
-
-       
       }
 
       return (

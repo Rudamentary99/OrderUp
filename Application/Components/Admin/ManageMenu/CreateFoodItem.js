@@ -96,7 +96,7 @@ function CreateFoodItem(props) {
         />
         <Controller
           name="price"
-          error={errors.prepTime}
+          error={errors.price}
           control={control}
           rules={{
             required: { value: true, message: "price is required" },
@@ -106,13 +106,13 @@ function CreateFoodItem(props) {
             return (
               <View style={styles.controller}>
                 <TextInput
-                  error={errors.prepTime}
+                  error={errors.price}
                   onChangeText={(text) => onChange(text)}
                   value={value}
                   label="Price ($)"
                 />
-                <HelperText type="error" visible={errors.prepTime}>
-                  {errors?.prepTime?.message}
+                <HelperText type="error" visible={errors.price}>
+                  {errors?.price?.message}
                 </HelperText>
               </View>
             );
@@ -142,10 +142,10 @@ function CreateFoodItem(props) {
                   }}
                   inputProps={{ error: errors?.foodType }}
                   list={foodTypes.map((foodType) => {
-                    console.log("foodType", foodType);
                     return { value: foodType.name, label: foodType.name };
                   })}
                 />
+
                 <HelperText type="error" visible={errors?.foodType}>
                   {errors?.foodType?.message}
                 </HelperText>
@@ -155,6 +155,7 @@ function CreateFoodItem(props) {
         />
         <Button
           onPress={handleSubmit((data) => {
+            console.log("data", data);
             createFoodItem({ ...data, archived: false })
               .then((result) => {
                 // console.log("result", result);
@@ -285,7 +286,6 @@ function EditFoodItem(props) {
                 }}
                 inputProps={{ error: errors?.foodType }}
                 list={foodTypes.map((foodType) => {
-                  console.log("foodType", foodType);
                   return { value: foodType.name, label: foodType.name };
                 })}
               />

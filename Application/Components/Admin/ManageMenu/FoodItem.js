@@ -14,13 +14,17 @@ import {
   TextInput,
 } from "react-native-paper";
 function FoodItem(props) {
-  const { id, name, prepTime, foodType, style, onArchive } = props;
-  const item = {
-    id,
-    name,
-    prepTime,
-    foodType,
-  };
+  const {
+    item: { id, name, prepTime, foodType },
+    style,
+    onArchive,
+  } = props;
+  // const item = {
+  //   id,
+  //   name,
+  //   prepTime,
+  //   foodType,
+  // };
   const [show, setShow] = React.useState(false);
   const navigation = useNavigation();
   return (
@@ -34,7 +38,7 @@ function FoodItem(props) {
           style={style}
           key={id}
           onPress={() => {
-            navigation.navigate("Food Details", item);
+            navigation.navigate("Food Details", props.item);
           }}
           onLongPress={() => {
             setShow(true);
@@ -85,9 +89,10 @@ class FoodDetails extends React.Component {
   render() {
     const {
       route: {
-        params: { name, prepTime, foodType },
+        params: { name, prepTime, foodType, price },
       },
     } = this.props;
+    console.log("this.props.route.params", this.props.route.params);
     return (
       <View
         style={{
@@ -105,6 +110,7 @@ class FoodDetails extends React.Component {
         <View>
           <Subheading>Tags:</Subheading>
         </View> */}
+        <Headline>Price: {price}</Headline>
         <FAB
           icon="pencil"
           onPress={() => {
