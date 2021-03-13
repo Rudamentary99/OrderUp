@@ -18,6 +18,7 @@ import {
   Dialog,
   Divider,
   Headline,
+  Subheading,
   Surface,
   TextInput,
 } from "react-native-paper";
@@ -53,6 +54,13 @@ const FoodListPane = (props) => {
                 }}
               >
                 <Card.Title title={food.name}></Card.Title>
+                <Card.Content style={{ flexDirection: "row" }}>
+                  <Subheading
+                    style={{ alignSelf: "flex-end", marginLeft: "auto" }}
+                  >
+                    ${food.price}
+                  </Subheading>
+                </Card.Content>
               </Card>
             ))}
         </ScrollView>
@@ -210,6 +218,12 @@ class CreateTicket extends React.Component {
               });
             }}
           />
+          <Subheading>
+            Total: $
+            {ticketItems.reduce(
+              (runningTotal, { price }) => runningTotal + price
+            )}
+          </Subheading>
           <Button
             onPress={() => {
               createOrder({
@@ -325,6 +339,7 @@ class EditTicket extends React.Component {
   render() {
     const { ticketItems, removedItems } = this.state;
     console.log("removedItems", removedItems);
+
     return (
       <View
         style={[StyleSheet.absoluteFill, { flex: 1, flexDirection: "row" }]}
@@ -357,6 +372,14 @@ class EditTicket extends React.Component {
               }
             }}
           />
+          <Subheading>
+            Total: $
+            {ticketItems.length
+              ? ticketItems.reduce(
+                  (runningTotal, { price }) => runningTotal + Number(price)
+                )
+              : "0.00"}
+          </Subheading>
           <Button
             onPress={() => {
               updateOrderItems({

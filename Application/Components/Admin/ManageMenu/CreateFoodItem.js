@@ -76,7 +76,7 @@ function CreateFoodItem(props) {
           control={control}
           rules={{
             required: { value: true, message: "Prep Time is required" },
-            pattern: { value: /[0-9]+/, message: "not at number!" },
+            pattern: { value: /^\d+$/, message: "not a number!" },
           }}
           render={({ onChange, value }) => {
             return (
@@ -85,7 +85,7 @@ function CreateFoodItem(props) {
                   error={errors.prepTime}
                   onChangeText={(text) => onChange(text)}
                   value={value}
-                  label="Prep Time"
+                  label="Prep Time (min)"
                 />
                 <HelperText type="error" visible={errors.prepTime}>
                   {errors?.prepTime?.message}
@@ -228,7 +228,7 @@ function EditFoodItem(props) {
           control={control}
           rules={{
             required: { value: true, message: "Prep Time is required" },
-            pattern: { value: /[0-9]+/, message: "not at number!" },
+            pattern: { value: /^\d+$/, message: "not a number!" },
           }}
           render={({ onChange, value }) => {
             return (
@@ -237,7 +237,7 @@ function EditFoodItem(props) {
                   error={errors.prepTime}
                   onChangeText={(text) => onChange(text)}
                   value={value}
-                  label="Prep Time"
+                  label="Prep Time (min)"
                 />
                 <HelperText type="error" visible={errors.prepTime}>
                   {errors?.prepTime?.message}
@@ -252,7 +252,7 @@ function EditFoodItem(props) {
           control={control}
           rules={{
             required: { value: true, message: "Price is required" },
-            pattern: { value: /[0-9]+\.?[0-9]+/, message: "not at number!" },
+            pattern: { value: /[0-9]+\.?[0-9]+/, message: "not a number!" },
           }}
           render={({ onChange, value }) => {
             return (
