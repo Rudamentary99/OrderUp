@@ -44,6 +44,7 @@ export default function App() {
       accent: "#98ded9",
       primary: "#161d6f",
       card: "rgb(255, 255, 255)",
+      text: "#1e212d",
     },
   };
   return (
