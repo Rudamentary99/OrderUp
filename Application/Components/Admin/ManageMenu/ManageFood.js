@@ -233,7 +233,7 @@ class FoodMain extends React.Component {
 export default function ManageFood(props) {
   return (
     <Stack.Navigator initialRouteName="main" headerMode="float">
-      <Stack.Screen name="Foot Items" component={FoodMain} />
+      <Stack.Screen name="Food Items" component={FoodMain} />
       <Stack.Screen name="create-food" component={ManageFoodItem} />
       <Stack.Screen name="Food Details" component={FoodDetails} />
       <Stack.Screen name="Edit Food" component={ManageFoodItem} />
