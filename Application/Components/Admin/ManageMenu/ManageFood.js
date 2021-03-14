@@ -25,7 +25,7 @@ import {
   getFoodTypes,
   updateFoodItem,
 } from "../../../DB/foodController";
-import { CreateFoodItem, EditFoodItem } from "./CreateFoodItem";
+import { ManageFoodItem } from "./ManageFoodItem";
 import { FoodItem, FoodDetails } from "./FoodItem";
 const Stack = createStackNavigator();
 const MenuBar = ({ navigation }) => {
@@ -73,13 +73,7 @@ class FoodMain extends React.Component {
     this.state = {
       foodItems: [],
       doCreateFoodItem: false,
-      newFoodItem: {
-        name: "",
-        prepTime: "",
-        ingredients: [],
-        tags: [],
-        archived: false,
-      },
+
       refreshing: false,
       prepTimeHasError: false,
       archived: null,
@@ -87,13 +81,8 @@ class FoodMain extends React.Component {
   }
   componentDidMount() {
     this.focusListener = this.props.navigation.addListener("focus", () => {
-      if (this.props?.route?.params) {
-        this.setState({
-          foodItems: [...this.state.foodItems, this.props?.route?.params],
-        });
-      }
+      this.loadFood();
     });
-    console.log("this.focusListener", this.focusListener);
     this.loadFood();
     getFoodTypes()
       .then((result) => {
@@ -244,10 +233,10 @@ class FoodMain extends React.Component {
 export default function ManageFood(props) {
   return (
     <Stack.Navigator initialRouteName="main" headerMode="float">
-      <Stack.Screen name="main" component={FoodMain} />
-      <Stack.Screen name="create-food" component={CreateFoodItem} />
+      <Stack.Screen name="Foot Items" component={FoodMain} />
+      <Stack.Screen name="create-food" component={ManageFoodItem} />
       <Stack.Screen name="Food Details" component={FoodDetails} />
-      <Stack.Screen name="Edit Food" component={EditFoodItem} />
+      <Stack.Screen name="Edit Food" component={ManageFoodItem} />
     </Stack.Navigator>
   );
 }
