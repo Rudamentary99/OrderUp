@@ -101,7 +101,6 @@ const FoodListPane = (props) => {
 
 const TicketListPane = (props) => {
   const { ticketItems, onRemove } = props;
-  const [openSwipable, setOpenSwipable] = React.useState(null);
   return (
     <SwipeList
       renderItem={(data) => {
@@ -116,8 +115,11 @@ const TicketListPane = (props) => {
             }}
             underlayColor={"#AAA"}
           >
-            <View>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
               <Text style={{ fontSize: 19 }}>- {data.item.name}</Text>
+              <Text>${data.item.price}</Text>
             </View>
           </TouchableHighlight>
         );
