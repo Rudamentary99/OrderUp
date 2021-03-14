@@ -36,10 +36,13 @@ const tempScreen = ({ navigation }) => {
 };
 
 export default function App() {
+  console.log(`DefaultTheme.colors`, DefaultTheme.colors);
   const theme = {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
+      accent: "#98ded9",
+      primary: "#161d6f",
       card: "rgb(255, 255, 255)",
     },
   };
