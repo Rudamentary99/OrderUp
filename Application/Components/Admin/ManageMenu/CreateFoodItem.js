@@ -10,7 +10,6 @@ import {
 import { Text, Button, TextInput, HelperText } from "react-native-paper";
 import { useHeaderHeight } from "@react-navigation/stack";
 import { useForm, Controller } from "react-hook-form";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   createFoodItem,
   updateFoodItem,
