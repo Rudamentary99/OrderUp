@@ -6,7 +6,7 @@ axios.defaults.baseURL = config.axios.baseURL;
  * @param {Boolean} archived get archived or non-archived
  * @returns {Object[]}
  */
-async function getFoodItems(archived) {
+export async function getFoodItems(archived) {
   const result = await axios
     .get("/api/foods/" + archived)
     .then((result) => {
@@ -24,7 +24,7 @@ async function getFoodItems(archived) {
  * @param {string} id
  * @returns {object} FoodItem
  */
-async function getFoodItem(id) {
+export async function getFoodItem(id) {
   return await axios
     .get(`api/food/${id}`)
     .then((result) => {
@@ -40,7 +40,7 @@ async function getFoodItem(id) {
  * @param {Object} foodItem
  * @returns {Object} data (reaturns object containing the id of new food)
  */
-async function createFoodItem(foodItem) {
+export async function createFoodItem(foodItem) {
   return await axios
     .post("/api/food/", foodItem)
     .then((result) => {
@@ -56,7 +56,7 @@ async function createFoodItem(foodItem) {
  * @param {Object} foodItem
  * @returns {Boolean} success
  */
-async function updateFoodItem(foodItem) {
+export async function updateFoodItem(foodItem) {
   const result = await axios
     .post("/api/food/" + foodItem.id + "/update", foodItem)
     .then((result) => {
@@ -74,7 +74,7 @@ async function updateFoodItem(foodItem) {
 /**
  * @returns {Array} FoodTypes
  */
-async function getFoodTypes() {
+export async function getFoodTypes() {
   return await axios
     .get("/api/foodTypes/")
     .then((result) => {
@@ -84,10 +84,3 @@ async function getFoodTypes() {
       console.error(err);
     });
 }
-module.exports = {
-  getFoodItems,
-  getFoodItem,
-  createFoodItem,
-  updateFoodItem,
-  getFoodTypes,
-};

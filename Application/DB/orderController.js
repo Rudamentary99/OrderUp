@@ -7,7 +7,7 @@ axios.default.baseURL = config.axios.baseURL;
  * @param {string} type specifies filter {open, closed, all}
  * @returns {Array<Object>} orders
  */
-async function getOrders(type) {
+export async function getOrders(type) {
   return await axios
     .get("api/order/" + type)
     .then((result) => {
@@ -22,7 +22,7 @@ async function getOrders(type) {
  * Gets Open orders and their foodItems
  * @returns {Object} orders
  */
-async function getOpenOrdersFull() {
+export async function getOpenOrdersFull() {
   return await axios
     .get("api/order/full/open")
     .then((result) => {
@@ -36,7 +36,7 @@ async function getOpenOrdersFull() {
  * Gets all orderItems for a specific order
  * @param {string} orderID
  */
-async function getOrderItems(orderID) {
+export async function getOrderItems(orderID) {
   return await axios
     .get("/api/orderItems/" + orderID)
     .then((result) => {
@@ -52,7 +52,7 @@ async function getOrderItems(orderID) {
  * @param {Object} order
  * @returns {boolean} declares success or failure
  */
-async function createOrder(order) {
+export async function createOrder(order) {
   return await axios
     .post("api/order/", order)
     .then((result) => {
@@ -69,7 +69,7 @@ async function createOrder(order) {
  * @param {Object} order
  * @returns {Boolean} success
  */
-async function updateOrderItems(order) {
+export async function updateOrderItems(order) {
   return await axios
     .post("/api/order/" + order.id, order)
     .then((result) => {
@@ -86,7 +86,7 @@ async function updateOrderItems(order) {
  * @param {string} orderID id of order you want to close
  * @returns {Boolean} success
  */
-async function closeOrder(orderID) {
+export async function closeOrder(orderID) {
   return await axios
     .post(`/api/order/${orderID}/close`)
     .then((result) => {
@@ -106,7 +106,7 @@ async function closeOrder(orderID) {
  * @param {string} orderID id of order you want to open
  * @returns {Boolean} success
  */
-async function openOrder(orderID) {
+export async function openOrder(orderID) {
   return await axios
     .post(`/api/order/${orderID}/open`)
     .then((result) => {
@@ -126,7 +126,7 @@ async function openOrder(orderID) {
  * @param {string} orderID id of order you want to cancel
  * @returns {Boolean} success
  */
-async function cancelOrder(orderID) {
+export async function cancelOrder(orderID) {
   return await axios
     .post(`/api/order/${orderID}/cancel`)
     .then((result) => {
@@ -140,14 +140,3 @@ async function cancelOrder(orderID) {
       console.error(err);
     });
 }
-
-module.exports = {
-  getOrders,
-  getOpenOrdersFull,
-  getOrderItems,
-  createOrder,
-  updateOrderItems,
-  closeOrder,
-  openOrder,
-  cancelOrder,
-};

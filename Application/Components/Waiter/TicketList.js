@@ -61,27 +61,27 @@ class TicketList extends React.Component {
 
     return (
       <View style={StyleSheet.absoluteFill}>
-        <ScrollView
-          style={{
-            position: "relative",
-            top: 0,
-            bottom: 0,
-            right: 0,
-            left: 0,
-          }}
-        >
-          <View
+        {this.state.tickets?.length ? (
+          <ScrollView
             style={{
               position: "relative",
+              top: 0,
+              bottom: 0,
               right: 0,
               left: 0,
-              flexWrap: "wrap",
-              flexDirection: "row",
-              //backgroundColor: "#f59042",
             }}
           >
-            {this.state?.tickets?.length ? (
-              this.state.tickets.map((ticket) => (
+            <View
+              style={{
+                position: "relative",
+                right: 0,
+                left: 0,
+                flexWrap: "wrap",
+                flexDirection: "row",
+                //backgroundColor: "#f59042",
+              }}
+            >
+              {this.state.tickets.map((ticket) => (
                 <Card
                   key={ticket.id}
                   onPress={() => {
@@ -98,14 +98,19 @@ class TicketList extends React.Component {
                     {ticket.closeDate && <Text>Closed</Text>}
                   </Card.Content>
                 </Card>
-              ))
-            ) : (
-              <Subheading style={{ margin: 50 }}>
-                You have no {this.props.ticketType} orders.
-              </Subheading>
-            )}
+              ))}
+            </View>
+          </ScrollView>
+        ) : (
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              { justifyContent: "center", alignItems: "center" },
+            ]}
+          >
+            <Headline>You have no {this.props.ticketType} orders.</Headline>
           </View>
-        </ScrollView>
+        )}
         <FAB
           icon="plus"
           onPress={() => {
