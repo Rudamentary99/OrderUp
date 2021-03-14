@@ -187,6 +187,14 @@ class CreateTicket extends React.Component {
   }
   render() {
     const { ticketItems } = this.state;
+    console.log("ticketItems", ticketItems);
+    const getTotal = () => {
+      const total = ticketItems.reduce((runningTotal, item) => {
+        return { price: Number(runningTotal.price) + Number(item.price) };
+      });
+      console.log("total", total);
+      return total.price;
+    };
     return (
       <KeyboardAvoidingView
         enabled={false}
@@ -219,10 +227,7 @@ class CreateTicket extends React.Component {
             }}
           />
           <Subheading>
-            Total: $
-            {ticketItems.reduce(
-              (runningTotal, { price }) => runningTotal + price
-            )}
+            Total: ${ticketItems.length ? getTotal() : "0.00"}
           </Subheading>
           <Button
             onPress={() => {
@@ -339,7 +344,13 @@ class EditTicket extends React.Component {
   render() {
     const { ticketItems, removedItems } = this.state;
     console.log("removedItems", removedItems);
-
+    const getTotal = () => {
+      const total = ticketItems.reduce((runningTotal, item) => {
+        return { price: Number(runningTotal.price) + Number(item.price) };
+      });
+      console.log("total", total);
+      return total.price;
+    };
     return (
       <View
         style={[StyleSheet.absoluteFill, { flex: 1, flexDirection: "row" }]}
@@ -373,12 +384,7 @@ class EditTicket extends React.Component {
             }}
           />
           <Subheading>
-            Total: $
-            {ticketItems.length
-              ? ticketItems.reduce(
-                  (runningTotal, { price }) => runningTotal + Number(price)
-                )
-              : "0.00"}
+            Total: ${ticketItems.length ? getTotal() : "0.00"}
           </Subheading>
           <Button
             onPress={() => {

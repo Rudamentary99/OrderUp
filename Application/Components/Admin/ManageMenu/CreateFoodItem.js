@@ -100,7 +100,7 @@ function CreateFoodItem(props) {
           control={control}
           rules={{
             required: { value: true, message: "price is required" },
-            pattern: { value: /[0-9]+\.?[0-9]+/, message: "not at number!" },
+            pattern: { value: /^\d+\.?\d+$/, message: "not at number!" },
           }}
           render={({ onChange, value }) => {
             return (
@@ -252,7 +252,7 @@ function EditFoodItem(props) {
           control={control}
           rules={{
             required: { value: true, message: "Price is required" },
-            pattern: { value: /[0-9]+\.?[0-9]+/, message: "not a number!" },
+            pattern: { value: /^\d+\.?\d*$/, message: "not a number!" },
           }}
           render={({ onChange, value }) => {
             return (
