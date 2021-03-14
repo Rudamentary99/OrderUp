@@ -1,4 +1,7 @@
 import React from "react";
+
+import { v4 as uuidv4 } from "uuid";
+import "react-native-get-random-values";
 import {
   SafeAreaView,
   ScrollView,
@@ -6,8 +9,16 @@ import {
   View,
   KeyboardAvoidingView,
   KeyboardAvoidingViewBase,
+  TextInput as PlainInput,
 } from "react-native";
-import { Text, Button, TextInput, HelperText } from "react-native-paper";
+import {
+  Text,
+  Button,
+  TextInput,
+  HelperText,
+  List,
+  IconButton,
+} from "react-native-paper";
 import { useHeaderHeight } from "@react-navigation/stack";
 import { useForm, Controller } from "react-hook-form";
 import {
@@ -16,9 +27,11 @@ import {
   getFoodTypes,
 } from "../../../DB/foodController";
 import DropDown from "react-native-paper-dropdown";
+import { ListInput } from "../../helpers/ListInput";
 export function ManageFoodItem(props) {
   const [selectingFoodType, setSelectingFoodType] = React.useState(false);
   const [foodTypes, setFoodTypes] = React.useState([]);
+  const [tempIngredient, setTempIngredient] = React.useState("");
   React.useEffect(() => {
     if (!foodTypes.length)
       getFoodTypes()
@@ -36,7 +49,7 @@ export function ManageFoodItem(props) {
       prepTime: "",
       price: "",
       foodType: "",
-      ingredietns: [],
+      ingredients: [],
       ...props.route.params, //override if editing
     },
     mode: "onChange",
@@ -151,6 +164,64 @@ export function ManageFoodItem(props) {
                   {errors?.foodType?.message}
                 </HelperText>
               </>
+            );
+          }}
+        />
+        <Controller
+          name="ingredients"
+          control={control}
+          render={({ onChange, value }) => {
+            return (
+              <ListInput
+                listTitle="Ingredients"
+                inputTitle="New Ingredient"
+                items={value}
+                onChange={(newIngredient) => {
+                  onChange([...value, newIngredient]);
+                }}
+                onRemove={(index) => {
+                  let temp = value;
+                  temp.splice(index);
+                  onChange([...temp]);
+                }}
+                sortFunction={(a, b) => a.localeCompare(b)}
+              />
+              // <View>
+              //   <List.Accordion title="Ingredients">
+              //     <TextInput
+              //       label="New Ingredient"
+              //       value={tempIngredient}
+              //       onChangeText={(text) => {
+              //         setTempIngredient(text);
+              //       }}
+              //       onSubmitEditing={(ev) => {
+              //         onChange([...value, tempIngredient]);
+              //         setTempIngredient("");
+              //       }}
+              //     />
+              //     {value
+              //       .sort((a, b) => a.localeCompare(b))
+              //       .map((ingredient, index) => (
+              //         <List.Item
+              //           key={uuidv4()}
+              //           title={ingredient}
+              //           right={() => (
+              //             <IconButton
+              //               icon="close"
+              //               onPress={() => {
+              //                 console.log("pressed close");
+              //                 let tempList = value;
+              //                 tempList.splice(index);
+              //                 console.log(`tempList`, tempList);
+              //                 onChange(tempList);
+              //                 console.log(`value`, value);
+              //               }}
+              //             ></IconButton>
+              //           )}
+              //         />
+              //       ))}
+              //   </List.Accordion>
+              // </View>
             );
           }}
         />
