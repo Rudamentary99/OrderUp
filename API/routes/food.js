@@ -21,7 +21,6 @@ module.exports = (rdbConn) => [
     method: "get",
     path: "/api/food/:id",
     fn: (req, res) => {
-      //console.log("req.params", req.params);
       r.table("food")
         .get(req?.params?.id)
         .run(rdbConn, (err, result) => {

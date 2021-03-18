@@ -101,6 +101,23 @@ module.exports = (rdbConn) => [
     },
   },
   {
+    method: "get",
+    path: "/api/orderItem/:id",
+    fn: (req, res) => {
+      r.table("orderItem")
+        .get(req.params.id)
+        .run(rdbConn, (err, result) => {
+          if (err) {
+            console.error(err);
+            res.status(400).send({ message: "ran into an err", error: err });
+          } else {
+            console.log(`result`, result);
+            res.send();
+          }
+        });
+    },
+  },
+  {
     method: "post",
     path: "/api/order",
     fn: (req, res) => {

@@ -46,7 +46,16 @@ export async function getOrderItems(orderID) {
       console.error(err);
     });
 }
-
+export async function getOrderItem(orderItemID) {
+  return await axios
+    .get("/api/orderItem/" + orderItemID)
+    .then((result) => {
+      console.log(`result`, result);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
 /**
  * creates order with the attributes of the passed object
  * @param {Object} order

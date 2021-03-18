@@ -36,7 +36,6 @@ const tempScreen = ({ navigation }) => {
 };
 
 export default function App() {
-  console.log(`DefaultTheme.colors`, DefaultTheme.colors);
   const theme = {
     ...DefaultTheme,
     colors: {
@@ -51,9 +50,9 @@ export default function App() {
     <PaperProvider theme={theme}>
       <NavigationContainer theme={theme}>
         <Portal.Host>
-          <Drawer.Navigator initialRouteName="waiter" conten>
+          <Drawer.Navigator initialRouteName="kitchen">
             <Drawer.Screen name="temp" component={tempScreen} />
-            <Drawer.Screen name="admin" component={AdminNav} />
+            <Drawer.Screen name="manager" component={AdminNav} />
             <Drawer.Screen name="waiter" component={WaiterNav} />
             <Drawer.Screen name="kitchen" component={KitchenNav} />
           </Drawer.Navigator>

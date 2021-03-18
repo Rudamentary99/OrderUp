@@ -233,7 +233,10 @@ export function ManageFoodItem(props) {
                 .then((success) => {
                   // console.log("result", result);
                   if (success)
-                    props.navigation.navigate("Food Details", newItem);
+                    props.navigation.navigate(
+                      "Food Details",
+                      props.route.params
+                    );
                   else
                     console.error(
                       "something went wrong. could not update FoodItem"

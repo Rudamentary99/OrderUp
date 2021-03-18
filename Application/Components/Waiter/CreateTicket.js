@@ -1,6 +1,7 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
+
 import {
   View,
   Text,
@@ -45,6 +46,7 @@ const FoodListPane = (props) => {
             })
             .map((food, index) => (
               <Card
+                key={uuidv4()}
                 style={{ margin: 10 }}
                 onPress={() => {
                   if (onSelect) onSelect(food);
