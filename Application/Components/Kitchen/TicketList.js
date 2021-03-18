@@ -5,7 +5,14 @@ momenDurationFormatSetup(moment);
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
 import { View, ScrollView, StyleSheet } from "react-native";
-import { Card, Headline, List, Snackbar, Text } from "react-native-paper";
+import {
+  Card,
+  Headline,
+  List,
+  Snackbar,
+  Text,
+  Subheading,
+} from "react-native-paper";
 import { getOpenOrdersFull, updateOrderItem } from "../../DB/orderController";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
 import { closeOrder } from "../../DB/orderController";
@@ -13,7 +20,8 @@ import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
 const TicketItem = (props) => {
   const {
-    food: { id, name, foodID, elapsedTime },
+    food: { id, name, foodID, prepTime },
+    timeElapsed,
   } = props;
   const [completed, setCompleted] = React.useState(props.food.completed);
 
@@ -30,6 +38,20 @@ const TicketItem = (props) => {
         />
       )}
       title={name}
+      right={(params) => {
+        return (
+          <Text
+            style={{
+              paddingTop: 20,
+              marginLeft: 15,
+              textAlign: "right",
+              justifyContent: "flex-end",
+            }}
+          >
+            {moment.duration(prepTime - timeElapsed).format("hh:mm:ss")}
+          </Text>
+        );
+      }}
       onPress={() => {
         setCompleted(!completed);
         updateOrderItem(id, { completed: !completed }).catch((err) => {
@@ -48,7 +70,14 @@ const TicketItem = (props) => {
 
 const Ticket = (props) => {
   const [animation, setAnimation] = React.useState("");
-  const { id, table, orderItems, onClose } = props;
+  const { id, table, orderItems, onClose, timeElapsed } = props;
+  const [duration, setDuration] = React.useState(getDuration());
+  function getDuration() {
+    let total = orderItems.reduce((total, item) => {
+      return { prepTime: total.prepTime + item.prepTime };
+    });
+    return total.prepTime;
+  }
   //console.log("id", id);
   return (
     <FlingGestureHandler
@@ -65,13 +94,28 @@ const Ticket = (props) => {
         }}
       >
         <Card style={{ margin: 10 }}>
-          <Card.Title title={`#${table}`}></Card.Title>
           <Card.Content>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-around",
+              }}
+            >
+              <Card.Title title={`#${table}`}></Card.Title>
+              <Subheading>
+                {moment.duration(duration - timeElapsed).format("hh:mm:ss")}
+              </Subheading>
+            </View>
             <List.Section>
               {orderItems
                 .sort((a, b) => a.prepTime - b.prepTime)
                 .map((food) => (
-                  <TicketItem key={uuidv4()} food={food} />
+                  <TicketItem
+                    key={uuidv4()}
+                    food={food}
+                    timeElapsed={timeElapsed}
+                  />
                 ))}
             </List.Section>
           </Card.Content>
@@ -87,6 +131,7 @@ export default class TicketList extends React.Component {
     this.state = {
       tickets: [],
       snackMessage: null,
+      timeElapsed: 0,
     };
   }
   componentDidMount() {
@@ -97,15 +142,16 @@ export default class TicketList extends React.Component {
         this.loadData();
       }
     );
-    this.intervalID = setInterval(() => this.tick(), 5 * 1000);
+    this.dataInterval = setInterval(() => this.loadData(), 5 * 1000);
+    this.tickInterval = setInterval(() => this.tick(), 1000);
     this.loadData();
   }
 
   componentWillUnmount() {
-    clearInterval(this.intervalID);
+    clearInterval(this.dataInterval);
   }
   tick() {
-    this.loadData();
+    this.setState({ timeElapsed: this.state.timeElapsed + 1000 });
   }
   loadData() {
     getOpenOrdersFull()
@@ -128,6 +174,7 @@ export default class TicketList extends React.Component {
                 <Ticket
                   key={ticket.id}
                   {...ticket}
+                  timeElapsed={this.state.timeElapsed}
                   onClose={(pId) => {
                     closeOrder(pId)
                       .then((result) => {

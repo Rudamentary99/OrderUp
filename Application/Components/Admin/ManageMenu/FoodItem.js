@@ -51,7 +51,7 @@ export function FoodItem(props) {
         >
           <Card.Title
             title={name}
-            subtitle={"Prep Time: " + prepTime + "min"}
+            subtitle={"Prep Time: " + prepTime / 60 / 1000 + "min"}
           ></Card.Title>
         </Card>
       }

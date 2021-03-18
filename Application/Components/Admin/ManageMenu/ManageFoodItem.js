@@ -46,11 +46,13 @@ export function ManageFoodItem(props) {
   const { handleSubmit, control, errors } = useForm({
     defaultValues: {
       name: "",
-      prepTime: "",
       price: "",
       foodType: "",
       ingredients: [],
       ...props.route.params, //override if editing
+      prepTime: props.route.params.prepTime
+        ? props.route.params.prepTime / 60 / 1000 //convert to minutes from ms
+        : "",
     },
     mode: "onChange",
   });
@@ -97,8 +99,8 @@ export function ManageFoodItem(props) {
               <View style={styles.controller}>
                 <TextInput
                   error={errors.prepTime}
-                  onChangeText={(text) => onChange(text * 60 * 1000)}
-                  value={String(value / 60 / 1000)}
+                  onChangeText={(text) => onChange(text)}
+                  value={String(value)}
                   label="Prep Time (min)"
                 />
                 <HelperText type="error" visible={errors.prepTime}>
@@ -228,7 +230,11 @@ export function ManageFoodItem(props) {
         <Button
           onPress={handleSubmit((data) => {
             if (Boolean(props.route.params?.name)) {
-              const newItem = { ...data, id: props.route.params.id };
+              const newItem = {
+                ...data,
+                id: props.route.params.id,
+                prepTime: data.prepTime * 60 * 1000,
+              };
               updateFoodItem(newItem)
                 .then((success) => {
                   // console.log("result", result);

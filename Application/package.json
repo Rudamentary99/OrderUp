@@ -21,6 +21,7 @@
     "expo-updates": "~0.4.0",
     "install": "^0.13.0",
     "moment": "^2.29.1",
+    "moment-duration-format": "^2.3.2",
     "npm": "^6.14.11",
     "react": "16.13.1",
     "react-dom": "16.13.1",
