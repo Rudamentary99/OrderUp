@@ -1,13 +1,20 @@
 import React from "react";
+
+import { v4 as uuidv4 } from "uuid";
+import "react-native-get-random-values";
 import { View, ScrollView, StyleSheet } from "react-native";
 import { Card, Headline, List, Snackbar, Text } from "react-native-paper";
 import { getOpenOrdersFull } from "../../DB/orderController";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
 import { closeOrder } from "../../DB/orderController";
 import * as Animatable from "react-native-animatable";
+import { useNavigation } from "@react-navigation/native";
 const TicketItem = (props) => {
-  const { name } = props;
+  const {
+    food: { name, foodID },
+  } = props;
   const [completed, setCompleted] = React.useState(false);
+  const navigation = useNavigation();
   return (
     <List.Item
       left={() => (
@@ -22,6 +29,12 @@ const TicketItem = (props) => {
       title={name}
       onPress={() => {
         setCompleted(!completed);
+      }}
+      onLongPress={() => {
+        navigation.navigate("Food Details", {
+          id: foodID,
+          noEdit: true,
+        });
       }}
     ></List.Item>
   );
@@ -51,8 +64,8 @@ const Ticket = (props) => {
             <List.Section>
               {orderItems
                 .sort((a, b) => a.prepTime - b.prepTime)
-                .map(({ id, name }) => (
-                  <TicketItem key={id} name={name} />
+                .map((food) => (
+                  <TicketItem key={uuidv4()} food={food} />
                 ))}
             </List.Section>
           </Card.Content>
