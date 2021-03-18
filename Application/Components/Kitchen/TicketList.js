@@ -1,19 +1,22 @@
 import React from "react";
-
+import moment from "moment";
+import momenDurationFormatSetup from "moment-duration-format";
+momenDurationFormatSetup(moment);
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
 import { View, ScrollView, StyleSheet } from "react-native";
 import { Card, Headline, List, Snackbar, Text } from "react-native-paper";
-import { getOpenOrdersFull } from "../../DB/orderController";
+import { getOpenOrdersFull, updateOrderItem } from "../../DB/orderController";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
 import { closeOrder } from "../../DB/orderController";
 import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
 const TicketItem = (props) => {
   const {
-    food: { name, foodID },
+    food: { id, name, foodID, elapsedTime },
   } = props;
-  const [completed, setCompleted] = React.useState(false);
+  const [completed, setCompleted] = React.useState(props.food.completed);
+
   const navigation = useNavigation();
   return (
     <List.Item
@@ -29,6 +32,9 @@ const TicketItem = (props) => {
       title={name}
       onPress={() => {
         setCompleted(!completed);
+        updateOrderItem(id, { completed: !completed }).catch((err) => {
+          console.error(err);
+        });
       }}
       onLongPress={() => {
         navigation.navigate("Food Details", {
