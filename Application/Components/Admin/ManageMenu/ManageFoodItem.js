@@ -97,8 +97,8 @@ export function ManageFoodItem(props) {
               <View style={styles.controller}>
                 <TextInput
                   error={errors.prepTime}
-                  onChangeText={(text) => onChange(text)}
-                  value={value}
+                  onChangeText={(text) => onChange(text * 60 * 1000)}
+                  value={String(value / 60 / 1000)}
                   label="Prep Time (min)"
                 />
                 <HelperText type="error" visible={errors.prepTime}>

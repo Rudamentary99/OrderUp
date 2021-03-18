@@ -119,7 +119,7 @@ export class FoodDetails extends React.Component {
       >
         <View>
           <Headline>{name || "Food Details!"}</Headline>
-          <Subheading>Prep Time: {prepTime}</Subheading>
+          <Subheading>Prep Time: {prepTime / 60 / 1000}</Subheading>
           <Subheading>Food Type: {foodType}</Subheading>
           <List.Section title="Ingredients">
             <ScrollView>
