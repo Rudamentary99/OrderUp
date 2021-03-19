@@ -79,7 +79,19 @@ export default class TicketDetails extends React.Component {
         <ScrollView>
           <List.Section>
             {this.state.ticketItems.map((item) => (
-              <List.Item key={uuidv4()} title={"- " + item.name}></List.Item>
+              <List.Item
+                key={uuidv4()}
+                left={() => (
+                  <List.Icon
+                    icon={
+                      item.completed
+                        ? "checkbox-marked-circle-outline"
+                        : "checkbox-blank-circle-outline"
+                    }
+                  />
+                )}
+                title={item.name}
+              ></List.Item>
             ))}
           </List.Section>
         </ScrollView>

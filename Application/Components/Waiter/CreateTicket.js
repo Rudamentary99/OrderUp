@@ -46,7 +46,7 @@ const FoodListPane = (props) => {
             })
             .map((food, index) => (
               <Card
-                key={uuidv4()}
+                key={food.id + "-" + uuidv4()}
                 style={{ margin: 10 }}
                 onPress={() => {
                   if (onSelect) onSelect(food);
@@ -108,8 +108,6 @@ const TicketListPane = (props) => {
       renderItem={(data) => {
         return (
           <TouchableHighlight
-            key={data.item.key}
-            onPress={() => console.log("You touched me")}
             style={{
               backgroundColor: "white",
               justifyContent: "center",
@@ -191,12 +189,11 @@ class CreateTicket extends React.Component {
   }
   render() {
     const { ticketItems } = this.state;
-    console.log("ticketItems", ticketItems);
     const getTotal = () => {
       const total = ticketItems.reduce((runningTotal, item) => {
         return { price: Number(runningTotal.price) + Number(item.price) };
       });
-      console.log("total", total);
+
       return total.price;
     };
     return (

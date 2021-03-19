@@ -13,6 +13,7 @@ import {
   Text,
   Subheading,
   Button,
+  useTheme,
 } from "react-native-paper";
 import { getOpenOrdersFull, updateOrderItem } from "../../DB/orderController";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
@@ -22,7 +23,7 @@ import { useNavigation } from "@react-navigation/native";
 const TicketItem = (props) => {
   const {
     food: { id, name, foodID, prepTime, completionTime },
-    timeElapsed,
+    // timeElapsed,
   } = props;
   const [completed, setCompleted] = React.useState(props.food.completed);
 
@@ -39,32 +40,31 @@ const TicketItem = (props) => {
         />
       )}
       title={name}
-      right={(params) => {
-        return (
-          <Text
-            style={{
-              paddingTop: 20,
-              marginLeft: 15,
-              textAlign: "right",
-              justifyContent: "flex-end",
-              color: completed
-                ? "green"
-                : prepTime - timeElapsed <= 0
-                ? "red"
-                : "",
-            }}
-          >
-            {(completed &&
-              moment.duration(completionTime).format("hh:mm:ss")) ||
-              moment.duration(prepTime - timeElapsed).format("hh:mm:ss")}
-          </Text>
-        );
-      }}
+      // right={(params) => {
+      //   return (
+      //     <Text
+      //       style={{
+      //         paddingTop: 20,
+      //         marginLeft: 15,
+      //         textAlign: "right",
+      //         justifyContent: "flex-end",
+      //         color: completed
+      //           ? "green"
+      //           : prepTime - timeElapsed <= 0
+      //           ? "red"
+      //           : "",
+      //       }}
+      //     >
+      //       {(completed &&
+      //         moment.duration(completionTime).format("hh:mm:ss")) ||
+      //         moment.duration(prepTime - timeElapsed).format("hh:mm:ss")}
+      //     </Text>
+      //   );
+      // }}
       onPress={() => {
         //setCompleted(!completed);
         updateOrderItem(id, {
           completed: !completed,
-          completionTime: prepTime - timeElapsed,
         }).catch((err) => {
           console.error(err);
         });
@@ -83,7 +83,8 @@ const Ticket = (props) => {
   const [animation, setAnimation] = React.useState("");
   const { id, table, orderItems, onClose, created } = props;
   const [duration, setDuration] = React.useState(getDuration());
-
+  const { colors } = useTheme();
+  // console.log(`theme`, theme);
   function getDuration() {
     let total = orderItems.reduce((total, item) => {
       return { prepTime: total.prepTime + item.prepTime };
@@ -105,36 +106,31 @@ const Ticket = (props) => {
         }}
       >
         <Card style={{ margin: 10 }}>
-          <Card.Content>
-            <View
+          <Card.Content style={{ position: "relative" }}>
+            <Card.Title title={`#${table}`}></Card.Title>
+
+            <Subheading
               style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-around",
+                position: "absolute",
+                top: 0,
+                right: 0,
+                padding: 22,
+                color:
+                  duration - moment().subtract(created) > 0
+                    ? colors.text
+                    : colors.notification,
               }}
             >
-              <Card.Title title={`#${table}`}></Card.Title>
-              <Subheading
-                style={{
-                  marginLeft: "auto",
-                  color:
-                    duration - moment().subtract(created) <= 0 ? "red" : "",
-                }}
-              >
-                {moment
-                  .duration(duration - moment().subtract(created))
-                  .format("hh:mm:ss")}
-              </Subheading>
-            </View>
+              {moment
+                .duration(duration - moment().subtract(created))
+                .format("hh:mm:ss")}
+            </Subheading>
+
             <List.Section>
               {orderItems
                 .sort((a, b) => a.prepTime - b.prepTime)
                 .map((food) => (
-                  <TicketItem
-                    key={uuidv4()}
-                    food={food}
-                    timeElapsed={moment().subtract(created)}
-                  />
+                  <TicketItem key={uuidv4()} food={food} />
                 ))}
             </List.Section>
           </Card.Content>
