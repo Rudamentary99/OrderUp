@@ -24,13 +24,35 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import AdminNav from "./Components/Admin/index";
 import WaiterNav from "./Components/Waiter/index";
 import KitchenNav from "./Components/Kitchen/index";
-const Stack = createStackNavigator();
+
+import { Audio } from "expo-av";
 const Drawer = createDrawerNavigator();
 const tempScreen = ({ navigation }) => {
+  const [sound, setSound] = React.useState();
+  async function playSound() {
+    console.log("Loading Sound");
+    const { sound } = await Audio.Sound.createAsync(
+      require("./sounds/sharp.mp3")
+    );
+    setSound(sound);
+
+    console.log("Playing Sound");
+    await sound.playAsync();
+  }
+
+  React.useEffect(() => {
+    return sound
+      ? () => {
+          console.log("Unloading Sound");
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
   const theme = useTheme();
   return (
     <View style={styles.container}>
       <Text>Test</Text>
+      <Button onPress={playSound}>play sound</Button>
     </View>
   );
 };

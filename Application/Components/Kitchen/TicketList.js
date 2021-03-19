@@ -12,6 +12,7 @@ import {
   Snackbar,
   Text,
   Subheading,
+  Button,
 } from "react-native-paper";
 import { getOpenOrdersFull, updateOrderItem } from "../../DB/orderController";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
@@ -20,7 +21,7 @@ import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
 const TicketItem = (props) => {
   const {
-    food: { id, name, foodID, prepTime },
+    food: { id, name, foodID, prepTime, completionTime },
     timeElapsed,
   } = props;
   const [completed, setCompleted] = React.useState(props.food.completed);
@@ -46,15 +47,25 @@ const TicketItem = (props) => {
               marginLeft: 15,
               textAlign: "right",
               justifyContent: "flex-end",
+              color: completed
+                ? "green"
+                : prepTime - timeElapsed <= 0
+                ? "red"
+                : "",
             }}
           >
-            {moment.duration(prepTime - timeElapsed).format("hh:mm:ss")}
+            {(completed &&
+              moment.duration(completionTime).format("hh:mm:ss")) ||
+              moment.duration(prepTime - timeElapsed).format("hh:mm:ss")}
           </Text>
         );
       }}
       onPress={() => {
-        setCompleted(!completed);
-        updateOrderItem(id, { completed: !completed }).catch((err) => {
+        //setCompleted(!completed);
+        updateOrderItem(id, {
+          completed: !completed,
+          completionTime: prepTime - timeElapsed,
+        }).catch((err) => {
           console.error(err);
         });
       }}
@@ -70,15 +81,15 @@ const TicketItem = (props) => {
 
 const Ticket = (props) => {
   const [animation, setAnimation] = React.useState("");
-  const { id, table, orderItems, onClose, timeElapsed } = props;
+  const { id, table, orderItems, onCloseElapsed, created } = props;
   const [duration, setDuration] = React.useState(getDuration());
+
   function getDuration() {
     let total = orderItems.reduce((total, item) => {
       return { prepTime: total.prepTime + item.prepTime };
     });
     return total.prepTime;
   }
-  //console.log("id", id);
   return (
     <FlingGestureHandler
       direction={Directions.DOWN}
@@ -104,7 +115,9 @@ const Ticket = (props) => {
             >
               <Card.Title title={`#${table}`}></Card.Title>
               <Subheading>
-                {moment.duration(duration - timeElapsed).format("hh:mm:ss")}
+                {moment
+                  .duration(duration - moment().subtract(created))
+                  .format("hh:mm:ss")}
               </Subheading>
             </View>
             <List.Section>
@@ -114,7 +127,7 @@ const Ticket = (props) => {
                   <TicketItem
                     key={uuidv4()}
                     food={food}
-                    timeElapsed={timeElapsed}
+                    timeElapsed={moment().subtract(created)}
                   />
                 ))}
             </List.Section>
@@ -142,8 +155,8 @@ export default class TicketList extends React.Component {
         this.loadData();
       }
     );
-    this.dataInterval = setInterval(() => this.loadData(), 5 * 1000);
-    this.tickInterval = setInterval(() => this.tick(), 1000);
+    this.dataInterval = setInterval(() => this.loadData(), 1000);
+    // this.tickInterval = setInterval(() => this.tick(), 1000);
     this.loadData();
   }
 
@@ -166,6 +179,13 @@ export default class TicketList extends React.Component {
   render() {
     return (
       <View style={StyleSheet.absoluteFill}>
+        <Button
+          onPress={(params) => {
+            this.setState({ timeElapsed: 0 });
+          }}
+        >
+          reset Time
+        </Button>
         {this.state.tickets.length ? (
           <ScrollView horizontal>
             {this.state.tickets
