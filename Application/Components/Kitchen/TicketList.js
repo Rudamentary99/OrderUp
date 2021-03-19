@@ -81,7 +81,7 @@ const TicketItem = (props) => {
 
 const Ticket = (props) => {
   const [animation, setAnimation] = React.useState("");
-  const { id, table, orderItems, onCloseElapsed, created } = props;
+  const { id, table, orderItems, onClose, created } = props;
   const [duration, setDuration] = React.useState(getDuration());
 
   function getDuration() {
@@ -114,7 +114,13 @@ const Ticket = (props) => {
               }}
             >
               <Card.Title title={`#${table}`}></Card.Title>
-              <Subheading>
+              <Subheading
+                style={{
+                  marginLeft: "auto",
+                  color:
+                    duration - moment().subtract(created) <= 0 ? "red" : "",
+                }}
+              >
                 {moment
                   .duration(duration - moment().subtract(created))
                   .format("hh:mm:ss")}
@@ -144,7 +150,6 @@ export default class TicketList extends React.Component {
     this.state = {
       tickets: [],
       snackMessage: null,
-      timeElapsed: 0,
     };
   }
   componentDidMount() {
@@ -179,13 +184,6 @@ export default class TicketList extends React.Component {
   render() {
     return (
       <View style={StyleSheet.absoluteFill}>
-        <Button
-          onPress={(params) => {
-            this.setState({ timeElapsed: 0 });
-          }}
-        >
-          reset Time
-        </Button>
         {this.state.tickets.length ? (
           <ScrollView horizontal>
             {this.state.tickets
@@ -194,7 +192,6 @@ export default class TicketList extends React.Component {
                 <Ticket
                   key={ticket.id}
                   {...ticket}
-                  timeElapsed={this.state.timeElapsed}
                   onClose={(pId) => {
                     closeOrder(pId)
                       .then((result) => {
