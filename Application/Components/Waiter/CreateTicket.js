@@ -160,15 +160,17 @@ const TicketListPane = (props) => {
     />
   );
 };
-class CreateTicket extends React.Component {
+
+export class ManageTicket extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       foodItems: [],
       foodTypes: [],
       ticketItems: [],
-      table: "",
-      getTableNumber: true,
+      removedItems: [],
+      table: this.props.route.params?.ticket?.table || "",
+      getTableNumber: !Boolean(this.props.route.params?.ticket?.table),
     };
   }
   componentDidMount() {
@@ -186,9 +188,24 @@ class CreateTicket extends React.Component {
       .catch((err) => {
         console.error(err);
       });
+    if (this.props.route.params?.ticket) {
+      getOrderItems(this.props.route.params?.ticket?.id)
+        .then((result) => {
+          if (result)
+            this.setState({
+              ticketItems: result.map((item) => ({
+                ...item,
+                key: item.id + "-" + uuidv4(),
+              })),
+            });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   }
   render() {
-    const { ticketItems } = this.state;
+    const { ticketItems, removedItems } = this.state;
     const getTotal = () => {
       const total = ticketItems.reduce((runningTotal, item) => {
         return { price: Number(runningTotal.price) + Number(item.price) };
@@ -219,39 +236,70 @@ class CreateTicket extends React.Component {
           <Divider />
           <TicketListPane
             ticketItems={ticketItems}
-            onRemove={({ key }) => {
+            onRemove={(item) => {
               this.setState({
                 ticketItems: ticketItems.filter(
-                  ({ key: itemKey }) => itemKey != key
+                  ({ key: itemKey }) => itemKey != item.key
                 ),
               });
+              if (item.id) {
+                this.setState({ removedItems: [...removedItems, item] });
+              }
             }}
           />
           <Subheading>
             Total: ${ticketItems.length ? getTotal() : "0.00"}
           </Subheading>
-          <Button
-            onPress={() => {
-              createOrder({
-                table: this.state.table,
-                ticketItems: ticketItems,
-                created: Date.now(),
-                open: true,
-              })
-                .then((result) => {
-                  if (result) {
-                    this.props.navigation.navigate("Open Tickets");
-                  }
+          {this.props.route.params?.ticket ? (
+            <Button
+              onPress={() => {
+                updateOrderItems({
+                  id: this.props.route.params.ticket.id,
+                  table: this.state.table,
+                  ticketItems: ticketItems,
+                  removedItems: removedItems,
                 })
-                .catch((err) => {
-                  console.error(err);
-                });
-            }}
-            disabled={!this.state.ticketItems.length}
-            labelStyle={{ fontSize: 20 }}
-          >
-            Submit
-          </Button>
+                  .then((result) => {
+                    if (result)
+                      this.props.navigation.navigate(
+                        "Ticket Details",
+                        this.props.route.params
+                      );
+                    // console.log("result", result);
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                  });
+              }}
+              disabled={!this.state.ticketItems.length}
+              labelStyle={{ fontSize: 20 }}
+            >
+              Update
+            </Button>
+          ) : (
+            <Button
+              onPress={() => {
+                createOrder({
+                  table: this.state.table,
+                  ticketItems: ticketItems,
+                  created: Date.now(),
+                  open: true,
+                })
+                  .then((result) => {
+                    if (result) {
+                      this.props.navigation.navigate("Open Tickets");
+                    }
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                  });
+              }}
+              disabled={!this.state.ticketItems.length}
+              labelStyle={{ fontSize: 20 }}
+            >
+              Submit
+            </Button>
+          )}
         </Surface>
         <View
           style={{
@@ -301,167 +349,3 @@ class CreateTicket extends React.Component {
     );
   }
 }
-class EditTicket extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      foodItems: [],
-      foodTypes: [],
-      ticketItems: [],
-      removedItems: [],
-      getTableNumber: false,
-      table: this.props.route.params.table,
-    };
-  }
-  componentDidMount() {
-    getFoodTypes()
-      .then((result) => {
-        this.setState({ foodTypes: result });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    getFoodItems(false)
-      .then((result) => {
-        this.setState({ foodItems: result });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    getOrderItems(this.props.route.params.id)
-      .then((result) => {
-        if (result)
-          this.setState({
-            ticketItems: result.map((item) => ({
-              ...item,
-              key: item.id + "-" + uuidv4(),
-            })),
-          });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }
-  render() {
-    const { ticketItems, removedItems } = this.state;
-    console.log("removedItems", removedItems);
-    const getTotal = () => {
-      const total = ticketItems.reduce((runningTotal, item) => {
-        return { price: Number(runningTotal.price) + Number(item.price) };
-      });
-      console.log("total", total);
-      return total.price;
-    };
-    return (
-      <View
-        style={[StyleSheet.absoluteFill, { flex: 1, flexDirection: "row" }]}
-      >
-        <Surface
-          style={{
-            marginTop: 25,
-            width: (Dimensions.get("window").width / 10) * 4,
-            padding: 20,
-          }}
-        >
-          <TouchableHighlight
-            onPress={() => {
-              this.setState({ getTableNumber: true });
-            }}
-          >
-            <Headline>{`Order for table #${this.state.table}:`}</Headline>
-          </TouchableHighlight>
-          <Divider />
-          <TicketListPane
-            ticketItems={ticketItems}
-            onRemove={(item) => {
-              this.setState({
-                ticketItems: ticketItems.filter(
-                  ({ key: itemKey }) => itemKey != item.key
-                ),
-              });
-              if (item.id) {
-                this.setState({ removedItems: [...removedItems, item] });
-              }
-            }}
-          />
-          <Subheading>
-            Total: ${ticketItems.length ? getTotal() : "0.00"}
-          </Subheading>
-          <Button
-            onPress={() => {
-              updateOrderItems({
-                id: this.props.route.params.id,
-                table: this.state.table,
-                ticketItems: ticketItems,
-                removedItems: removedItems,
-              })
-                .then((result) => {
-                  if (result)
-                    this.props.navigation.navigate(
-                      "Ticket Details",
-                      this.props.route.params
-                    );
-                  // console.log("result", result);
-                })
-                .catch((err) => {
-                  console.error(err);
-                });
-            }}
-            disabled={!this.state.ticketItems.length}
-            labelStyle={{ fontSize: 20 }}
-          >
-            Submit
-          </Button>
-        </Surface>
-        <View
-          style={{
-            position: "relative",
-            width: (Dimensions.get("window").width / 10) * 6,
-            margin: 5,
-          }}
-        >
-          <FoodListPane
-            foodTypes={this.state.foodTypes}
-            foodItems={this.state.foodItems}
-            onSelect={(food) => {
-              this.setState({
-                ticketItems: [
-                  ...ticketItems,
-                  { ...food, key: food.id + "-" + uuidv4() },
-                ],
-              });
-            }}
-          />
-        </View>
-        <Dialog
-          visible={this.state.getTableNumber}
-          style={{ marginBottom: 400 }}
-        >
-          <Dialog.Content>
-            <TextInput
-              label="Table Number"
-              value={this.state.table}
-              onChangeText={(text) => {
-                this.setState({ table: text });
-              }}
-              autoFocus
-            ></TextInput>
-          </Dialog.Content>
-          <Dialog.Actions style={{ justifyContent: "center" }}>
-            <Button
-              onPress={() => {
-                this.setState({ getTableNumber: false });
-              }}
-            >
-              Enter
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </View>
-    );
-  }
-}
-module.exports = {
-  CreateTicket,
-  EditTicket,
-};

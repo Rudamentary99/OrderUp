@@ -178,7 +178,7 @@ class FoodMain extends React.Component {
     return (
       <View style={{ ...StyleSheet.absoluteFill, padding: 50, paddingTop: 0 }}>
         <MenuBar navigation={this.props.navigation}></MenuBar>
-        <Title>Food Items</Title>
+
         <ScrollView
           refreshControl={
             <RefreshControl
