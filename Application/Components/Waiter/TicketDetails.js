@@ -83,6 +83,7 @@ export default class TicketDetails extends React.Component {
                 key={uuidv4()}
                 left={() => (
                   <List.Icon
+                    style={{ opacity: 0.5 }}
                     icon={
                       item.completed
                         ? "checkbox-marked-circle-outline"
