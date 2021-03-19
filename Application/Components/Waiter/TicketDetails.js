@@ -33,7 +33,7 @@ export default class TicketDetails extends React.Component {
   }
   componentDidMount() {
     this.willFocusSubscription = this.props.navigation.addListener(
-      "willFocus",
+      "focus",
       () => {
         this.loadData();
       }
