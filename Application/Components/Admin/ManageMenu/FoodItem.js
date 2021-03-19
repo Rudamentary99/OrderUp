@@ -41,7 +41,6 @@ export function FoodItem(props) {
       anchor={
         <Card
           style={style}
-          key={id}
           onPress={() => {
             navigation.navigate("Food Details", props.item);
           }}
