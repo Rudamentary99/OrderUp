@@ -89,7 +89,7 @@ export class FoodDetails extends React.Component {
     this.loadData();
   }
   componentWillUnmount() {
-    this.focusListener.remove;
+    this.focusListener();
   }
   loadData() {
     const itemID = this.props?.route?.params?.id;

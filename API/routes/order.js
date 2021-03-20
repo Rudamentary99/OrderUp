@@ -160,7 +160,7 @@ module.exports = (rdbConn) => [
               // prepTime: item.prepTime,
               foodID: item.id,
               orderID: result.generated_keys[0],
-              customization: item.customization,
+              customization: item.customization || null,
             }));
 
             r.table("orderItem").insert(orderItems).run(rdbConn, callback);
@@ -203,7 +203,7 @@ module.exports = (rdbConn) => [
                   .map((item) => ({
                     foodID: item.id,
                     orderID: req.params.id,
-                    customization: item.customization,
+                    customization: item.customization || null,
                   }))
               )
               .run(rdbConn, callback);

@@ -32,20 +32,16 @@ export default class TicketDetails extends React.Component {
     };
   }
   componentDidMount() {
-    this.willFocusSubscription = this.props.navigation.addListener(
-      "focus",
-      () => {
-        this.loadData();
-      }
-    );
+    this.FocusSubscription = this.props.navigation.addListener("focus", () => {
+      this.loadData();
+    });
     this.loadData();
   }
   componentWillUnmount() {
-    this.willFocusSubscription.remove;
+    this.FocusSubscription();
   }
 
   loadData() {
-    console.log("loading data");
     getOrderItems(this.props.route.params.ticket.id)
       .then((result) => {
         if (result) {
@@ -61,8 +57,16 @@ export default class TicketDetails extends React.Component {
       ticket: { id, table, created, closeDate },
       onBack,
     } = this.props.route.params;
-    const getAction = () => {
-      return {};
+
+    const getDesiption = (item) => {
+      let rv = "";
+      const excluded = item?.customization?.excludedIngredients;
+      if (excluded) {
+        excluded.forEach((ingredient) => {
+          rv += "no " + ingredient + ", ";
+        });
+      }
+      return rv;
     };
     return (
       <View style={{ ...StyleSheet.absoluteFillObject, padding: 50 }}>
@@ -91,7 +95,8 @@ export default class TicketDetails extends React.Component {
                     }
                   />
                 )}
-                title={item.name}
+                title={item.name + (item.customization?.notes ? "*" : "")}
+                description={getDesiption(item)}
               ></List.Item>
             ))}
           </List.Section>

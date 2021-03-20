@@ -10,16 +10,18 @@ import {
 } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { getOrders } from "../../DB/orderController";
+import { useNavigation } from "@react-navigation/native";
 
 const moment = require("moment"); // require
 const Tab = createMaterialTopTabNavigator();
 const Ticket = ({ ticket }) => {
+  const navigation = useNavigation();
   return (
     <Card
       onPress={() => {
-        this.props.navigation.navigate("Ticket Details", {
+        navigation.navigate("Ticket Details", {
           ticket,
-          onBack: this.onBack,
+          //onBack: this.onBack,
         });
       }}
       style={{ height: 200, width: 200, margin: 20 }}
@@ -53,12 +55,6 @@ class TicketList extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
-  }
-
-  onBack(params) {
-    console.log("running goBack");
-    console.log("params", params);
-    this.setState(params);
   }
 
   loadData() {

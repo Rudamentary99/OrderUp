@@ -119,11 +119,25 @@ const TicketListPane = (props) => {
             }}
             underlayColor={"#AAA"}
           >
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text style={{ fontSize: 19 }}>- {data.item.name}</Text>
-              <Text>${data.item.price}</Text>
+            <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={{ fontSize: 19 }}>- {data.item.name}</Text>
+                <Text>${data.item.price}</Text>
+              </View>
+              <View style={{ paddingLeft: 10 }}>
+                {data.item?.customization?.excludedIngredients?.map(
+                  (ingredient) => (
+                    <Text style={{ textDecorationLine: "line-through" }}>
+                      {ingredient}
+                    </Text>
+                  )
+                )}
+              </View>
             </View>
           </TouchableHighlight>
         );

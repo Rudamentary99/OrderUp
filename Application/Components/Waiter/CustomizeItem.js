@@ -1,7 +1,7 @@
 import { useHeaderHeight } from "@react-navigation/stack";
 import React from "react";
 import { KeyboardAvoidingView, ScrollView, View } from "react-native";
-import { Button, List, TextInput } from "react-native-paper";
+import { Button, List, Subheading, TextInput } from "react-native-paper";
 
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
@@ -30,33 +30,37 @@ export function customizeItem({
               setIngredientOpen(!ingredientOpen);
             }}
           >
-            {item?.ingredients.map((ingredient) => (
-              <List.Item
-                key={uuidv4()}
-                title={ingredient}
-                left={() => (
-                  <List.Icon
-                    style={{ opacity: 0.5 }}
-                    icon={
-                      excludedIngredients?.find((ei) => ei == ingredient)
-                        ? "checkbox-blank-circle-outline"
-                        : "checkbox-marked-circle-outline"
-                    }
-                  />
-                )}
-                onPress={() => {
-                  //if ingredient is already excluded
-                  let tempExcludedIngredients = excludedIngredients.find(
-                    (ei) => ei == ingredient
-                  )
-                    ? //remove it
-                      excludedIngredients.filter((ei) => ei != ingredient)
-                    : //otherwise add it
-                      [...excludedIngredients, ingredient];
-                  setExcludedIngredients(tempExcludedIngredients);
-                }}
-              />
-            ))}
+            {item?.ingredients?.length ? (
+              item?.ingredients.map((ingredient) => (
+                <List.Item
+                  key={uuidv4()}
+                  title={ingredient}
+                  left={() => (
+                    <List.Icon
+                      style={{ opacity: 0.5 }}
+                      icon={
+                        excludedIngredients?.find((ei) => ei == ingredient)
+                          ? "checkbox-blank-circle-outline"
+                          : "checkbox-marked-circle-outline"
+                      }
+                    />
+                  )}
+                  onPress={() => {
+                    //if ingredient is already excluded
+                    let tempExcludedIngredients = excludedIngredients.find(
+                      (ei) => ei == ingredient
+                    )
+                      ? //remove it
+                        excludedIngredients.filter((ei) => ei != ingredient)
+                      : //otherwise add it
+                        [...excludedIngredients, ingredient];
+                    setExcludedIngredients(tempExcludedIngredients);
+                  }}
+                />
+              ))
+            ) : (
+              <List.Item title="No ingredients given." />
+            )}
           </List.Accordion>
         </View>
         <TextInput
@@ -79,15 +83,6 @@ export function customizeItem({
             },
           });
           navigation.goBack();
-          //   navigation.setParams({
-          //     customeItem: {
-          //       ...item,
-          //       customization: {
-          //         notes: notes,
-          //         excludedIngredients: excludedIngredients,
-          //       },
-          //     },
-          //   });
         }}
       >
         Submit
