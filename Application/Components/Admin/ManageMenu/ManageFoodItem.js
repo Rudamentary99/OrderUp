@@ -188,42 +188,6 @@ export function ManageFoodItem(props) {
                 }}
                 sortFunction={(a, b) => a.localeCompare(b)}
               />
-              // <View>
-              //   <List.Accordion title="Ingredients">
-              //     <TextInput
-              //       label="New Ingredient"
-              //       value={tempIngredient}
-              //       onChangeText={(text) => {
-              //         setTempIngredient(text);
-              //       }}
-              //       onSubmitEditing={(ev) => {
-              //         onChange([...value, tempIngredient]);
-              //         setTempIngredient("");
-              //       }}
-              //     />
-              //     {value
-              //       .sort((a, b) => a.localeCompare(b))
-              //       .map((ingredient, index) => (
-              //         <List.Item
-              //           key={uuidv4()}
-              //           title={ingredient}
-              //           right={() => (
-              //             <IconButton
-              //               icon="close"
-              //               onPress={() => {
-              //                 console.log("pressed close");
-              //                 let tempList = value;
-              //                 tempList.splice(index);
-              //                 console.log(`tempList`, tempList);
-              //                 onChange(tempList);
-              //                 console.log(`value`, value);
-              //               }}
-              //             ></IconButton>
-              //           )}
-              //         />
-              //       ))}
-              //   </List.Accordion>
-              // </View>
             );
           }}
         />

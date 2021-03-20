@@ -13,6 +13,25 @@ import { getOrders } from "../../DB/orderController";
 
 const moment = require("moment"); // require
 const Tab = createMaterialTopTabNavigator();
+const Ticket = ({ ticket }) => {
+  return (
+    <Card
+      onPress={() => {
+        this.props.navigation.navigate("Ticket Details", {
+          ticket,
+          onBack: this.onBack,
+        });
+      }}
+      style={{ height: 200, width: 200, margin: 20 }}
+    >
+      <Card.Title title={ticket.table}></Card.Title>
+      <Card.Content>
+        <Text>{moment(ticket.created).format("hh:mm A, MMM DD, yyyy")}</Text>
+        {ticket.closeDate && <Text>Closed</Text>}
+      </Card.Content>
+    </Card>
+  );
+};
 class TicketList extends React.Component {
   constructor(props) {
     super(props);
@@ -28,16 +47,14 @@ class TicketList extends React.Component {
         this.loadData();
       }
     );
-    this.intervalID = setInterval(() => this.tick(), 10 * 1000);
+    this.intervalID = setInterval(() => this.loadData(), 10 * 1000);
     this.loadData();
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
   }
-  tick() {
-    this.loadData();
-  }
+
   onBack(params) {
     console.log("running goBack");
     console.log("params", params);
@@ -55,10 +72,6 @@ class TicketList extends React.Component {
       });
   }
   render() {
-    const getDate = (dateInMilli) => {
-      return new moment(dateInMilli).format("hh:mm A, MMM DD, yyyy");
-    };
-
     return (
       <View style={StyleSheet.absoluteFill}>
         {this.state.tickets?.length ? (
@@ -82,22 +95,7 @@ class TicketList extends React.Component {
               }}
             >
               {this.state.tickets.map((ticket) => (
-                <Card
-                  key={ticket.id}
-                  onPress={() => {
-                    this.props.navigation.navigate("Ticket Details", {
-                      ticket,
-                      onBack: this.onBack,
-                    });
-                  }}
-                  style={{ height: 200, width: 200, margin: 20 }}
-                >
-                  <Card.Title title={ticket.table}></Card.Title>
-                  <Card.Content>
-                    <Text>{getDate(ticket.created)}</Text>
-                    {ticket.closeDate && <Text>Closed</Text>}
-                  </Card.Content>
-                </Card>
+                <Ticket key={ticket.id} ticket={ticket} />
               ))}
             </View>
           </ScrollView>

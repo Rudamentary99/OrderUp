@@ -2,8 +2,9 @@ import React from "react";
 import { View, Text } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import TicketList from "./TicketList";
-import { CreateTicket, EditTicket, ManageTicket } from "./CreateTicket";
+import { ManageTicket } from "./ManageTicket";
 import TicketDetails from "./TicketDetails";
+import { customizeItem } from "./CustomizeItem";
 const Stack = createStackNavigator();
 
 const temp = (props) => {
@@ -21,6 +22,7 @@ const WaiterNav = () => {
       <Stack.Screen name="New Ticket" component={ManageTicket} />
       <Stack.Screen name="Ticket Details" component={TicketDetails} />
       <Stack.Screen name="Edit Ticket" component={ManageTicket} />
+      <Stack.Screen name="Customize Item" component={customizeItem} />
     </Stack.Navigator>
   );
 };
