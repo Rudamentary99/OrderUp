@@ -1,7 +1,13 @@
 import { useHeaderHeight } from "@react-navigation/stack";
 import React from "react";
 import { KeyboardAvoidingView, ScrollView, View } from "react-native";
-import { Button, List, Subheading, TextInput } from "react-native-paper";
+import {
+  Button,
+  Headline,
+  List,
+  Subheading,
+  TextInput,
+} from "react-native-paper";
 
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
@@ -13,14 +19,17 @@ export function customizeItem({
 }) {
   //const [item, setItem] = React.useState(params.item);
   const [ingredientOpen, setIngredientOpen] = React.useState(true);
-  const [excludedIngredients, setExcludedIngredients] = React.useState([]);
-  const [notes, setNotes] = React.useState("");
+  const [excludedIngredients, setExcludedIngredients] = React.useState(
+    item?.customization?.excludedIngredients || []
+  );
+  const [notes, setNotes] = React.useState(item?.customization?.notes || "");
   return (
     <KeyboardAvoidingView
       keyboardVerticalOffset={useHeaderHeight() + 10}
       behavior="padding"
       style={{ padding: 50, flex: 1 }}
     >
+      <Headline>{item.name}</Headline>
       <ScrollView contentContainerStyle={{ justifyContent: "flex-end" }}>
         <View style={{ marginBottom: 20 }}>
           <List.Accordion

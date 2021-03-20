@@ -33,6 +33,7 @@ import {
   updateOrderItems,
 } from "../../DB/orderController";
 import { useHeaderHeight } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
 const FoodListPane = (props) => {
   const { foodTypes, foodItems, onSelect, onLongSelect } = props;
   const [selectedFoodType, setSelectedFoodType] = React.useState("Entree");
@@ -106,12 +107,20 @@ const FoodListPane = (props) => {
 };
 
 const TicketListPane = (props) => {
-  const { ticketItems, onRemove } = props;
+  const { ticketItems, onRemove, onCustomize } = props;
+  const navigation = useNavigation();
   return (
     <SwipeList
       renderItem={(data) => {
+        ///console.log(`data`, data.item);
         return (
           <TouchableHighlight
+            onPress={() => {
+              navigation.navigate("Customize Item", {
+                item: data.item,
+                onSubmit: onCustomize,
+              });
+            }}
             style={{
               backgroundColor: "white",
               justifyContent: "center",
@@ -264,6 +273,13 @@ export class ManageTicket extends React.Component {
               if (item.id) {
                 this.setState({ removedItems: [...removedItems, item] });
               }
+            }}
+            onCustomize={(customItem) => {
+              this.setState({
+                ticketItems: ticketItems.map((item) =>
+                  customItem.key == item.key ? customItem : item
+                ),
+              });
             }}
           />
           <Subheading>
