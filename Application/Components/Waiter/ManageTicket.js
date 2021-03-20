@@ -358,78 +358,7 @@ export class ManageTicket extends React.Component {
             </Button>
           </Dialog.Actions>
         </Dialog>
-        {/* <CustomizationDialog
-          item={customeItem}
-          onDismiss={() => this.setState({ customeItem: null })}
-          onModification={(newItem) => {
-            this.setState({ customeItem: newItem });
-          }}
-        /> */}
       </KeyboardAvoidingView>
     );
   }
-}
-function CustomizationDialog({ item, onDismiss, onModification }) {
-  return (
-    <Portal>
-      <Dialog visible={item} onDismiss={onDismiss}>
-        <Dialog.Title>{item?.name}</Dialog.Title>
-        <Dialog.Content>
-          <KeyboardAvoidingView
-            keyboardVerticalOffset={useHeaderHeight() + 10}
-            behavior="padding"
-          >
-            <ScrollView>
-              <List.Accordion title="Ingredients">
-                {item?.ingredients.map((ingredient) => (
-                  <List.Item
-                    key={uuidv4()}
-                    title={ingredient}
-                    left={() => (
-                      <List.Icon
-                        style={{ opacity: 0.5 }}
-                        icon={
-                          item.customization?.excludedIngredients?.find(
-                            (ei) => ei == ingredient
-                          )
-                            ? "checkbox-blank-circle-outline"
-                            : "checkbox-marked-circle-outline"
-                        }
-                      />
-                    )}
-                    onPress={() => {
-                      console.log("pressed");
-                      let customization = item.customization || {};
-                      console.log(`customization`, customization);
-                      let excludedIngredients =
-                        customization.excludedIngredients || [];
-                      console.log(
-                        `excludedIngredients og`,
-                        excludedIngredients
-                      );
-                      //if ingredient is already excluded
-                      excludedIngredients = excludedIngredients.find(
-                        (ei) => ei == ingredient
-                      )
-                        ? //remove it
-                          excludedIngredients.filter((ei) => ei != ingredient)
-                        : //otherwise add it
-                          [...excludedIngredients, ingredient];
-                      customization.excludedIngredients = excludedIngredients;
-                      console.log(`customization`, customization);
-                      onModification({
-                        ...item,
-                        customization: customization,
-                      });
-                    }}
-                  />
-                ))}
-              </List.Accordion>
-              <TextInput label="Notes" multiline />
-            </ScrollView>
-          </KeyboardAvoidingView>
-        </Dialog.Content>
-      </Dialog>
-    </Portal>
-  );
 }
