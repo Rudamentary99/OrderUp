@@ -7,6 +7,9 @@ import {
   Card,
   Snackbar,
   Subheading,
+  IconButton,
+  Button,
+  Portal,
 } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { getOrders } from "../../DB/orderController";
@@ -39,6 +42,7 @@ class TicketList extends React.Component {
     super(props);
     this.state = {
       tickets: [],
+      filter: true,
     };
   }
   componentDidMount() {
@@ -68,33 +72,78 @@ class TicketList extends React.Component {
       });
   }
   render() {
+    const filter = (ticket) =>
+      !this.state.filter ||
+      moment(ticket.created).isAfter(moment().startOf("day"));
     return (
-      <View style={StyleSheet.absoluteFill}>
-        {this.state.tickets?.length ? (
-          <ScrollView
+      <View
+        style={{
+          ...StyleSheet.absoluteFill,
+        }}
+      >
+        <Portal>
+          <View
             style={{
-              position: "relative",
+              marginTop: 120,
+              margin: 20,
+              position: "absolute",
               top: 0,
-              bottom: 0,
               right: 0,
-              left: 0,
             }}
           >
-            <View
-              style={{
-                position: "relative",
-                right: 0,
-                left: 0,
-                flexWrap: "wrap",
-                flexDirection: "row",
-                //backgroundColor: "#f59042",
+            <Button
+              mode="contained"
+              labelStyle={{ fontSize: 15 }}
+              compact
+              icon={this.state.filter ? "filter" : "filter-outline"}
+              onPress={() => {
+                this.setState({ filter: !this.state.filter });
               }}
             >
-              {this.state.tickets.map((ticket) => (
-                <Ticket key={ticket.id} ticket={ticket} />
-              ))}
+              Today
+            </Button>
+          </View>
+        </Portal>
+
+        {this.state.tickets?.length ? (
+          this.state.tickets.filter(filter).length ? (
+            <ScrollView
+              style={{
+                position: "relative",
+                top: 0,
+                bottom: 0,
+                right: 0,
+                left: 0,
+              }}
+            >
+              <View
+                style={{
+                  position: "relative",
+                  right: 0,
+                  left: 0,
+                  flexWrap: "wrap",
+                  flexDirection: "row",
+                  //backgroundColor: "#f59042",
+                }}
+              >
+                {this.state.tickets.filter(filter).map((ticket) => (
+                  <Ticket key={ticket.id} ticket={ticket} />
+                ))}
+              </View>
+            </ScrollView>
+          ) : (
+            <View
+              style={[
+                StyleSheet.absoluteFill,
+                { justifyContent: "center", alignItems: "center" },
+              ]}
+            >
+              <Headline>
+                You have no {this.props.ticketType} orders for{" "}
+                <Text style={{ textDecorationLine: "underline" }}>today</Text>.
+              </Headline>
             </View>
-          </ScrollView>
+          )
         ) : (
           <View
             style={[
@@ -105,6 +154,7 @@ class TicketList extends React.Component {
             <Headline>You have no {this.props.ticketType} orders.</Headline>
           </View>
         )}
+
         <FAB
           icon="plus"
           onPress={() => {
