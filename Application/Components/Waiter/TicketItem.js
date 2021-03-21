@@ -26,7 +26,6 @@ export class TicketItemDetails extends React.Component {
     if (itemID)
       getOrderItem(itemID)
         .then((result) => {
-          console.log(`result ticket`, result);
           this.setState({ orderItem: result });
         })
         .catch((err) => {

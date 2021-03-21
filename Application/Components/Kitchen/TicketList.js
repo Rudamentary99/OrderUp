@@ -22,12 +22,24 @@ import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
 const TicketItem = (props) => {
   const {
-    food: { id, name, foodID, prepTime, completionTime },
+    food: { id, name, customization },
     // timeElapsed,
   } = props;
   const [completed, setCompleted] = React.useState(props.food.completed);
-
+  const { colors } = useTheme();
   const navigation = useNavigation();
+  const getDescription = () => {
+    let rv = "";
+    if (customization?.excludedIngredients?.length) {
+      customization.excludedIngredients.forEach((ingredient) => {
+        rv += ` no ${ingredient},\n`;
+      });
+    }
+    if (customization?.notes) {
+      rv += `\n${customization.notes}`;
+    }
+    return rv;
+  };
   return (
     <List.Item
       left={() => (
@@ -40,27 +52,7 @@ const TicketItem = (props) => {
         />
       )}
       title={name}
-      // right={(params) => {
-      //   return (
-      //     <Text
-      //       style={{
-      //         paddingTop: 20,
-      //         marginLeft: 15,
-      //         textAlign: "right",
-      //         justifyContent: "flex-end",
-      //         color: completed
-      //           ? "green"
-      //           : prepTime - timeElapsed <= 0
-      //           ? "red"
-      //           : "",
-      //       }}
-      //     >
-      //       {(completed &&
-      //         moment.duration(completionTime).format("hh:mm:ss")) ||
-      //         moment.duration(prepTime - timeElapsed).format("hh:mm:ss")}
-      //     </Text>
-      //   );
-      // }}
+      description={getDescription()}
       onPress={() => {
         //setCompleted(!completed);
         updateOrderItem(id, {
@@ -71,10 +63,10 @@ const TicketItem = (props) => {
       }}
       onLongPress={() => {
         navigation.navigate("Food Details", {
-          id: foodID,
-          noEdit: true,
+          id: id,
         });
       }}
+      descriptionStyle={{ color: colors.notification }}
     ></List.Item>
   );
 };
@@ -86,9 +78,10 @@ const Ticket = (props) => {
   const { colors } = useTheme();
   // console.log(`theme`, theme);
   function getDuration() {
-    let total = orderItems.reduce((total, item) => {
-      return { prepTime: total.prepTime + item.prepTime };
-    });
+    let total = (orderItems.length &&
+      orderItems.reduce((total, item) => {
+        return { prepTime: total.prepTime + item.prepTime };
+      })) || { prepTime: 0 };
     return total.prepTime;
   }
   return (
@@ -105,7 +98,7 @@ const Ticket = (props) => {
           onClose(id);
         }}
       >
-        <Card style={{ margin: 10 }}>
+        <Card style={{ margin: 10, minWidth: 300 }}>
           <Card.Content style={{ position: "relative" }}>
             <Card.Title title={`#${table}`}></Card.Title>
 
@@ -127,11 +120,19 @@ const Ticket = (props) => {
             </Subheading>
 
             <List.Section>
-              {orderItems
-                .sort((a, b) => a.prepTime - b.prepTime)
-                .map((food) => (
-                  <TicketItem key={uuidv4()} food={food} />
-                ))}
+              {orderItems.length ? (
+                orderItems
+                  .sort((a, b) => a.prepTime - b.prepTime)
+                  .map((food) => <TicketItem key={uuidv4()} food={food} />)
+              ) : (
+                <List.Item
+                  titleStyle={{
+                    color: colors.secondary,
+                    fontStyle: "italic",
+                  }}
+                  title="no items entered..."
+                ></List.Item>
+              )}
             </List.Section>
           </Card.Content>
         </Card>
@@ -182,29 +183,33 @@ export default class TicketList extends React.Component {
       <View style={StyleSheet.absoluteFill}>
         {this.state.tickets.length ? (
           <ScrollView horizontal>
-            {this.state.tickets
-              .sort((a, b) => a.created - b.created)
-              .map((ticket) => (
-                <Ticket
-                  key={ticket.id}
-                  {...ticket}
-                  onClose={(pId) => {
-                    closeOrder(pId)
-                      .then((result) => {
-                        if (result)
-                          this.setState({ snackMessage: "Ticket Closed!" });
-                        else
-                          this.setState({
-                            snackMessage: "something went wrong! :'(",
-                          });
-                      })
-                      .catch((err) => {});
-                    this.setState({
-                      tickets: this.state.tickets.filter(({ id }) => id != pId),
-                    });
-                  }}
-                />
-              ))}
+            <View style={{ flexDirection: "row" }}>
+              {this.state.tickets
+                .sort((a, b) => a.created - b.created)
+                .map((ticket) => (
+                  <Ticket
+                    key={ticket.id}
+                    {...ticket}
+                    onClose={(pId) => {
+                      closeOrder(pId)
+                        .then((result) => {
+                          if (result)
+                            this.setState({ snackMessage: "Ticket Closed!" });
+                          else
+                            this.setState({
+                              snackMessage: "something went wrong! :'(",
+                            });
+                        })
+                        .catch((err) => {});
+                      this.setState({
+                        tickets: this.state.tickets.filter(
+                          ({ id }) => id != pId
+                        ),
+                      });
+                    }}
+                  />
+                ))}
+            </View>
           </ScrollView>
         ) : (
           <View

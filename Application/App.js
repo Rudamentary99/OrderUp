@@ -72,7 +72,7 @@ export default function App() {
     <PaperProvider theme={theme}>
       <NavigationContainer theme={theme}>
         <Portal.Host>
-          <Drawer.Navigator initialRouteName="waiter">
+          <Drawer.Navigator initialRouteName="kitchen">
             <Drawer.Screen name="temp" component={tempScreen} />
             <Drawer.Screen name="manager" component={AdminNav} />
             <Drawer.Screen name="waiter" component={WaiterNav} />
