@@ -50,7 +50,8 @@ export async function getOrderItem(orderItemID) {
   return await axios
     .get("/api/orderItem/" + orderItemID)
     .then((result) => {
-      console.log(`result`, result);
+      console.log(`result`, result.data);
+      return result.data;
     })
     .catch((err) => {
       console.error(err);

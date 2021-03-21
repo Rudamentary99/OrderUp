@@ -135,13 +135,19 @@ const TicketListPane = (props) => {
                   justifyContent: "space-between",
                 }}
               >
-                <Text style={{ fontSize: 19 }}>- {data.item.name}</Text>
+                <Text style={{ fontSize: 19 }}>
+                  - {data.item.name}
+                  {data.item?.customization?.notes && "*"}
+                </Text>
                 <Text>${data.item.price}</Text>
               </View>
               <View style={{ paddingLeft: 10 }}>
                 {data.item?.customization?.excludedIngredients?.map(
                   (ingredient) => (
-                    <Text style={{ textDecorationLine: "line-through" }}>
+                    <Text
+                      key={uuidv4()}
+                      style={{ textDecorationLine: "line-through" }}
+                    >
                       {ingredient}
                     </Text>
                   )
@@ -275,10 +281,16 @@ export class ManageTicket extends React.Component {
               }
             }}
             onCustomize={(customItem) => {
+              const removedItem = ticketItems.find(
+                (item) => item.key == customItem.key
+              );
               this.setState({
                 ticketItems: ticketItems.map((item) =>
-                  customItem.key == item.key ? customItem : item
+                  customItem.key == item.key
+                    ? { ...customItem, orderID: null }
+                    : item
                 ),
+                removedItems: [...removedItems, removedItem],
               });
             }}
           />

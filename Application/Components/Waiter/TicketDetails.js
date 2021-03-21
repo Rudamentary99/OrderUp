@@ -97,6 +97,12 @@ export default class TicketDetails extends React.Component {
                 )}
                 title={item.name + (item.customization?.notes ? "*" : "")}
                 description={getDesiption(item)}
+                onPress={() => {
+                  this.props.navigation.navigate("Food Details", {
+                    id: item.id,
+                  });
+                  console.log(`item`, item);
+                }}
               ></List.Item>
             ))}
           </List.Section>

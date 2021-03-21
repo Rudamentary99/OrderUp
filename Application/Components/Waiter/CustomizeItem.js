@@ -68,7 +68,7 @@ export function customizeItem({
                 />
               ))
             ) : (
-              <List.Item title="No ingredients given." />
+              <List.Item title="This item has no ingredients." />
             )}
           </List.Accordion>
         </View>
