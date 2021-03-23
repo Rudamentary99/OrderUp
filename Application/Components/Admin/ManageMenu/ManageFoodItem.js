@@ -28,12 +28,14 @@ import {
 } from "../../../DB/foodController";
 import DropDown from "react-native-paper-dropdown";
 import { ListInput } from "../../helpers/ListInput";
+import { getTags } from "../../../DB/SettingsController";
+import { TagInput } from "../../helpers/TagInput";
 export function ManageFoodItem(props) {
   const [selectingFoodType, setSelectingFoodType] = React.useState(false);
   const [foodTypes, setFoodTypes] = React.useState([]);
-  const [tempIngredient, setTempIngredient] = React.useState("");
+  const [tags, setTags] = React.useState([]);
   React.useEffect(() => {
-    if (!foodTypes.length)
+    const focusListener = props.navigation.addListener("focus", () => {
       getFoodTypes()
         .then((result) => {
           setFoodTypes(result);
@@ -41,6 +43,18 @@ export function ManageFoodItem(props) {
         .catch((err) => {
           console.error(err);
         });
+      getTags()
+        .then((result) => {
+          setTags(result);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    });
+
+    return () => {
+      focusListener();
+    };
   });
   // export default function App() {
   const { handleSubmit, control, errors } = useForm({
@@ -49,9 +63,10 @@ export function ManageFoodItem(props) {
       price: "",
       foodType: "",
       ingredients: [],
+      tags: [],
       ...props.route.params, //override if editing
-      prepTime: props.route.params.prepTime
-        ? props.route.params.prepTime / 60 / 1000 //convert to minutes from ms
+      prepTime: props.route.params?.prepTime
+        ? props.route.params?.prepTime / 60 / 1000 //convert to minutes from ms
         : "",
     },
     mode: "onChange",
@@ -63,7 +78,13 @@ export function ManageFoodItem(props) {
       behavior="padding"
       style={[styles.containerStyle, { flex: 1 }]}
     >
-      <ScrollView contentContainerStyle={{ justifyContent: "flex-end" }}>
+      <ScrollView
+        contentContainerStyle={{
+          justifyContent: "flex-end",
+          paddingLeft: "20%",
+          paddingRight: "20%",
+        }}
+      >
         {/* <Text style={styles.headingStyle}>Form Builder Basic Demo</Text> */}
         <Controller
           name="name"
@@ -174,23 +195,45 @@ export function ManageFoodItem(props) {
           control={control}
           render={({ onChange, value }) => {
             return (
-              <ListInput
-                listTitle="Ingredients"
-                inputTitle="New Ingredient"
-                items={value}
-                onChange={(newIngredient) => {
-                  onChange([...value, newIngredient]);
-                }}
-                onRemove={(index) => {
-                  let temp = value;
-                  temp.splice(index);
-                  onChange([...temp]);
-                }}
-                sortFunction={(a, b) => a.localeCompare(b)}
-              />
+              <List.Accordion title="Ingredients">
+                <ListInput
+                  inputTitle="New Ingredient"
+                  items={value}
+                  onChange={(newIngredient) => {
+                    onChange([...value, newIngredient]);
+                  }}
+                  onRemove={(index) => {
+                    let temp = value;
+                    temp.splice(index);
+                    onChange([...temp]);
+                  }}
+                  sortFunction={(a, b) => a.localeCompare(b)}
+                />
+              </List.Accordion>
             );
           }}
         />
+        <Controller
+          name="tags"
+          control={control}
+          render={({ onChange, value }) => (
+            <List.Accordion title="Tags">
+              <View
+                style={{
+                  padding: 20,
+                  flexDirection: "row",
+                }}
+              >
+                <TagInput
+                  items={tags}
+                  selectedItems={value}
+                  onChangeSelection={onChange}
+                />
+              </View>
+            </List.Accordion>
+          )}
+        />
+
         <Button
           onPress={handleSubmit((data) => {
             if (Boolean(props.route.params?.name)) {

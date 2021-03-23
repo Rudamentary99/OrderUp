@@ -5,12 +5,12 @@ import "react-native-get-random-values";
 import { Divider, IconButton, Surface, TextInput } from "react-native-paper";
 import { List } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
+import { View } from "react-native";
 
 export function ListInput({
   items,
   onChange,
   onRemove,
-  listTitle,
   inputTitle,
   sortFunction,
 }) {
@@ -25,48 +25,46 @@ export function ListInput({
     }
   };
   return (
-    <List.Accordion title={listTitle}>
-      <Surface style={{ padding: 40 }}>
-        <TextInput
-          label={inputTitle}
-          value={newItem}
-          onChangeText={(text) => {
-            setNewItem(text);
-          }}
-          onSubmitEditing={() => {
-            submit();
-          }}
-          right={
-            <TextInput.Icon
-              icon={"plus"}
-              onPress={() => {
-                submit();
-              }}
-              forceTextInputFocus={false}
+    <Surface style={{ padding: 40 }}>
+      <TextInput
+        label={inputTitle}
+        value={newItem}
+        onChangeText={(text) => {
+          setNewItem(text);
+        }}
+        onSubmitEditing={() => {
+          submit();
+        }}
+        right={
+          <TextInput.Icon
+            icon={"plus"}
+            onPress={() => {
+              submit();
+            }}
+            forceTextInputFocus={false}
+          />
+        }
+        blurOnSubmit={false}
+      />
+      <ScrollView>
+        {getItems().map((item, index) => (
+          <View key={uuidv4()}>
+            <Divider />
+            <List.Item
+              key={uuidv4()}
+              title={item}
+              right={() => (
+                <IconButton
+                  icon="close"
+                  onPress={() => {
+                    onRemove(index);
+                  }}
+                />
+              )}
             />
-          }
-          blurOnSubmit={false}
-        />
-        <ScrollView>
-          {getItems().map((item, index) => (
-            <>
-              <Divider key={uuidv4()} />
-              <List.Item
-                key={uuidv4()}
-                title={item}
-                right={() => (
-                  <IconButton
-                    icon="close"
-                    onPress={() => {
-                      onRemove(index);
-                    }}
-                  />
-                )}
-              />
-            </>
-          ))}
-        </ScrollView>
-      </Surface>
-    </List.Accordion>
+          </View>
+        ))}
+      </ScrollView>
+    </Surface>
   );
 }
