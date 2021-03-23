@@ -27,42 +27,51 @@ import {
 } from "../../../DB/foodController";
 import { ManageFoodItem } from "./ManageFoodItem";
 import { FoodItem, FoodDetails } from "./FoodItem";
+import { FoodSettings } from "./FoodSettings";
 const Stack = createStackNavigator();
 const MenuBar = ({ navigation }) => {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  // const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   return (
     <View
       style={{
         position: "relative",
         flexDirection: "row",
+        justifyContent: "flex-start",
       }}
     >
       <IconButton compact disabled icon="magnify"></IconButton>
       <IconButton icon="filter" compact disabled></IconButton>
-      <Menu
-        visible={isMenuOpen}
-        onDismiss={() => setIsMenuOpen(false)}
+      <View
         style={{
           marginLeft: "auto",
+          alignSelf: "flex-end",
         }}
-        anchor={
-          <IconButton
-            disabled
-            compact
-            icon="cog"
-            onPress={() => setIsMenuOpen(true)}
-          ></IconButton>
-        }
       >
-        <Menu.Item
-          title="Manage Food Types"
+        {/* <Menu
+          visible={isMenuOpen}
+          onDismiss={() => setIsMenuOpen(false)}
+          style={{ paddingTop: 50 }}
+          anchor={ */}
+        <IconButton
+          compact
+          icon="cog"
           onPress={() => {
-            setIsMenuOpen(false);
-            navigation.navigate("temp");
+            navigation.navigate("Food Settings");
+            //   setIsMenuOpen(true)
           }}
-        ></Menu.Item>
-      </Menu>
+        ></IconButton>
+        {/* }
+        >
+          <Menu.Item
+            title="Manage Food Types"
+            onPress={() => {
+              setIsMenuOpen(false);
+              navigation.navigate("temp");
+            }}
+          ></Menu.Item>
+        </Menu> */}
+      </View>
     </View>
   );
 };
@@ -237,6 +246,7 @@ export default function ManageFood(props) {
       <Stack.Screen name="create-food" component={ManageFoodItem} />
       <Stack.Screen name="Food Details" component={FoodDetails} />
       <Stack.Screen name="Edit Food" component={ManageFoodItem} />
+      <Stack.Screen name="Food Settings" component={FoodSettings} />
     </Stack.Navigator>
   );
 }

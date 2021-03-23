@@ -5,6 +5,7 @@ const testRoutes = require("./routes/testRoutes");
 const foodRoutes = require("./routes/food");
 const orderRoutes = require("./routes/order");
 const foodTypeRoutes = require("./routes/foodType");
+const settingRoutes = require("./routes/settings");
 const expressApp = require("./expressApp");
 //get App Config
 const config = JSON.parse(fs.readFileSync(`${__dirname}/config.json`));
@@ -14,6 +15,7 @@ const getRoutes = (dbConn) => [
   ...foodRoutes(dbConn),
   ...foodTypeRoutes(dbConn),
   ...orderRoutes(dbConn),
+  ...settingRoutes(dbConn),
   {
     method: "all",
     path: "/test",
