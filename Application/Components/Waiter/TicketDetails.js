@@ -23,6 +23,7 @@ import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
 import { getActionFromState } from "@react-navigation/native";
+import { CustomStyles } from "../../Styles";
 export default class TicketDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -195,7 +196,7 @@ export default class TicketDetails extends React.Component {
           onStateChange={() => {
             this.setState({ editOpen: !this.state.editOpen });
           }}
-          style={{ position: "absolute", bottom: 0, right: 0, padding: 50 }}
+          style={CustomStyles.bottomRightAction}
         />
         <Dialog
           visible={this.state.confirm}

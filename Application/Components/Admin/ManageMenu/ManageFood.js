@@ -28,6 +28,7 @@ import {
 import { ManageFoodItem } from "./ManageFoodItem";
 import { FoodItem, FoodDetails } from "./FoodItem";
 import { FoodSettings } from "./FoodSettings";
+import { CustomStyles } from "../../../Styles";
 const Stack = createStackNavigator();
 const MenuBar = ({ navigation }) => {
   // const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -179,16 +180,18 @@ class FoodMain extends React.Component {
         </View>
       );
     };
-    const styles = StyleSheet.create({
-      input: {
-        margin: 10,
-      },
-    });
+
     return (
-      <View style={{ ...StyleSheet.absoluteFill, padding: 50, paddingTop: 0 }}>
+      <View
+        style={{
+          ...StyleSheet.absoluteFill,
+          paddingTop: 0,
+        }}
+      >
         <MenuBar navigation={this.props.navigation}></MenuBar>
 
         <ScrollView
+          contentContainerStyle={CustomStyles.container}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -205,7 +208,7 @@ class FoodMain extends React.Component {
           onPress={() => {
             this.props.navigation.navigate("create-food");
           }}
-          style={{ position: "absolute", right: 0, bottom: 0, margin: 50 }}
+          style={CustomStyles.bottomRightAction}
         />
         <Portal>
           <Snackbar

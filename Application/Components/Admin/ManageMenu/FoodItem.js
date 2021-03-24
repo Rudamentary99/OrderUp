@@ -15,12 +15,14 @@ import {
   Button,
   TextInput,
   List,
+  Chip,
 } from "react-native-paper";
 import { getFoodItem } from "../../../DB/foodController";
 import { ScrollView } from "react-native-gesture-handler";
+import { CustomStyles } from "../../../Styles";
 export function FoodItem(props) {
   const {
-    item: { id, name, prepTime, foodType },
+    item: { id, name, prepTime, tags },
     style,
     onArchive,
   } = props;
@@ -52,6 +54,15 @@ export function FoodItem(props) {
             title={name}
             subtitle={"Prep Time: " + prepTime / 60 / 1000 + "min"}
           ></Card.Title>
+          <Card.Content>
+            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+              {tags?.map((tag) => (
+                <Chip key={tag.id} style={{ marginLeft: 3 }}>
+                  {tag.name}
+                </Chip>
+              ))}
+            </View>
+          </Card.Content>
         </Card>
       }
     >
@@ -105,12 +116,13 @@ export class FoodDetails extends React.Component {
 
   render() {
     const {
-      foodItem: { name, prepTime, foodType, price, ingredients },
+      foodItem: { name, prepTime, foodType, price, ingredients, tags },
     } = this.state;
     return (
       <View
         style={{
           ...StyleSheet.absoluteFill,
+          ...CustomStyles.container,
           padding: 50,
           paddingHorizontal: 80,
           justifyContent: "space-between",
@@ -134,13 +146,16 @@ export class FoodDetails extends React.Component {
           </List.Section>
         </View>
 
-        {/* <View>
-          <Subheading>Ingredients:</Subheading>
-        </View>
         <View>
-          <Subheading>Tags:</Subheading>
-        </View> */}
-        <Headline style={{}}>Price: ${price}</Headline>
+          <View style={{ flexDirection: "row", alignSelf: "flex-end" }}>
+            {tags?.map((tag) => (
+              <Chip mode="outlined" key={tag.id} style={{ marginLeft: 3 }}>
+                {tag.name}
+              </Chip>
+            ))}
+          </View>
+          <Headline style={{}}>Price: ${price}</Headline>
+        </View>
         <FAB
           icon="pencil"
           onPress={() => {
@@ -150,10 +165,7 @@ export class FoodDetails extends React.Component {
             );
           }}
           style={{
-            position: "absolute",
-            bottom: 0,
-            right: 0,
-            margin: 50,
+            ...CustomStyles.bottomRightAction,
             display: Boolean(this.props.route.params?.noEdit) ? "none" : "flex",
           }}
         ></FAB>

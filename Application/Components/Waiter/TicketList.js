@@ -14,6 +14,7 @@ import {
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { getOrders } from "../../DB/orderController";
 import { useNavigation } from "@react-navigation/native";
+import { CustomStyles } from "../../Styles";
 
 const moment = require("moment"); // require
 const Tab = createMaterialTopTabNavigator();
@@ -160,7 +161,7 @@ class TicketList extends React.Component {
           onPress={() => {
             this.props.navigation.navigate("New Ticket");
           }}
-          style={{ position: "absolute", bottom: 0, right: 0, margin: 50 }}
+          style={CustomStyles.bottomRightAction}
         />
         <Snackbar
           visible={this.state.snackMessage}
