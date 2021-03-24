@@ -256,7 +256,7 @@ export class ManageTicket extends React.Component {
         <Surface
           style={{
             marginTop: 25,
-            width: (Dimensions.get("window").width / 10) * 4,
+            width: "35%",
             padding: 20,
           }}
         >
@@ -351,7 +351,7 @@ export class ManageTicket extends React.Component {
         <View
           style={{
             position: "relative",
-            width: (Dimensions.get("window").width / 10) * 6,
+            width: "65%",
             margin: 5,
           }}
         >
