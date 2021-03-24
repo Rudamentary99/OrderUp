@@ -2,9 +2,9 @@ import React from "react";
 import { View } from "react-native";
 import { Chip } from "react-native-paper";
 
-export function TagInput({ selectedItems, onChangeSelection, items }) {
+export function TagInput({ selectedItems, onChangeSelection, items, style }) {
   return (
-    <View style={{ flexDirection: "row" }}>
+    <View style={{ flexDirection: "row", ...style }}>
       {items.map((tag) => (
         <Chip
           key={tag.id}

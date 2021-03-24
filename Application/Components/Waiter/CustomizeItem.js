@@ -11,6 +11,9 @@ import {
 
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
+import { CustomStyles } from "../../Styles";
+import { TagInput } from "../helpers/TagInput";
+import { getTags } from "../../DB/SettingsController";
 export function customizeItem({
   navigation,
   route: {
@@ -22,12 +25,25 @@ export function customizeItem({
   const [excludedIngredients, setExcludedIngredients] = React.useState(
     item?.customization?.excludedIngredients || []
   );
+  const [customTags, setCustomTags] = React.useState(item.tags || []);
+  const [tags, setTags] = React.useState([]);
   const [notes, setNotes] = React.useState(item?.customization?.notes || "");
+  React.useEffect(() => {
+    if (!tags.length)
+      getTags()
+        .then((result) => {
+          setTags(result);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+  });
+
   return (
     <KeyboardAvoidingView
       keyboardVerticalOffset={useHeaderHeight() + 10}
       behavior="padding"
-      style={{ padding: 50, flex: 1 }}
+      style={{ padding: 50, flex: 1, ...CustomStyles.container }}
     >
       <Headline>{item.name}</Headline>
       <ScrollView contentContainerStyle={{ justifyContent: "flex-end" }}>
@@ -81,21 +97,29 @@ export function customizeItem({
           mode="outlined"
           multiline={true}
         />
+        <TagInput
+          items={tags}
+          selectedItems={customTags}
+          style={{ padding: 30 }}
+          onChangeSelection={(newTags) => {
+            setCustomTags(newTags);
+          }}
+        />
+        <Button
+          onPress={() => {
+            onSubmit({
+              ...item,
+              customization: {
+                notes: notes,
+                excludedIngredients: excludedIngredients,
+              },
+            });
+            navigation.goBack();
+          }}
+        >
+          Submit
+        </Button>
       </ScrollView>
-      <Button
-        onPress={() => {
-          onSubmit({
-            ...item,
-            customization: {
-              notes: notes,
-              excludedIngredients: excludedIngredients,
-            },
-          });
-          navigation.goBack();
-        }}
-      >
-        Submit
-      </Button>
     </KeyboardAvoidingView>
   );
 }

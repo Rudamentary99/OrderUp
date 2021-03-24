@@ -38,32 +38,31 @@ const Ticket = ({ ticket }) => {
     </Card>
   );
 };
-class TicketList extends React.Component {
+export default class TicketList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       tickets: [],
       filter: true,
+      ticketType: this.props.ticketType || "open",
     };
   }
   componentDidMount() {
-    this.willFocusSubscription = this.props.navigation.addListener(
-      "focus",
-      () => {
-        this.setState({ snackMessage: this.props.route?.params?.snackMessage });
-        this.loadData();
-      }
-    );
+    this.focusSubscription = this.props.navigation.addListener("focus", () => {
+      this.setState({ snackMessage: this.props.route?.params?.snackMessage });
+      this.loadData();
+    });
     this.intervalID = setInterval(() => this.loadData(), 10 * 1000);
     this.loadData();
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
+    this.focusSubscription();
   }
 
   loadData() {
-    getOrders(this.props.ticketType)
+    getOrders(this.state.ticketType)
       .then((result) => {
         if (result) this.setState({ tickets: result });
         // console.log("result", result);
@@ -82,29 +81,26 @@ class TicketList extends React.Component {
           ...StyleSheet.absoluteFill,
         }}
       >
-        <Portal>
-          <View
-            style={{
-              marginTop: 120,
-              margin: 20,
-              position: "absolute",
-              top: 0,
-              right: 0,
+        {/* <View
+          style={{
+            margin: 20,
+            position: "absolute",
+            top: 0,
+            right: 0,
+          }}
+        >
+          <Button
+            mode="contained"
+            labelStyle={{ fontSize: 15 }}
+            compact
+            icon={this.state.filter ? "filter" : "filter-outline"}
+            onPress={() => {
+              this.setState({ filter: !this.state.filter });
             }}
           >
-            <Button
-              mode="contained"
-              labelStyle={{ fontSize: 15 }}
-              compact
-              icon={this.state.filter ? "filter" : "filter-outline"}
-              onPress={() => {
-                this.setState({ filter: !this.state.filter });
-              }}
-            >
-              Today
-            </Button>
-          </View>
-        </Portal>
+            Today
+          </Button>
+        </View> */}
 
         {this.state.tickets?.length ? (
           this.state.tickets.filter(filter).length ? (
@@ -140,7 +136,7 @@ class TicketList extends React.Component {
               ]}
             >
               <Headline>
-                You have no {this.props.ticketType} orders for{" "}
+                You have no {this.state.ticketType} orders for
                 <Text style={{ textDecorationLine: "underline" }}>today</Text>.
               </Headline>
             </View>
@@ -152,7 +148,7 @@ class TicketList extends React.Component {
               { justifyContent: "center", alignItems: "center" },
             ]}
           >
-            <Headline>You have no {this.props.ticketType} orders.</Headline>
+            <Headline>You have no {this.state.ticketType} orders.</Headline>
           </View>
         )}
 
@@ -175,15 +171,16 @@ class TicketList extends React.Component {
     );
   }
 }
-export default function WaiterTicketLists(props) {
-  return (
-    <Tab.Navigator initialRouteName="Open">
-      <Tab.Screen name="Open">
-        {(props) => <TicketList {...props} ticketType="open" />}
-      </Tab.Screen>
-      <Tab.Screen name="Closed">
-        {(props) => <TicketList {...props} ticketType="closed" />}
-      </Tab.Screen>
-    </Tab.Navigator>
-  );
-}
+// export default function WaiterTicketLists(props) {
+//   return (
+//     <TicketList ticketType="open" />
+//     // <Tab.Navigator initialRouteName="Open">
+//     //   <Tab.Screen name="Open">
+//     //     {(props) => <TicketList {...props} ticketType="open" />}
+//     //   </Tab.Screen>
+//     //   <Tab.Screen name="Closed">
+//     //     {(props) => <TicketList {...props} ticketType="closed" />}
+//     //   </Tab.Screen>
+//     // </Tab.Navigator>
+//   );
+// }
