@@ -124,7 +124,6 @@ export class FoodDetails extends React.Component {
           ...StyleSheet.absoluteFill,
           ...CustomStyles.container,
           padding: 50,
-          paddingHorizontal: 80,
           justifyContent: "space-between",
         }}
       >

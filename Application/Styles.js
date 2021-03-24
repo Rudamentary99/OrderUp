@@ -2,8 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const CustomStyles = StyleSheet.create({
   container: {
-    paddingLeft: "20%",
-    paddingRight: "20%",
+    paddingHorizontal: "20%",
   },
   bottomRightAction: {
     position: "absolute",
