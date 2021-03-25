@@ -20,6 +20,10 @@ export function customizeItem({
     params: { item, onSubmit },
   },
 }) {
+  // console.log(
+  //   ` navigation.dangerouslyGetState()`,
+  //   navigation.dangerouslyGetState().routes
+  // );
   //const [item, setItem] = React.useState(params.item);
   const [ingredientOpen, setIngredientOpen] = React.useState(true);
   const [excludedIngredients, setExcludedIngredients] = React.useState(

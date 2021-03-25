@@ -37,6 +37,7 @@ import {
 import { useHeaderHeight } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { getTags } from "../../DB/SettingsController";
+import { CustomStyles } from "../../Styles";
 const FoodListPane = (props) => {
   const { foodTypes, foodItems, onSelect, onLongSelect } = props;
   const [selectedFoodType, setSelectedFoodType] = React.useState("Entree");
@@ -75,8 +76,6 @@ const FoodListPane = (props) => {
               if (filterTags?.length) {
                 if (tags?.length) {
                   filterTags.forEach((filterTag) => {
-                    console.log(`filterTag`, filterTag);
-
                     if (!tags.find((tag) => tag.id == filterTag.id)) {
                       rv = false;
                     }
@@ -158,6 +157,7 @@ const FoodListPane = (props) => {
         onDismiss={() => {
           setEditFilter(false);
         }}
+        style={{ top: -230 }}
       >
         <Dialog.Title>Filter Items By</Dialog.Title>
         <Dialog.Content>
@@ -180,6 +180,16 @@ const FoodListPane = (props) => {
             ))}
           </View>
         </Dialog.Content>
+        <Dialog.Actions>
+          <Button
+            onPress={() => {
+              setFilterTags([]);
+            }}
+            style={{ display: filterTags.length ? "flex" : "none" }}
+          >
+            Clear Filter
+          </Button>
+        </Dialog.Actions>
       </Dialog>
     </>
   );
@@ -460,7 +470,7 @@ export class ManageTicket extends React.Component {
           onDismiss={() => {
             this.setState({ getTableNumber: false });
           }}
-          style={{ marginBottom: 400 }}
+          style={{ marginBottom: 400, ...CustomStyles.dialogContainer }}
         >
           <Dialog.Content>
             <TextInput
@@ -472,7 +482,7 @@ export class ManageTicket extends React.Component {
               autoFocus
             ></TextInput>
           </Dialog.Content>
-          <Dialog.Actions style={{ justifyContent: "center" }}>
+          <Dialog.Actions>
             <Button
               onPress={() => {
                 this.setState({ getTableNumber: false });

@@ -4,6 +4,9 @@ export const CustomStyles = StyleSheet.create({
   container: {
     paddingHorizontal: "20%",
   },
+  dialogContainer: {
+    marginHorizontal: "20%",
+  },
   bottomRightAction: {
     position: "absolute",
     bottom: 0,
