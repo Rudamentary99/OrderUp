@@ -16,9 +16,11 @@ import {
 import {
   Button,
   Card,
+  Chip,
   Dialog,
   Divider,
   Headline,
+  IconButton,
   List,
   Portal,
   Subheading,
@@ -34,17 +36,61 @@ import {
 } from "../../DB/orderController";
 import { useHeaderHeight } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
+import { getTags } from "../../DB/SettingsController";
 const FoodListPane = (props) => {
   const { foodTypes, foodItems, onSelect, onLongSelect } = props;
   const [selectedFoodType, setSelectedFoodType] = React.useState("Entree");
-
+  const [tags, setTags] = React.useState([]);
+  const [filterTags, setFilterTags] = React.useState([]);
+  const navigation = useNavigation();
+  React.useEffect(() => {
+    if (!tags.length)
+      getTags()
+        .then((result) => {
+          setTags(result);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+  });
+  const [editFilter, setEditFilter] = React.useState(false);
   return (
     <>
       <View style={{ padding: 20 }}>
-        <Headline style={{ textAlign: "center" }}>{selectedFoodType}s</Headline>
+        <View style={{ flexDirection: "row" }}>
+          <Headline>{selectedFoodType}s</Headline>
+          <IconButton
+            style={{ alignSelf: "flex-end", marginLeft: "auto" }}
+            icon="filter"
+            onPress={() => {
+              setEditFilter(true);
+            }}
+          />
+        </View>
         <ScrollView>
           {foodItems
             .filter(({ foodType }) => foodType == selectedFoodType)
+            .filter(({ tags }) => {
+              var rv = true;
+              if (filterTags?.length) {
+                if (tags?.length) {
+                  filterTags.forEach((filterTag) => {
+                    console.log(`filterTag`, filterTag);
+
+                    if (!tags.find((tag) => tag.id == filterTag.id)) {
+                      rv = false;
+                    }
+                  });
+                  //return tags.find((tag) => {
+                  //   console.log(`tag`, tag);
+                  //      return tag.id == "36722855-cd9f-4f9f-b08d-7fe303c7ab79";
+                  // });
+                } else {
+                  rv = false;
+                }
+              }
+              return rv;
+            })
             .sort(({ name: a }, { name: b }) => {
               return a < b ? -1 : a > b ? 1 : 0;
             })
@@ -61,6 +107,11 @@ const FoodListPane = (props) => {
               >
                 <Card.Title title={food.name}></Card.Title>
                 <Card.Content style={{ flexDirection: "row" }}>
+                  <View style={{ flexDirection: "row" }}>
+                    {/* {food.tags?.map((tag) => (
+                      <Chip key={uuidv4()}>{tag.name}</Chip>
+                    ))} */}
+                  </View>
                   <Subheading
                     style={{ alignSelf: "flex-end", marginLeft: "auto" }}
                   >
@@ -102,6 +153,34 @@ const FoodListPane = (props) => {
           );
         })}
       </View>
+      <Dialog
+        visible={editFilter}
+        onDismiss={() => {
+          setEditFilter(false);
+        }}
+      >
+        <Dialog.Title>Filter Items By</Dialog.Title>
+        <Dialog.Content>
+          <View style={{ flexDirection: "row" }}>
+            {tags?.map((tag) => (
+              <Chip
+                key={uuidv4()}
+                selected={filterTags.find(({ id }) => tag.id == id)}
+                style={{ marginRight: 3 }}
+                onPress={() => {
+                  if (filterTags.find(({ id }) => tag.id == id)) {
+                    setFilterTags(filterTags.filter(({ id }) => id != tag.id));
+                  } else {
+                    setFilterTags([...filterTags, tag]);
+                  }
+                }}
+              >
+                {tag.name}
+              </Chip>
+            ))}
+          </View>
+        </Dialog.Content>
+      </Dialog>
     </>
   );
 };
@@ -256,17 +335,17 @@ export class ManageTicket extends React.Component {
         <Surface
           style={{
             marginTop: 25,
-            width: "35%",
+            width: "40%",
             padding: 20,
           }}
         >
-          <TouchableHighlight
+          <TouchableOpacity
             onPress={() => {
               this.setState({ getTableNumber: true });
             }}
           >
             <Headline>{`Order for table #${this.state.table}:`}</Headline>
-          </TouchableHighlight>
+          </TouchableOpacity>
           <Divider />
           <TicketListPane
             ticketItems={ticketItems}
@@ -351,7 +430,7 @@ export class ManageTicket extends React.Component {
         <View
           style={{
             position: "relative",
-            width: "65%",
+            width: "60%",
             margin: 5,
           }}
         >
@@ -378,6 +457,9 @@ export class ManageTicket extends React.Component {
         </View>
         <Dialog
           visible={this.state.getTableNumber}
+          onDismiss={() => {
+            this.setState({ getTableNumber: false });
+          }}
           style={{ marginBottom: 400 }}
         >
           <Dialog.Content>

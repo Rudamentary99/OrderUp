@@ -25,7 +25,9 @@ export function customizeItem({
   const [excludedIngredients, setExcludedIngredients] = React.useState(
     item?.customization?.excludedIngredients || []
   );
-  const [customTags, setCustomTags] = React.useState(item.tags || []);
+  const [customTags, setCustomTags] = React.useState(
+    item?.customization?.customTags || item?.tags || []
+  );
   const [tags, setTags] = React.useState([]);
   const [notes, setNotes] = React.useState(item?.customization?.notes || "");
   React.useEffect(() => {
@@ -112,6 +114,7 @@ export function customizeItem({
               customization: {
                 notes: notes,
                 excludedIngredients: excludedIngredients,
+                customTags: customTags,
               },
             });
             navigation.goBack();
