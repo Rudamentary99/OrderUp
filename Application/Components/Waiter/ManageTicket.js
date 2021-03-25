@@ -61,7 +61,7 @@ const FoodListPane = (props) => {
           <Headline>{selectedFoodType}s</Headline>
           <IconButton
             style={{ alignSelf: "flex-end", marginLeft: "auto" }}
-            icon="filter"
+            icon={filterTags.length ? "filter" : "filter-outline"}
             onPress={() => {
               setEditFilter(true);
             }}
