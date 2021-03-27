@@ -125,18 +125,18 @@ class FoodMain extends React.Component {
     const listFoodItems = () => {
       if (foodItems?.length && foodTypes?.length) {
         return foodTypes
-          .sort(({ name: aName }, { name: bName }) =>
-            aName < bName ? -1 : aName > bName ? 1 : 0
-          )
+          .sort((a, b) => {
+            return b.priority - a.priority;
+          })
           .map(({ id, name }) => {
-            if (foodItems.find(({ foodType }) => name == foodType)) {
-              return (
-                <>
-                  <Subheading key={id + "-" + uuidv4()}>{name}</Subheading>
-                  {foodItems
+            return (
+              <View>
+                <Subheading key={id + "-" + uuidv4()}>{name}</Subheading>
+                {foodItems.find(({ foodType }) => name == foodType) ? (
+                  foodItems
                     .filter(({ foodType }) => foodType == name)
                     .sort(({ name: aName }, { name: bName }) =>
-                      aName < bName ? -1 : aName > bName ? 1 : 0
+                      aName.localeCompare(bName)
                     )
                     .map((food) => (
                       <FoodItem
@@ -160,10 +160,16 @@ class FoodMain extends React.Component {
                         }}
                         style={{ margin: 10 }}
                       />
-                    ))}
-                </>
-              );
-            }
+                    ))
+                ) : (
+                  <View style={{ padding: 15 }}>
+                    <Subheading style={{ textAlign: "center" }}>
+                      No food of this type.
+                    </Subheading>
+                  </View>
+                )}
+              </View>
+            );
           });
       }
 

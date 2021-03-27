@@ -137,7 +137,7 @@ export default class TicketList extends React.Component {
             >
               <Headline>
                 You have no {this.state.ticketType} orders for
-                <Text style={{ textDecorationLine: "underline" }}>today</Text>.
+                <Text style={{ textDecorationLine: "underline" }}> today</Text>.
               </Headline>
             </View>
           )
