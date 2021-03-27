@@ -40,7 +40,7 @@ import { getTags } from "../../DB/SettingsController";
 import { CustomStyles } from "../../Styles";
 const FoodListPane = (props) => {
   const { foodTypes, foodItems, onSelect, onLongSelect } = props;
-  const [selectedFoodType, setSelectedFoodType] = React.useState("Entree");
+  const [selectedFoodType, setSelectedFoodType] = React.useState("");
   const [tags, setTags] = React.useState([]);
   const [filterTags, setFilterTags] = React.useState([]);
   const navigation = useNavigation();
@@ -135,22 +135,24 @@ const FoodListPane = (props) => {
           margin: 20,
         }}
       >
-        {foodTypes?.map((type, index) => {
-          //   if (index > 3) return;
-          return (
-            <Button
-              key={uuidv4()}
-              disabled={selectedFoodType == type.name}
-              compact
-              onPress={() => {
-                setSelectedFoodType(type.name);
-              }}
-              labelStyle={{ fontSize: 18 }}
-            >
-              {type.name}
-            </Button>
-          );
-        })}
+        {foodTypes
+          ?.sort((a, b) => b.priority - a.priority)
+          ?.map((type, index) => {
+            if (!selectedFoodType && index == 0) setSelectedFoodType(type.name);
+            return (
+              <Button
+                key={uuidv4()}
+                disabled={selectedFoodType == type.name}
+                compact
+                onPress={() => {
+                  setSelectedFoodType(type.name);
+                }}
+                labelStyle={{ fontSize: 18 }}
+              >
+                {type.name}
+              </Button>
+            );
+          })}
       </View>
       <Dialog
         visible={editFilter}
