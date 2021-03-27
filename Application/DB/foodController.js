@@ -78,9 +78,17 @@ export async function getFoodTypes() {
   return await axios
     .get("/api/foodTypes/")
     .then((result) => {
+      // console.log(`result.data`, result.data);
       return result.data;
     })
     .catch((err) => {
       console.error(err);
     });
+}
+
+export async function updateFoodTypes(foodTypes, removedFoodTypes) {
+  return await axios.post("/api/foodTypes/", {
+    foodTypes: foodTypes,
+    removedFoodTypes: removedFoodTypes,
+  });
 }

@@ -1,0 +1,32 @@
+2021-03-26T18:11:41.755092000 0.080499s notice: Recursively removing directory /Users/seniorproject/Documents/GitHub/que-ue-rn/rethinkdb_data/tmp
+2021-03-26T18:11:41.757451000 0.082862s notice: Initializing directory /Users/seniorproject/Documents/GitHub/que-ue-rn/rethinkdb_data
+2021-03-26T18:11:41.757596000 0.083003s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/Users/seniorproject/Documents/GitHub/que-ue-rn/rethinkdb_data' did not already exist or is empty.)
+2021-03-26T18:11:41.757631000 0.083037s notice: Running rethinkdb 2.4.1 (CLANG 11.0.3 (clang-1103.0.32.62))...
+2021-03-26T18:11:41.764928000 0.090336s notice: Running on Darwin 17.7.0 x86_64
+2021-03-26T18:11:41.765042000 0.090448s notice: Loading data from directory /Users/seniorproject/Documents/GitHub/que-ue-rn/rethinkdb_data
+2021-03-26T18:11:41.824175000 0.149583s info: Automatically using cache size of 100 MB
+2021-03-26T18:11:41.824186000 0.149593s warn: Cache size does not leave much memory for server and query overhead (available memory: 862 MB).
+2021-03-26T18:11:41.824193000 0.149600s warn: Cache size is very low and may impact performance.
+2021-03-26T18:11:41.826648000 0.152056s notice: Listening for intracluster connections on port 29015
+2021-03-26T18:11:41.830299000 0.155707s notice: Listening for client driver connections on port 28015
+2021-03-26T18:11:41.830380000 0.155788s notice: Listening for administrative HTTP connections on port 8080
+2021-03-26T18:11:41.830387000 0.155795s notice: Listening on cluster addresses: 127.0.0.1, ::1
+2021-03-26T18:11:41.830396000 0.155803s notice: Listening on driver addresses: 127.0.0.1, ::1
+2021-03-26T18:11:41.830404000 0.155812s notice: Listening on http addresses: 127.0.0.1, ::1
+2021-03-26T18:11:41.830412000 0.155819s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2021-03-26T18:11:41.830426000 0.155834s notice: Server ready, "ITLOANMAC17164_usb" c885d7fc-b2b7-441c-a0f4-ad745a84d6f7
+2021-03-26T18:17:13.160898000 331.492867s info: Table bbda9771-cf70-43c0-9b05-36cf2d0da193: Starting a new Raft election for term 1.
+2021-03-26T18:17:13.164808000 331.496777s info: Table bbda9771-cf70-43c0-9b05-36cf2d0da193: Added replica on this server.
+2021-03-26T18:17:13.171778000 331.503747s info: Table bbda9771-cf70-43c0-9b05-36cf2d0da193: This server is Raft leader for term 1. Latest log index is 0.
+2021-03-26T18:17:17.182680000 335.514729s info: Table fbc26a85-d823-4342-baac-65cb1570a189: Starting a new Raft election for term 1.
+2021-03-26T18:17:17.182942000 335.514991s info: Table fbc26a85-d823-4342-baac-65cb1570a189: Added replica on this server.
+2021-03-26T18:17:17.189395000 335.521443s info: Table fbc26a85-d823-4342-baac-65cb1570a189: This server is Raft leader for term 1. Latest log index is 0.
+2021-03-26T18:17:23.186881000 341.519049s info: Table 9b5b2f64-6836-49a0-bbb2-b0395be2f6ad: Starting a new Raft election for term 1.
+2021-03-26T18:17:23.187181000 341.519349s info: Table 9b5b2f64-6836-49a0-bbb2-b0395be2f6ad: Added replica on this server.
+2021-03-26T18:17:23.193483000 341.525651s info: Table 9b5b2f64-6836-49a0-bbb2-b0395be2f6ad: This server is Raft leader for term 1. Latest log index is 0.
+2021-03-26T18:17:34.369894000 352.702283s info: Table 501986ab-5cee-4b2b-929f-ac908f21d6a7: Starting a new Raft election for term 1.
+2021-03-26T18:17:34.370202000 352.702591s info: Table 501986ab-5cee-4b2b-929f-ac908f21d6a7: Added replica on this server.
+2021-03-26T18:17:34.376710000 352.709099s info: Table 501986ab-5cee-4b2b-929f-ac908f21d6a7: This server is Raft leader for term 1. Latest log index is 0.
+2021-03-26T18:18:16.638502000 394.971728s info: Table 9af166b9-646d-4777-91bf-ff568b8c6e1b: Starting a new Raft election for term 1.
+2021-03-26T18:18:16.638807000 394.972034s info: Table 9af166b9-646d-4777-91bf-ff568b8c6e1b: Added replica on this server.
+2021-03-26T18:18:16.644941000 394.978167s info: Table 9af166b9-646d-4777-91bf-ff568b8c6e1b: This server is Raft leader for term 1. Latest log index is 0.

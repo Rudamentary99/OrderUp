@@ -11,7 +11,7 @@ module.exports = (rdbConn) => [
           console.error(error);
           res.status(400).send({ error: error });
         } else {
-          res.json(result._responses[0].r);
+          res.json(result?._responses[0]?.r);
           //  console.log(`result`, result._responses);
           //res.send;
         }

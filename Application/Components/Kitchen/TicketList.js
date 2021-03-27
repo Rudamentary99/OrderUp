@@ -14,9 +14,14 @@ import {
   Subheading,
   Button,
   useTheme,
+  IconButton,
 } from "react-native-paper";
 import { getOpenOrdersFull, updateOrderItem } from "../../DB/orderController";
-import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
+import {
+  FlingGestureHandler,
+  Directions,
+  TouchableHighlight,
+} from "react-native-gesture-handler";
 import { closeOrder } from "../../DB/orderController";
 import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
@@ -43,7 +48,14 @@ const TicketItem = (props) => {
   return (
     <List.Item
       left={() => (
-        <List.Icon
+        <IconButton
+          onPress={() => {
+            updateOrderItem(id, {
+              completed: !completed,
+            }).catch((err) => {
+              console.error(err);
+            });
+          }}
           icon={
             completed
               ? "checkbox-marked-circle-outline"
@@ -55,10 +67,8 @@ const TicketItem = (props) => {
       description={getDescription()}
       onPress={() => {
         //setCompleted(!completed);
-        updateOrderItem(id, {
-          completed: !completed,
-        }).catch((err) => {
-          console.error(err);
+        navigation.navigate("Food Details", {
+          id: id,
         });
       }}
       onLongPress={() => {

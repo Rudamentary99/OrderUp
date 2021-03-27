@@ -1,5 +1,5 @@
 const r = require("rethinkdb");
-
+const async = require("async");
 module.exports = (rdbConn) => [
   {
     method: "get",
@@ -13,6 +13,29 @@ module.exports = (rdbConn) => [
           res.end();
         }
       });
+    },
+  },
+  {
+    method: "post",
+    path: "/api/foodTypes/",
+    fn: (req, res) => {
+      const { foodTypes, removedFoodTypes } = req.body;
+      async.waterfall([
+        function saveNewFoodTypes(callback) {
+          r.table("foodTypes")
+            .insert(foodTypes.filter(({ id }) => !id))
+            .run(rdbConn, callback);
+        },
+        function removeFoodTypes(result, callback) {
+          r.table("foodTypes")
+            .getAll(r.args(removedFoodTypes.map(({ id }) => id)))
+            .update({ deleteDate: Date.now() })
+            .run(rdbConn, callback);
+        },
+        function cleeanUp(result) {
+          res.send();
+        },
+      ]);
     },
   },
 ];

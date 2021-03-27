@@ -1,6 +1,6 @@
 import react from "react";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 import {
   Button,
   Chip,
@@ -16,12 +16,16 @@ import {
   Portal,
   useTheme,
   Divider,
+  Subheading,
 } from "react-native-paper";
 
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
 import { getTags, updateTags } from "../../../DB/SettingsController";
-export function FoodSettings({ route, navigation }) {
+import { getFoodTypes, updateFoodTypes } from "../../../DB/foodController";
+import { CustomStyles } from "../../../Styles";
+
+function ManageTags({ route, navigation }) {
   const [tagList, setTagList] = React.useState([]);
   const [removedTags, setRemovedTags] = React.useState([]);
   const [editTags, setEditTags] = React.useState(false);
@@ -34,7 +38,7 @@ export function FoodSettings({ route, navigation }) {
   const loadData = () => {
     getTags()
       .then((result) => {
-        setTagList(result);
+        if (result?.length) setTagList(result);
       })
       .catch((err) => {
         console.error(err);
@@ -46,17 +50,13 @@ export function FoodSettings({ route, navigation }) {
   });
   const { roundness } = useTheme();
   return (
-    <View
-      style={[
-        StyleSheet.absoluteFill,
-        { padding: 50, paddingLeft: "10%", paddingRight: "10%" },
-      ]}
-    >
+    <View>
       <List.Section title="Tags">
         {editTags ? (
           <View style={{ alignItems: "center" }}>
-            {tagList.map((tag) => (
+            {tagList.map((foodType) => (
               <Surface
+                key={uuidv4()}
                 style={{
                   maxWidth: 600,
                   width: "100%",
@@ -74,14 +74,16 @@ export function FoodSettings({ route, navigation }) {
                     paddingLeft: 20,
                   }}
                 >
-                  <Chip>{tag.name}</Chip>
+                  <Chip>{foodType.name}</Chip>
                 </View>
 
                 <IconButton
                   icon="close-circle-outline"
                   onPress={() => {
-                    if (tag.id) setRemovedTags([...removedTags, tag]);
-                    setTagList(tagList.filter(({ name }) => name != tag.name));
+                    if (foodType.id) setRemovedTags([...removedTags, foodType]);
+                    setTagList(
+                      tagList.filter(({ name }) => name != foodType.name)
+                    );
                   }}
                 ></IconButton>
               </Surface>
@@ -133,8 +135,9 @@ export function FoodSettings({ route, navigation }) {
           </View>
         ) : (
           <View>
-            {tagList.map((tag) => (
+            {tagList.map((foodType) => (
               <View
+                key={uuidv4()}
                 style={{
                   maxWidth: 600,
                   justifyContent: "center",
@@ -144,7 +147,7 @@ export function FoodSettings({ route, navigation }) {
                   marginBottom: 20,
                 }}
               >
-                <Chip>{tag.name}</Chip>
+                <Chip>{foodType.name}</Chip>
                 <Divider />
               </View>
             ))}
@@ -220,5 +223,288 @@ export function FoodSettings({ route, navigation }) {
         </Snackbar>
       </Portal>
     </View>
+  );
+}
+function ManageFoodType({ route, navigation }) {
+  const [foodTypes, setFoodTypes] = React.useState([]);
+  const [removedFoodTypes, setRemovedFoodTypes] = React.useState([]);
+  const [editFoodTypes, setEditFoodTypes] = React.useState(false);
+  const [createFoodType, setCreateFoodType] = React.useState(false);
+  const [newFoodTypeName, setNewFoodTypeName] = React.useState("");
+  const [newFoodTypePriority, setNewFoodTypePriority] = React.useState("0");
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [priorityErrorMessage, setPriorityErrorMessage] = React.useState("");
+  const [snackMessage, setSnackMessage] = React.useState(
+    route.params?.snackMessage || ""
+  );
+  const loadData = () => {
+    getFoodTypes()
+      .then((result) => {
+        // console.log(`result`, result);
+        if (result?.length) {
+          setFoodTypes(result);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+  console.log(`foodTypes`, foodTypes);
+  React.useEffect(() => {
+    const focusListener = navigation.addListener("focus", loadData);
+    return focusListener;
+  });
+  const { roundness } = useTheme();
+  return (
+    <View style={{ paddingBottom: 100 }}>
+      <List.Section title="Food Types">
+        {editFoodTypes ? (
+          <View style={{ alignItems: "center" }}>
+            {foodTypes
+              .filter(({ deleteDate }) => !deleteDate)
+              //.sort((a, b) => b.priority - a.priority)
+              .map((foodType) => (
+                <Surface
+                  key={uuidv4()}
+                  style={{}}
+                  onPress={() => {
+                    console.log("pressed");
+                  }}
+                >
+                  <View
+                    style={{
+                      maxWidth: 600,
+                      width: "100%",
+                      borderRadius: roundness,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginBottom: 20,
+                      padding: 5,
+                      alignItems: "center",
+                    }}
+                  >
+                    <View
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        paddingLeft: 20,
+                      }}
+                    >
+                      <Subheading>{foodType.name}</Subheading>
+                    </View>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          paddingRight: "10%",
+                        }}
+                      >
+                        {foodType.priority}
+                      </Text>
+                      <IconButton
+                        icon="close-circle-outline"
+                        onPress={() => {
+                          if (foodType.id)
+                            setRemovedFoodTypes([
+                              ...removedFoodTypes,
+                              foodType,
+                            ]);
+                          setFoodTypes(
+                            foodTypes.filter(
+                              ({ name }) => name != foodType.name
+                            )
+                          );
+                        }}
+                      ></IconButton>
+                    </View>
+                  </View>
+                </Surface>
+              ))}
+            <FAB
+              label="Create New"
+              onPress={() => {
+                setCreateFoodType(true);
+              }}
+              style={{ width: 300, alignSelf: "center", marginBottom: 20 }}
+              small
+            />
+            <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  width: "100%",
+                }}
+              >
+                <Button
+                  onPress={() => {
+                    setEditFoodTypes(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onPress={() => {
+                    updateFoodTypes(foodTypes, removedFoodTypes)
+                      .then((result) => {
+                        if (result) {
+                          setSnackMessage("Food Types Updated Successfully!");
+                          loadData();
+                          setEditFoodTypes(false);
+                          setRemovedFoodTypes([]);
+                        }
+                        console.log(`result`, result);
+                      })
+                      .catch((err) => {
+                        console.error(err);
+                      });
+                  }}
+                >
+                  Save
+                </Button>
+              </View>
+            </View>
+          </View>
+        ) : (
+          <View>
+            {foodTypes
+              .filter(({ deleteDate }) => !deleteDate)
+              // .sort((a, b) => (b.priority = a.priority))
+              .map((foodType) => (
+                <View
+                  key={uuidv4()}
+                  style={{
+                    maxWidth: 600,
+                    width: "100%",
+                    flexDirection: "row",
+                    alignItems: "flex-start",
+                    padding: 5,
+                    paddingLeft: 50,
+                    justifyContent: "space-between",
+                    marginBottom: 20,
+                    //backgroundColor: "black",
+                  }}
+                >
+                  <Subheading>{foodType.name}</Subheading>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      paddingRight: "10%",
+                      textAlign: "right",
+                    }}
+                  >
+                    {foodType.priority}
+                  </Text>
+                </View>
+              ))}
+            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+              <Button
+                onPress={() => {
+                  setEditFoodTypes(true);
+                }}
+              >
+                Edit
+              </Button>
+            </View>
+          </View>
+        )}
+      </List.Section>
+      <Portal>
+        <Dialog
+          visible={createFoodType}
+          onDismiss={() => {
+            setCreateFoodType(false);
+          }}
+          style={{ marginBottom: 400 }}
+        >
+          <Dialog.Title label="New Tag">New Food Type</Dialog.Title>
+          <Dialog.Content>
+            <TextInput
+              label="Name*"
+              value={newFoodTypeName}
+              error={errorMessage}
+              autoFocus
+              autoCapitalize="words"
+              onChangeText={(text) => {
+                if (foodTypes.find(({ name }) => name == text)) {
+                  setErrorMessage("Food Type already exists!");
+                } else {
+                  setErrorMessage("");
+                }
+                setNewFoodTypeName(text);
+              }}
+            />
+            <HelperText visible={errorMessage}>{errorMessage}</HelperText>
+            <TextInput
+              label="Priority"
+              value={newFoodTypePriority}
+              error={priorityErrorMessage}
+              onChangeText={(text) => {
+                if (isNaN(Number(text)))
+                  setPriorityErrorMessage("Value must be a number.");
+                else setPriorityErrorMessage("");
+                setNewFoodTypePriority(text);
+              }}
+            />
+            <HelperText visible={priorityErrorMessage}>
+              {priorityErrorMessage}
+            </HelperText>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              onPress={() => {
+                setNewFoodTypeName("");
+                setNewFoodTypePriority("0");
+                setErrorMessage("");
+                setCreateFoodType(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              disabled={
+                errorMessage || priorityErrorMessage || !newFoodTypeName
+              }
+              onPress={() => {
+                setFoodTypes([
+                  ...foodTypes,
+                  { name: newFoodTypeName, priority: newFoodTypePriority },
+                ]);
+                setNewFoodTypeName("");
+                setCreateFoodType(false);
+              }}
+            >
+              Save
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+
+      <Portal>
+        <Snackbar
+          visible={snackMessage}
+          onDismiss={() => {
+            setSnackMessage("");
+          }}
+        >
+          {snackMessage}
+        </Snackbar>
+      </Portal>
+    </View>
+  );
+}
+export function FoodSettings({ route, navigation }) {
+  return (
+    <ScrollView
+      style={[
+        StyleSheet.absoluteFill,
+        { padding: 50, ...CustomStyles.container },
+      ]}
+    >
+      <ManageTags route={route} navigation={navigation} />
+      <ManageFoodType route={route} navigation={navigation} />
+    </ScrollView>
   );
 }
