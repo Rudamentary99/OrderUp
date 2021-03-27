@@ -29,7 +29,7 @@ module.exports = (rdbConn) => [
         function removeFoodTypes(result, callback) {
           r.table("foodTypes")
             .getAll(r.args(removedFoodTypes.map(({ id }) => id)))
-            .update({ deleteDate: Date.now() })
+            .delete()
             .run(rdbConn, callback);
         },
         function cleeanUp(result) {

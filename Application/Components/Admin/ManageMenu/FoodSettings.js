@@ -1,6 +1,11 @@
-import react from "react";
 import React from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  TouchableHighlight,
+  TouchableOpacity,
+} from "react-native";
 import {
   Button,
   Chip,
@@ -229,6 +234,7 @@ function ManageFoodType({ route, navigation }) {
   const [foodTypes, setFoodTypes] = React.useState([]);
   const [removedFoodTypes, setRemovedFoodTypes] = React.useState([]);
   const [editFoodTypes, setEditFoodTypes] = React.useState(false);
+  const [updateFoodType, setUpdateFoodType] = React.useState({});
   const [createFoodType, setCreateFoodType] = React.useState(false);
   const [newFoodTypeName, setNewFoodTypeName] = React.useState("");
   const [newFoodTypePriority, setNewFoodTypePriority] = React.useState("0");
@@ -261,65 +267,65 @@ function ManageFoodType({ route, navigation }) {
         {editFoodTypes ? (
           <View style={{ alignItems: "center" }}>
             {foodTypes
-              .filter(({ deleteDate }) => !deleteDate)
-              //.sort((a, b) => b.priority - a.priority)
+              .sort((a, b) => b.priority - a.priority)
               .map((foodType) => (
                 <Surface
                   key={uuidv4()}
-                  style={{}}
-                  onPress={() => {
-                    console.log("pressed");
-                  }}
+                  style={{ maxWidth: 600, width: "100%", marginBottom: 20 }}
                 >
-                  <View
-                    style={{
-                      maxWidth: 600,
-                      width: "100%",
-                      borderRadius: roundness,
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      marginBottom: 20,
-                      padding: 5,
-                      alignItems: "center",
+                  <TouchableOpacity
+                    onPress={() => {
+                      setUpdateFoodType(foodType);
                     }}
                   >
                     <View
                       style={{
-                        justifyContent: "center",
+                        borderRadius: roundness,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+
+                        padding: 5,
                         alignItems: "center",
-                        paddingLeft: 20,
                       }}
                     >
-                      <Subheading>{foodType.name}</Subheading>
-                    </View>
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <Text
+                      <View
                         style={{
-                          fontSize: 18,
-                          paddingRight: "10%",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          paddingLeft: 20,
                         }}
                       >
-                        {foodType.priority}
-                      </Text>
-                      <IconButton
-                        icon="close-circle-outline"
-                        onPress={() => {
-                          if (foodType.id)
-                            setRemovedFoodTypes([
-                              ...removedFoodTypes,
-                              foodType,
-                            ]);
-                          setFoodTypes(
-                            foodTypes.filter(
-                              ({ name }) => name != foodType.name
-                            )
-                          );
-                        }}
-                      ></IconButton>
+                        <Subheading>{foodType.name}</Subheading>
+                      </View>
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 18,
+                            paddingRight: "10%",
+                          }}
+                        >
+                          {foodType.priority}
+                        </Text>
+                        <IconButton
+                          icon="close-circle-outline"
+                          onPress={() => {
+                            if (foodType.id)
+                              setRemovedFoodTypes([
+                                ...removedFoodTypes,
+                                foodType,
+                              ]);
+                            setFoodTypes(
+                              foodTypes.filter(
+                                ({ name }) => name != foodType.name
+                              )
+                            );
+                          }}
+                        ></IconButton>
+                      </View>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 </Surface>
               ))}
             <FAB
@@ -370,8 +376,7 @@ function ManageFoodType({ route, navigation }) {
         ) : (
           <View>
             {foodTypes
-              .filter(({ deleteDate }) => !deleteDate)
-              // .sort((a, b) => (b.priority = a.priority))
+              .sort((a, b) => b.priority - a.priority)
               .map((foodType) => (
                 <View
                   key={uuidv4()}
@@ -445,7 +450,7 @@ function ManageFoodType({ route, navigation }) {
                 if (isNaN(Number(text)))
                   setPriorityErrorMessage("Value must be a number.");
                 else setPriorityErrorMessage("");
-                setNewFoodTypePriority(text);
+                setNewFoodTypePriority(text.replace(/^0+/, ""));
               }}
             />
             <HelperText visible={priorityErrorMessage}>
@@ -474,6 +479,76 @@ function ManageFoodType({ route, navigation }) {
                 ]);
                 setNewFoodTypeName("");
                 setCreateFoodType(false);
+              }}
+            >
+              Save
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+        <Dialog
+          visible={updateFoodType.name}
+          onDismiss={() => {
+            setCreateFoodType(false);
+          }}
+          style={{ marginBottom: 400 }}
+        >
+          <Dialog.Title label="New Tag">Update Food Type</Dialog.Title>
+          <Dialog.Content>
+            <TextInput
+              label="Name*"
+              disabled
+              value={updateFoodType.name}
+              error={errorMessage}
+              autoFocus
+              autoCapitalize="words"
+              onChangeText={(text) => {
+                if (foodTypes.find(({ name }) => name == text)) {
+                  setErrorMessage("Food Type already exists!");
+                } else {
+                  setErrorMessage("");
+                }
+                setNewFoodTypeName(text);
+              }}
+            />
+            <HelperText visible={errorMessage}>{errorMessage}</HelperText>
+            <TextInput
+              label="Priority"
+              value={updateFoodType.priority}
+              error={priorityErrorMessage}
+              onChangeText={(text) => {
+                if (isNaN(Number(text)))
+                  setPriorityErrorMessage("Value must be a number.");
+                else setPriorityErrorMessage("");
+                setUpdateFoodType({
+                  ...updateFoodType,
+                  priority: text.replace(/^0+/, ""),
+                });
+              }}
+            />
+            <HelperText visible={priorityErrorMessage}>
+              {priorityErrorMessage}
+            </HelperText>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              onPress={() => {
+                setUpdateFoodType({});
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              disabled={errorMessage || priorityErrorMessage}
+              onPress={() => {
+                setRemovedFoodTypes([...removedFoodTypes, updateFoodType]);
+                setFoodTypes(
+                  foodTypes.map((item) =>
+                    item.id == updateFoodType.id
+                      ? { ...updateFoodType, id: undefined }
+                      : item
+                  )
+                );
+                setUpdateFoodType({});
               }}
             >
               Save
