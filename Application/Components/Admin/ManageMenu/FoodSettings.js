@@ -22,6 +22,7 @@ import {
   useTheme,
   Divider,
   Subheading,
+  Paragraph,
 } from "react-native-paper";
 
 import { v4 as uuidv4 } from "uuid";
@@ -148,11 +149,11 @@ function ManageTags({ route, navigation }) {
                   justifyContent: "center",
                   alignItems: "flex-start",
                   padding: 5,
-                  paddingLeft: 150,
+                  paddingLeft: 25,
                   marginBottom: 20,
                 }}
               >
-                <Chip>{foodType.name}</Chip>
+                <Chip mode="outlined">{foodType.name}</Chip>
                 <Divider />
               </View>
             ))}
@@ -243,6 +244,7 @@ function ManageFoodType({ route, navigation }) {
   const [snackMessage, setSnackMessage] = React.useState(
     route.params?.snackMessage || ""
   );
+  const [deleteItem, setDeleteItem] = React.useState(null);
   const loadData = () => {
     getFoodTypes()
       .then((result) => {
@@ -311,16 +313,7 @@ function ManageFoodType({ route, navigation }) {
                         <IconButton
                           icon="close-circle-outline"
                           onPress={() => {
-                            if (foodType.id)
-                              setRemovedFoodTypes([
-                                ...removedFoodTypes,
-                                foodType,
-                              ]);
-                            setFoodTypes(
-                              foodTypes.filter(
-                                ({ name }) => name != foodType.name
-                              )
-                            );
+                            if (foodType.id) setDeleteItem(foodType);
                           }}
                         ></IconButton>
                       </View>
@@ -552,6 +545,41 @@ function ManageFoodType({ route, navigation }) {
               }}
             >
               Save
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+        <Dialog visible={deleteItem} style={CustomStyles.dialogContainer}>
+          <Dialog.Title>
+            Are you sure you want to remove food type "{deleteItem?.name}"?
+          </Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>
+              Deleting this item could cause loss of menu items. Ensure all
+              foods of this type have been updated before performing this
+              action!
+            </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              onPress={() => {
+                if (deleteItem) {
+                  setRemovedFoodTypes([...removedFoodTypes, deleteItem]);
+                  setFoodTypes(
+                    foodTypes.filter(({ name }) => name != deleteItem?.name)
+                  );
+                  setDeleteItem(null);
+                }
+              }}
+            >
+              Proceed
+            </Button>
+            <Button
+              mode="contained"
+              onPress={() => {
+                setDeleteItem(null);
+              }}
+            >
+              Cancel
             </Button>
           </Dialog.Actions>
         </Dialog>
