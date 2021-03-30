@@ -19,7 +19,7 @@ import {
 } from "react-native-paper";
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
-import TagInput from "../../helpers/TagInput";
+import TagInput from "../../helpers/Tag";
 import {
   getFoodItems,
   getFoodTypes,
@@ -130,8 +130,8 @@ class FoodMain extends React.Component {
           })
           .map(({ id, name }) => {
             return (
-              <View>
-                <Subheading key={id + "-" + uuidv4()}>{name}</Subheading>
+              <View key={uuidv4()}>
+                <Subheading>{name}</Subheading>
                 {foodItems.find(({ foodType }) => name == foodType) ? (
                   foodItems
                     .filter(({ foodType }) => foodType == name)

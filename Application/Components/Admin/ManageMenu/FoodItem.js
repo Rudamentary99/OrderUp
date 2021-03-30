@@ -71,7 +71,7 @@ export function FoodItem(props) {
         title="Edit"
         onPress={() => {
           setShow(false);
-          navigation.navigate("Edit Food", item);
+          navigation.navigate("Edit Food", props.item);
         }}
       />
       <Divider />

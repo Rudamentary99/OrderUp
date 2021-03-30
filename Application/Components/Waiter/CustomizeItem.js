@@ -12,7 +12,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
 import { CustomStyles } from "../../Styles";
-import { TagInput } from "../helpers/TagInput";
+import { TagInput } from "../helpers/Tag";
 import { getTags } from "../../DB/SettingsController";
 export function customizeItem({
   navigation,

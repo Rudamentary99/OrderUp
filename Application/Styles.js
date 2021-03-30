@@ -16,4 +16,12 @@ export const CustomStyles = StyleSheet.create({
   transparentBackground: {
     backgroundColor: "rgba(52, 52, 52, 0)",
   },
+  tagWrapper: {
+    flexDirection: "row",
+  },
+  buttonWrapperEnd: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    width: "100%",
+  },
 });

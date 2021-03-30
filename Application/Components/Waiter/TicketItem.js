@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, Text } from "react-native";
 import {
   Chip,
   Headline,
@@ -13,16 +13,8 @@ import { getOrderItem } from "../../DB/orderController";
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
 import { CustomStyles } from "../../Styles";
+import { TagChip } from "../helpers/Tag";
 
-function TagChip({ tag, emphasized }) {
-  const theme = useTheme();
-  const style = emphasized
-    ? {
-        backgroundColor: theme.colors.accent,
-      }
-    : {};
-  return <Chip style={style}>{tag.name}</Chip>;
-}
 export class TicketItemDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -97,14 +89,13 @@ export class TicketItemDetails extends React.Component {
                 )) || <List.Item title="no ingredients given..."></List.Item>}
             </ScrollView>
           </List.Section>
-          {customization?.notes && (
-            <View>
-              <Subheading>Notes: </Subheading>
-              <Paragraph style={{ paddingLeft: 20 }}>
-                {customization?.notes}
-              </Paragraph>
-            </View>
-          )}
+
+          <View style={{ display: customization?.notes ? "flex" : "none" }}>
+            <Subheading>Notes: </Subheading>
+            <Paragraph style={{ paddingLeft: 20 }}>
+              {customization?.notes}
+            </Paragraph>
+          </View>
         </View>
 
         <View
@@ -117,37 +108,43 @@ export class TicketItemDetails extends React.Component {
         >
           <Subheading>Tags</Subheading>
           <View style={{ flexDirection: "row" }}>
-            {customization?.customTags?.length
-              ? customization?.customTags?.map((customTag) => (
-                  // <TagChip
-                  //   key={uuidv4()}
-                  //   tag={customTag}
-                  //   emphasized={!tags.find(({ id }) => customTag.id == id)}
-                  // />
-                  <Chip
+            {customization?.customTags?.length ? (
+              <>
+                {tags
+                  .filter(
+                    (tag) =>
+                      !customization?.customTags?.find(({ id }) => id == tag.id)
+                  )
+                  .map((tag) => (
+                    <Chip key={uuidv4()} disabled style={{ marginRight: 3 }}>
+                      {tag.name}
+                    </Chip>
+                  ))}
+                {customization?.customTags?.map((customTag) => (
+                  <TagChip
                     key={uuidv4()}
-                    mode="outlined"
-                    style={{
-                      marginRight: 3,
-                    }}
-                  >
-                    {customTag.name}
-                  </Chip>
-                ))
-              : tags?.map((tag) => (
-                  <Chip
-                    key={uuidv4()}
-                    mode="outlined"
-                    style={{
-                      marginRight: 3,
-                    }}
-                  >
-                    {tag.name}
-                  </Chip>
+                    tag={customTag}
+                    style={{ marginRight: 3 }}
+                    emphasized={!tags.find(({ id }) => customTag.id == id)}
+                  />
                 ))}
+              </>
+            ) : (
+              tags?.map((tag) => (
+                <Chip
+                  key={uuidv4()}
+                  mode="outlined"
+                  style={{
+                    marginRight: 3,
+                  }}
+                >
+                  {tag.name}
+                </Chip>
+              ))
+            )}
           </View>
         </View>
-        
+
         <Headline>Price: ${price}</Headline>
       </View>
     );

@@ -29,7 +29,7 @@ import {
 import DropDown from "react-native-paper-dropdown";
 import { ListInput } from "../../helpers/ListInput";
 import { getTags } from "../../../DB/SettingsController";
-import { TagInput } from "../../helpers/TagInput";
+import { TagInput } from "../../helpers/Tag";
 export function ManageFoodItem(props) {
   const [selectingFoodType, setSelectingFoodType] = React.useState(false);
   const [foodTypes, setFoodTypes] = React.useState([]);

@@ -15,6 +15,7 @@ import {
   Button,
   useTheme,
   IconButton,
+  Chip,
 } from "react-native-paper";
 import { getOpenOrdersFull, updateOrderItem } from "../../DB/orderController";
 import {
@@ -25,9 +26,10 @@ import {
 import { closeOrder } from "../../DB/orderController";
 import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
+import { TagChip } from "../helpers/Tag";
 const TicketItem = (props) => {
   const {
-    food: { id, name, customization },
+    food: { id, name, customization, tags },
     // timeElapsed,
   } = props;
   const [completed, setCompleted] = React.useState(props.food.completed);
@@ -46,38 +48,64 @@ const TicketItem = (props) => {
     return rv;
   };
   return (
-    <List.Item
-      left={() => (
-        <IconButton
-          onPress={() => {
-            updateOrderItem(id, {
-              completed: !completed,
-            }).catch((err) => {
-              console.error(err);
-            });
-          }}
-          icon={
-            completed
-              ? "checkbox-marked-circle-outline"
-              : "checkbox-blank-circle-outline"
-          }
-        />
-      )}
-      title={name}
-      description={getDescription()}
-      onPress={() => {
-        //setCompleted(!completed);
-        navigation.navigate("Food Details", {
-          id: id,
-        });
-      }}
-      onLongPress={() => {
-        navigation.navigate("Food Details", {
-          id: id,
-        });
-      }}
-      descriptionStyle={{ color: colors.notification }}
-    ></List.Item>
+    <View>
+      <List.Item
+        left={() => (
+          <IconButton
+            onPress={() => {
+              updateOrderItem(id, {
+                completed: !completed,
+              }).catch((err) => {
+                console.error(err);
+              });
+            }}
+            icon={
+              completed
+                ? "checkbox-marked-circle-outline"
+                : "checkbox-blank-circle-outline"
+            }
+          />
+        )}
+        title={name}
+        description={getDescription()}
+        onPress={() => {
+          //setCompleted(!completed);
+          navigation.navigate("Food Details", {
+            id: id,
+          });
+        }}
+        onLongPress={() => {
+          navigation.navigate("Food Details", {
+            id: id,
+          });
+        }}
+        descriptionStyle={{ color: colors.notification }}
+      />
+      <View
+        style={{
+          display: customization?.customTags ? "flex" : "none",
+          flexDirection: "row",
+          paddingLeft: 20,
+        }}
+      >
+        {tags
+          ?.filter(
+            (tag) => !customization?.customTags.find(({ id }) => tag.id == id)
+          )
+          .map((tag) => (
+            <Chip key={uuidv4()} disabled>
+              {tag.name}
+            </Chip>
+          ))}
+        {customization?.customTags
+          ?.filter((customTag) => !tags.find(({ id }) => customTag.id == id))
+          ?.map((customTag) => (
+            <Chip key={uuidv4()} style={{ display: customTag }}>
+              {customTag.name}
+            </Chip>
+          ))}
+      </View>
+    </View>
   );
 };
 
@@ -108,7 +136,7 @@ const Ticket = (props) => {
           onClose(id);
         }}
       >
-        <Card style={{ margin: 10, minWidth: 300 }}>
+        <Card style={{ margin: 10, width: 300 }}>
           <Card.Content style={{ position: "relative" }}>
             <Card.Title title={`#${table}`}></Card.Title>
 
