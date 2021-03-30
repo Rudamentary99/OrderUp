@@ -27,12 +27,13 @@ import { closeOrder } from "../../DB/orderController";
 import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
 import { TagChip } from "../helpers/Tag";
+import { getData } from "../../Storage";
 const TicketItem = (props) => {
   const {
     food: { id, name, customization, tags },
     // timeElapsed,
   } = props;
-  const [completed, setCompleted] = React.useState(props.food.completed);
+  const [completed] = React.useState(props.food.completed);
   const { colors } = useTheme();
   const navigation = useNavigation();
   const getDescription = () => {
@@ -111,7 +112,10 @@ const TicketItem = (props) => {
 
 const Ticket = (props) => {
   const [animation, setAnimation] = React.useState("");
-  const { id, table, orderItems, onClose, created } = props;
+  const {
+    ticket: { id, table, orderItems, created },
+    onClose,
+  } = props;
   const [duration, setDuration] = React.useState(getDuration());
   const { colors } = useTheme();
   // console.log(`theme`, theme);
@@ -185,6 +189,7 @@ export default class TicketList extends React.Component {
     this.state = {
       tickets: [],
       snackMessage: null,
+      filterTags: [],
     };
   }
   componentDidMount() {
@@ -215,6 +220,15 @@ export default class TicketList extends React.Component {
       .catch((err) => {
         console.error(err);
       });
+    getData("filterTags")
+      .then((result) => {
+        if (result) {
+          this.setState({ filterTags: result });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
   render() {
     return (
@@ -227,7 +241,7 @@ export default class TicketList extends React.Component {
                 .map((ticket) => (
                   <Ticket
                     key={ticket.id}
-                    {...ticket}
+                    ticket={ticket}
                     onClose={(pId) => {
                       closeOrder(pId)
                         .then((result) => {
