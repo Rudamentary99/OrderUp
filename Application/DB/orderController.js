@@ -29,6 +29,7 @@ export async function getOpenOrdersFull() {
       return result.data;
     })
     .catch((err) => {
+      console.log("Error ocurred in getOpenOrdersFull()");
       console.error(err);
     });
 }
