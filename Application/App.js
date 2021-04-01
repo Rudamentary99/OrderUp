@@ -24,7 +24,6 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import AdminNav from "./Components/Admin/index";
 import WaiterNav from "./Components/Waiter/index";
 import KitchenNav from "./Components/Kitchen/index";
-
 import { Audio } from "expo-av";
 const Drawer = createDrawerNavigator();
 const tempScreen = ({ navigation }) => {
@@ -72,6 +71,7 @@ export default function App() {
     <PaperProvider theme={theme}>
       <NavigationContainer theme={theme}>
         <Portal.Host>
+          <StatusBar style="dark" />
           <Drawer.Navigator initialRouteName="kitchen">
             <Drawer.Screen name="temp" component={tempScreen} />
             <Drawer.Screen name="manager" component={AdminNav} />

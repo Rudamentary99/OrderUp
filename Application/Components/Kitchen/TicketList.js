@@ -114,6 +114,7 @@ const Ticket = (props) => {
   const [animation, setAnimation] = React.useState("");
   const {
     ticket: { id, table, orderItems, created },
+    filterTags,
     onClose,
   } = props;
   const [duration, setDuration] = React.useState(getDuration());
@@ -164,6 +165,7 @@ const Ticket = (props) => {
             <List.Section>
               {orderItems.length ? (
                 orderItems
+
                   .sort((a, b) => a.prepTime - b.prepTime)
                   .map((food) => <TicketItem key={uuidv4()} food={food} />)
               ) : (
@@ -198,6 +200,15 @@ export default class TicketList extends React.Component {
       () => {
         this.setState({ snackMessage: this.props.route?.params?.snackMessage });
         this.loadData();
+        getData("filterTags")
+          .then((result) => {
+            if (result) {
+              this.setState({ filterTags: result });
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       }
     );
     this.dataInterval = setInterval(() => this.loadData(), 1000);
@@ -220,28 +231,47 @@ export default class TicketList extends React.Component {
       .catch((err) => {
         console.error(err);
       });
-    getData("filterTags")
-      .then((result) => {
-        if (result) {
-          this.setState({ filterTags: result });
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
   }
   render() {
+    const { filterTags, tickets } = this.state;
+    const filteredTickets = tickets
+      .map((ticket) => ({
+        ...ticket,
+        orderItems: ticket.orderItems.filter((item) => {
+          // console.log(`item`, item);
+          if (filterTags?.length) {
+            if (item?.tags || item?.customization?.customTags) {
+              let rv = true;
+              const tags = item?.customization?.customTags || item?.tags;
+              filterTags?.forEach((ft) => {
+                if (!tags.find((tag) => tag.id == ft.id)) {
+                  rv = false;
+                  return;
+                }
+              });
+              return rv;
+            } else {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        }),
+      }))
+      .filter((ticket) => ticket?.orderItems?.length);
     return (
       <View style={StyleSheet.absoluteFill}>
-        {this.state.tickets.length ? (
+        {filteredTickets.length ? (
           <ScrollView horizontal>
             <View style={{ flexDirection: "row" }}>
-              {this.state.tickets
+              {filteredTickets
                 .sort((a, b) => a.created - b.created)
                 .map((ticket) => (
                   <Ticket
                     key={ticket.id}
-                    ticket={ticket}
+                    ticket={{
+                      ...ticket,
+                    }}
                     onClose={(pId) => {
                       closeOrder(pId)
                         .then((result) => {
