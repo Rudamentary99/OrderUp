@@ -21,7 +21,7 @@ import {
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import AdminNav from "./Components/Admin/index";
+import AdminNav from "./Components/Management/index";
 import WaiterNav from "./Components/Waiter/index";
 import KitchenNav from "./Components/Kitchen/index";
 import { Audio } from "expo-av";

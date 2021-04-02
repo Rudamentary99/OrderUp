@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import { IconButton, Text } from "react-native-paper";
 import { createStackNavigator } from "@react-navigation/stack";
-import { FoodDetails } from "../Admin/ManageMenu/FoodItem";
+import { FoodDetails } from "../Management/ManageMenu/FoodItem";
 import TicketList from "./TicketList";
 import { TicketItemDetails } from "../Waiter/TicketItem";
 import { KitchenSettings } from "./settings";
