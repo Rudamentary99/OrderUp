@@ -243,14 +243,14 @@ export default class TicketList extends React.Component {
   }
   async playCloseSound() {
     const { sound } = await Audio.Sound.createAsync(
-      require("../../sounds/sharp.mp3")
+      require("../../sounds/archivedFood.mp3")
     );
     this.setState({ sound: sound });
     await sound.playAsync();
   }
   async playNewTicketSound() {
     const { sound } = await Audio.Sound.createAsync(
-      require("../../sounds/sharp.mp3")
+      require("../../sounds/newOrder.mp3")
     );
     this.setState({ sound: sound });
     await sound.playAsync();

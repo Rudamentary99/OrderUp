@@ -29,6 +29,7 @@ import { ManageFoodItem } from "./ManageFoodItem";
 import { FoodItem, FoodDetails } from "./FoodItem";
 import { FoodSettings } from "./FoodSettings";
 import { CustomStyles } from "../../../Styles";
+import { Audio } from "expo-av";
 const Stack = createStackNavigator();
 const MenuBar = ({ navigation }) => {
   // const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -104,17 +105,40 @@ class FoodMain extends React.Component {
   }
   componentWillUnmount() {
     this.focusListener();
+    this.state?.sound?.unloadAsync();
   }
   loadFood() {
     this.setState({ refreshing: true });
     getFoodItems(false)
       .then((result) => {
+        if (result && this.state.foodItems?.length) {
+          result?.forEach((food) => {
+            if (!this.state.foodItems.find(({ id }) => id == food.id)) {
+              this.playNewFoodSound();
+              return;
+            }
+          });
+        }
         //console.log("result", result);
-        this.setState({ foodItems: result, refreshing: false });
+        this.setState({ foodItems: result || [], refreshing: false });
       })
       .catch((err) => {
         console.error(err);
       });
+  }
+  async playNewFoodSound() {
+    const { sound } = await Audio.Sound.createAsync(
+      require("../../../sounds/createdFood.mp3")
+    );
+    this.setState({ sound: sound });
+    await sound.playAsync();
+  }
+  async playArchivedFoodSound() {
+    const { sound } = await Audio.Sound.createAsync(
+      require("../../../sounds/archivedFood.mp3")
+    );
+    this.setState({ sound: sound });
+    await sound.playAsync();
   }
   render() {
     const { foodItems, archived, refreshing, foodTypes } = this.state;
@@ -150,6 +174,7 @@ class FoodMain extends React.Component {
                             .then((result) => {
                               console.log("result", result);
                               if (result) {
+                                this.playArchivedFoodSound();
                                 removeFoodItem(pID);
                                 this.setState({ archived: archivee });
                               }
