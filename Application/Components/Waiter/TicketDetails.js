@@ -196,7 +196,7 @@ export default class TicketDetails extends React.Component {
           onStateChange={() => {
             this.setState({ editOpen: !this.state.editOpen });
           }}
-          style={CustomStyles.bottomRightAction}
+          style={CustomStyles.bottomRightActionGroup}
         />
         <Dialog
           visible={this.state.confirm}

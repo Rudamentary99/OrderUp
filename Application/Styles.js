@@ -11,6 +11,12 @@ export const CustomStyles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     right: 0,
+    margin: 50,
+  },
+  bottomRightActionGroup: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
     padding: 50,
   },
   transparentBackground: {
