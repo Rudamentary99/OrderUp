@@ -11,7 +11,7 @@ export const CustomStyles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     right: 0,
-    margin: 50,
+    padding: 50,
   },
   transparentBackground: {
     backgroundColor: "rgba(52, 52, 52, 0)",

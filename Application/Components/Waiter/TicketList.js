@@ -158,6 +158,7 @@ export default class TicketList extends React.Component {
           onPress={() => {
             this.props.navigation.navigate("New Ticket");
           }}
+          
           style={CustomStyles.bottomRightAction}
         />
         <Snackbar

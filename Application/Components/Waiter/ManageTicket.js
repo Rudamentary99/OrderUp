@@ -215,7 +215,7 @@ const TicketListPane = (props) => {
             style={{
               backgroundColor: "white",
               justifyContent: "center",
-              height: 50,
+              // height: 50,
             }}
             underlayColor={"#AAA"}
           >
@@ -227,7 +227,7 @@ const TicketListPane = (props) => {
                 }}
               >
                 <Text style={{ fontSize: 19 }}>
-                  - {data.item.name}
+                  {data.item.name}
                   {data.item?.customization?.notes && "*"}
                 </Text>
                 <Text>${data.item.price}</Text>
@@ -252,6 +252,7 @@ const TicketListPane = (props) => {
         <View
           style={{
             alignItems: "center",
+            position: "relative",
             backgroundColor: "white",
             flex: 1,
             flexDirection: "row",
@@ -358,7 +359,7 @@ export class ManageTicket extends React.Component {
           >
             <Headline>{`Order for table #${this.state.table}:`}</Headline>
           </TouchableOpacity>
-          <Divider />
+          <Divider style={{ marginBottom: 15 }} />
           <TicketListPane
             ticketItems={ticketItems}
             onRemove={(item) => {
