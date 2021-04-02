@@ -227,7 +227,14 @@ export default class TicketList extends React.Component {
   loadData() {
     getOpenOrdersFull()
       .then((result) => {
-        if (result) this.setState({ tickets: result });
+        if (result)
+          result?.forEach((ticket) => {
+            if (!this.state.tickets.find(({ id }) => id == ticket.id)) {
+              this.playNewTicketSound();
+            }
+          });
+
+        this.setState({ tickets: result || [] });
         // console.log("result", result);
       })
       .catch((err) => {
@@ -235,6 +242,13 @@ export default class TicketList extends React.Component {
       });
   }
   async playCloseSound() {
+    const { sound } = await Audio.Sound.createAsync(
+      require("../../sounds/sharp.mp3")
+    );
+    this.setState({ sound: sound });
+    await sound.playAsync();
+  }
+  async playNewTicketSound() {
     const { sound } = await Audio.Sound.createAsync(
       require("../../sounds/sharp.mp3")
     );
