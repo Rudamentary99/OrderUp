@@ -23,6 +23,7 @@ import {
   Directions,
   TouchableHighlight,
 } from "react-native-gesture-handler";
+import { Audio } from "expo-av";
 import { closeOrder } from "../../DB/orderController";
 import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
@@ -218,6 +219,7 @@ export default class TicketList extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.dataInterval);
+    this.state?.sound?.unloadAsync();
   }
   tick() {
     this.setState({ timeElapsed: this.state.timeElapsed + 1000 });
@@ -231,6 +233,13 @@ export default class TicketList extends React.Component {
       .catch((err) => {
         console.error(err);
       });
+  }
+  async playCloseSound() {
+    const { sound } = await Audio.Sound.createAsync(
+      require("../../sounds/sharp.mp3")
+    );
+    this.setState({ sound: sound });
+    await sound.playAsync();
   }
   render() {
     const { filterTags, tickets } = this.state;
@@ -273,6 +282,7 @@ export default class TicketList extends React.Component {
                       ...ticket,
                     }}
                     onClose={(pId) => {
+                      this.playCloseSound();
                       closeOrder(pId)
                         .then((result) => {
                           if (result)

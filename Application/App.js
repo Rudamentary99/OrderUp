@@ -29,24 +29,28 @@ const Drawer = createDrawerNavigator();
 const tempScreen = ({ navigation }) => {
   const [sound, setSound] = React.useState();
   async function playSound() {
-    console.log("Loading Sound");
     const { sound } = await Audio.Sound.createAsync(
       require("./sounds/sharp.mp3")
     );
-    setSound(sound);
-
-    console.log("Playing Sound");
-    await sound.playAsync();
+    // this.setState({ closeSound: sound });
+    await sound
+      .playAsync()
+      .then((result) => {
+        console.log(`result`, result);
+      })
+      .catch((err) => {});
+    // console.log(`result`, result);
+    //sound.unloadAsync();
   }
 
-  React.useEffect(() => {
-    return sound
-      ? () => {
-          console.log("Unloading Sound");
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
+  // React.useEffect(() => {
+  //   return sound
+  //     ? () => {
+  //         console.log("Unloading Sound");
+  //         sound.unloadAsync();
+  //       }
+  //     : undefined;
+  // }, [sound]);
   const theme = useTheme();
   return (
     <View style={styles.container}>

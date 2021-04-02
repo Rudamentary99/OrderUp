@@ -52,7 +52,7 @@ export default class TicketList extends React.Component {
       this.setState({ snackMessage: this.props.route?.params?.snackMessage });
       this.loadData();
     });
-    this.intervalID = setInterval(() => this.loadData(), 10 * 1000);
+    this.intervalID = setInterval(() => this.loadData(), 5 * 1000);
     this.loadData();
   }
 
@@ -64,7 +64,8 @@ export default class TicketList extends React.Component {
   loadData() {
     getOrders(this.state.ticketType)
       .then((result) => {
-        if (result) this.setState({ tickets: result });
+        this.setState({ tickets: result || [] });
+
         // console.log("result", result);
       })
       .catch((err) => {
