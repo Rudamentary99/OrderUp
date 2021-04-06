@@ -25,6 +25,7 @@ import AdminNav from "./Components/Management/index";
 import WaiterNav from "./Components/Waiter/index";
 import KitchenNav from "./Components/Kitchen/index";
 import { Audio } from "expo-av";
+import { DeviceSettings } from "./Components/DeviceSettings";
 const Drawer = createDrawerNavigator();
 const tempScreen = ({ navigation }) => {
   const [sound, setSound] = React.useState();
@@ -71,16 +72,18 @@ export default function App() {
       text: "#1e212d",
     },
   };
+
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer theme={theme}>
         <Portal.Host>
           <StatusBar style="dark" />
           <Drawer.Navigator initialRouteName="kitchen">
-            <Drawer.Screen name="temp" component={tempScreen} />
-            <Drawer.Screen name="manager" component={AdminNav} />
-            <Drawer.Screen name="waiter" component={WaiterNav} />
-            <Drawer.Screen name="kitchen" component={KitchenNav} />
+            {/* <Drawer.Screen name="temp" component={tempScreen} /> */}
+            <Drawer.Screen name="Device Settings" component={DeviceSettings} />
+            <Drawer.Screen name="Manager" component={AdminNav} />
+            <Drawer.Screen name="Waiter" component={WaiterNav} />
+            <Drawer.Screen name="Kitchen" component={KitchenNav} />
           </Drawer.Navigator>
           {/* <Stack.Navigator headerMode="none" initialRouteName="kitchen">
             <Stack.Screen name="temp" component={tempScreen} />

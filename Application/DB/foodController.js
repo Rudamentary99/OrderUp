@@ -1,6 +1,13 @@
 const axios = require("axios");
 import config from "../config";
-axios.defaults.baseURL = config.axios.baseURL;
+import { getData } from "../Storage";
+getData("serverInfo")
+  .then(({ host, port }) => {
+    axios.defaults.baseURL = `http://${host}:${port}`;
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 /**
  * @description Gets all FoodItems
  * @param {Boolean} archived get archived or non-archived
