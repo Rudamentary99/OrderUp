@@ -1,7 +1,13 @@
 const axios = require("axios");
 import config from "../config";
-axios.default.baseURL = config.axios.baseURL;
-
+import { getData } from "../Storage";
+getData("serverInfo")
+  .then(({ host, port }) => {
+    axios.defaults.baseURL = `http://${host}:${port}`;
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 /**
  * Gets all orders
  * @param {string} type specifies filter {open, closed, all}

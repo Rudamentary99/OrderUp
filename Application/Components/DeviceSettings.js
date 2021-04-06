@@ -24,27 +24,62 @@ function DefaultEnvironment(props) {
       <Headline>Default Environment</Headline>
       {editDefaultEnvironment ? (
         <View>
-          <DropDown
-            value={defaultEnvironment}
-            setValue={setDefaultEnvironment}
-            visible={showDropdown}
-            showDropDown={() => {
-              setShowDropdown(true);
-            }}
-            onDismiss={() => {
-              setShowDropdown(false);
-            }}
-            list={[
-              { value: "Management", label: "Management" },
-              { value: "Waiter", label: "Waiter" },
-              { value: "Kitchen", label: "Kitchen" },
-            ]}
-          />
+          <View style={{ marginBottom: 20 }}>
+            <DropDown
+              label="Default Environment"
+              placeholder="Not Set"
+              value={defaultEnvironment}
+              setValue={setDefaultEnvironment}
+              visible={showDropdown}
+              showDropDown={() => {
+                setShowDropdown(true);
+              }}
+              onDismiss={() => {
+                setShowDropdown(false);
+              }}
+              list={[
+                { value: "Management", label: "Management" },
+                { value: "Waiter", label: "Waiter" },
+                { value: "Kitchen", label: "Kitchen" },
+              ]}
+            />
+          </View>
+          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+            <Button
+              onPress={() => {
+                setEditDefaultEnvironment(false);
+                loadData();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onPress={() => {
+                storeData("defaultEnvironent", defaultEnvironment);
+                setEditDefaultEnvironment(false);
+              }}
+            >
+              Save
+            </Button>
+          </View>
         </View>
       ) : (
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Subheading>Default Environment:</Subheading>
-          <Subheading>{defaultEnvironment}</Subheading>
+        <View>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Subheading>Default Environment:</Subheading>
+            <Subheading>{defaultEnvironment || "Not Set"}</Subheading>
+          </View>
+          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+            <Button
+              onPress={() => {
+                setEditDefaultEnvironment(true);
+              }}
+            >
+              Edit
+            </Button>
+          </View>
         </View>
       )}
     </View>
@@ -141,6 +176,7 @@ function SettingsView() {
     <View
       style={[StyleSheet.absoluteFill, CustomStyles.container, { padding: 50 }]}
     >
+      <DefaultEnvironment />
       <ServerInfo />
     </View>
   );
