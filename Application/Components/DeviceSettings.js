@@ -1,15 +1,23 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, Headline, Subheading, TextInput } from "react-native-paper";
+import {
+  Button,
+  Headline,
+  Portal,
+  Snackbar,
+  Subheading,
+  TextInput,
+} from "react-native-paper";
 import DropDown from "react-native-paper-dropdown";
 import { getData, storeData } from "../Storage";
 import { CustomStyles } from "../Styles";
 
-function DefaultEnvironment(props) {
+function DefaultEnvironment({ onSave }) {
   const [editDefaultEnvironment, setEditDefaultEnvironment] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [defaultEnvironment, setDefaultEnvironment] = useState("");
+
   const loadData = () => {
     getData("defaultEnvironment")
       .then((result) => {
@@ -19,6 +27,9 @@ function DefaultEnvironment(props) {
         console.error(err);
       });
   };
+  useEffect(() => {
+    loadData();
+  });
   return (
     <View>
       <Headline>Default Environment</Headline>
@@ -55,7 +66,13 @@ function DefaultEnvironment(props) {
             </Button>
             <Button
               onPress={() => {
-                storeData("defaultEnvironent", defaultEnvironment);
+                storeData("defaultEnvironment", defaultEnvironment)
+                  .then((result) => {
+                    onSave("Default environment has been saved!");
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                  });
                 setEditDefaultEnvironment(false);
               }}
             >
@@ -86,7 +103,7 @@ function DefaultEnvironment(props) {
   );
 }
 
-function ServerInfo(props) {
+function ServerInfo({ onSave }) {
   const [editServerInfo, setEditServerInfo] = useState(false);
   const [serverInfo, setServerInfo] = useState({});
   const loadData = () => {
@@ -134,7 +151,11 @@ function ServerInfo(props) {
             </Button>
             <Button
               onPress={() => {
-                storeData("serverInfo", serverInfo);
+                storeData("serverInfo", serverInfo)
+                  .then((result) => {
+                    onSave("Server Info has been saved!");
+                  })
+                  .catch((err) => {});
                 setEditServerInfo(false);
               }}
             >
@@ -172,12 +193,31 @@ function ServerInfo(props) {
 }
 
 function SettingsView() {
+  const [snackMessage, setSnackMessage] = useState("");
   return (
     <View
       style={[StyleSheet.absoluteFill, CustomStyles.container, { padding: 50 }]}
     >
-      <DefaultEnvironment />
-      <ServerInfo />
+      <DefaultEnvironment
+        onSave={(message) => {
+          setSnackMessage(message);
+        }}
+      />
+      <ServerInfo
+        onSave={(message) => {
+          setSnackMessage(message);
+        }}
+      />
+      <Portal>
+        <Snackbar
+          visible={snackMessage}
+          onDismiss={() => {
+            setSnackMessage("");
+          }}
+        >
+          {snackMessage}
+        </Snackbar>
+      </Portal>
     </View>
   );
 }

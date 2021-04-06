@@ -63,6 +63,7 @@ const tempScreen = ({ navigation }) => {
 };
 
 export default function App() {
+  const [defaultEnvironment, setDefaultEnvironment] = React.useState("");
   const theme = {
     ...DefaultTheme,
     colors: {
@@ -73,7 +74,15 @@ export default function App() {
       text: "#1e212d",
     },
   };
-  const defaultEnvironment = getData("defaultEnvironment");
+  React.useEffect(() => {
+    getData("defaultEnvironment")
+      .then((result) => {
+        setDefaultEnvironment(result || "Management");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer theme={theme}>
@@ -82,7 +91,7 @@ export default function App() {
           <Drawer.Navigator initialRouteName={defaultEnvironment}>
             {/* <Drawer.Screen name="temp" component={tempScreen} /> */}
             <Drawer.Screen name="Device Settings" component={DeviceSettings} />
-            <Drawer.Screen name="Manager" component={AdminNav} />
+            <Drawer.Screen name="Management" component={AdminNav} />
             <Drawer.Screen name="Waiter" component={WaiterNav} />
             <Drawer.Screen name="Kitchen" component={KitchenNav} />
           </Drawer.Navigator>
