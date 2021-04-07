@@ -264,11 +264,11 @@ export default class TicketList extends React.Component {
           // console.log(`item`, item);
           if (filterTags?.length) {
             if (item?.tags || item?.customization?.customTags) {
-              let rv = true;
+              let rv = false;
               const tags = item?.customization?.customTags || item?.tags;
               filterTags?.forEach((ft) => {
-                if (!tags.find((tag) => tag.id == ft.id)) {
-                  rv = false;
+                if (tags.find((tag) => tag.id == ft.id)) {
+                  rv = true;
                   return;
                 }
               });
