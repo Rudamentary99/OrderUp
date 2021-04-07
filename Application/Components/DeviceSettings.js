@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
@@ -17,7 +18,7 @@ function DefaultEnvironment({ onSave }) {
   const [editDefaultEnvironment, setEditDefaultEnvironment] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [defaultEnvironment, setDefaultEnvironment] = useState("");
-
+  const navigation = useNavigation();
   const loadData = () => {
     getData("defaultEnvironment")
       .then((result) => {
@@ -28,7 +29,8 @@ function DefaultEnvironment({ onSave }) {
       });
   };
   useEffect(() => {
-    loadData();
+    const focusListener = navigation.addListener("focus", loadData);
+    return focusListener;
   });
   return (
     <View>
@@ -106,6 +108,7 @@ function DefaultEnvironment({ onSave }) {
 function ServerInfo({ onSave }) {
   const [editServerInfo, setEditServerInfo] = useState(false);
   const [serverInfo, setServerInfo] = useState({});
+  const navigation = useNavigation();
   const loadData = () => {
     getData("serverInfo")
       .then((result) => {
@@ -118,7 +121,8 @@ function ServerInfo({ onSave }) {
       });
   };
   useEffect(() => {
-    loadData();
+    const focusListener = navigation.addListener("focus", loadData);
+    return focusListener;
   });
 
   return (

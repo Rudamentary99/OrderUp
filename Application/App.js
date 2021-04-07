@@ -63,7 +63,9 @@ const tempScreen = ({ navigation }) => {
 };
 
 export default function App() {
-  const [defaultEnvironment, setDefaultEnvironment] = React.useState("");
+  const [defaultEnvironment, setDefaultEnvironment] = React.useState(
+    "Management"
+  );
   const theme = {
     ...DefaultTheme,
     colors: {
@@ -77,6 +79,7 @@ export default function App() {
   React.useEffect(() => {
     getData("defaultEnvironment")
       .then((result) => {
+        console.log(`result`, result);
         setDefaultEnvironment(result || "Management");
       })
       .catch((err) => {

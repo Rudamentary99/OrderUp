@@ -42,8 +42,8 @@ const MenuBar = ({ navigation }) => {
         justifyContent: "flex-start",
       }}
     >
-      <IconButton compact disabled icon="magnify"></IconButton>
-      <IconButton icon="filter" compact disabled></IconButton>
+      {/* <IconButton compact disabled icon="magnify"></IconButton>
+      <IconButton icon="filter" compact disabled></IconButton> */}
       <View
         style={{
           marginLeft: "auto",
