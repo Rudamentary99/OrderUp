@@ -169,55 +169,57 @@ function ManageTags({ route, navigation }) {
           </View>
         )}
       </List.Section>
-
-      <Dialog
-        visible={createTag}
-        onDismiss={() => {
-          setCreateTag(false);
-        }}
-        style={{ marginBottom: 400 }}
-      >
-        <Dialog.Title label="New Tag">New Tag</Dialog.Title>
-        <Dialog.Content>
-          <TextInput
-            label="name"
-            value={newTagName}
-            error={errorMessage}
-            autoFocus
-            autoCapitalize="words"
-            onChangeText={(text) => {
-              if (tagList.find(({ name }) => name == text)) {
-                setErrorMessage("Tag already exists!");
-              } else {
+      <Portal>
+        <Dialog
+          visible={createTag}
+          onDismiss={() => {
+            setCreateTag(false);
+          }}
+          style={{ marginBottom: 400, ...CustomStyles.dialogContainer }}
+        >
+          <Dialog.Title label="New Tag">New Tag</Dialog.Title>
+          <Dialog.Content>
+            <TextInput
+              label="name"
+              value={newTagName}
+              error={errorMessage}
+              autoFocus
+              autoCapitalize="words"
+              onChangeText={(text) => {
+                if (tagList.find(({ name }) => name == text)) {
+                  setErrorMessage("Tag already exists!");
+                } else {
+                  setErrorMessage("");
+                }
+                setNewTagName(text);
+              }}
+            />
+            <HelperText visible={errorMessage}>{errorMessage}</HelperText>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              onPress={() => {
+                setNewTagName("");
                 setErrorMessage("");
-              }
-              setNewTagName(text);
-            }}
-          />
-          <HelperText visible={errorMessage}>{errorMessage}</HelperText>
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Button
-            onPress={() => {
-              setNewTagName("");
-              setErrorMessage("");
-              setCreateTag(false);
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            disabled={errorMessage}
-            onPress={() => {
-              setTagList([...tagList, { name: newTagName }]);
-              setNewTagName("");
-              setCreateTag(false);
-            }}
-          >
-            Save
-          </Button>
-        </Dialog.Actions>
-      </Dialog>
+                setCreateTag(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              disabled={errorMessage}
+              onPress={() => {
+                setTagList([...tagList, { name: newTagName }]);
+                setNewTagName("");
+                setCreateTag(false);
+              }}
+            >
+              Save
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+
       <Portal>
         <Snackbar
           visible={snackMessage}
