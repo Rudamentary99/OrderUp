@@ -483,7 +483,7 @@ function ManageFoodType({ route, navigation }) {
         <Dialog
           visible={updateFoodType.name}
           onDismiss={() => {
-            setCreateFoodType(false);
+            setUpdateFoodType({});
           }}
           style={{ marginBottom: 400 }}
         >
@@ -550,7 +550,13 @@ function ManageFoodType({ route, navigation }) {
             </Button>
           </Dialog.Actions>
         </Dialog>
-        <Dialog visible={deleteItem} style={CustomStyles.dialogContainer}>
+        <Dialog
+          visible={deleteItem}
+          onDismiss={() => {
+            setDeleteItem(nulls);
+          }}
+          style={CustomStyles.dialogContainer}
+        >
           <Dialog.Title>
             Are you sure you want to remove food type "{deleteItem?.name}"?
           </Dialog.Title>
