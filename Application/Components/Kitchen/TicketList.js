@@ -142,7 +142,7 @@ const Ticket = (props) => {
           onClose(id);
         }}
       >
-        <Card style={{ margin: 10, width: 300 }}>
+        <Card style={{ margin: 10, width: 300, maxHeight: "97%" }}>
           <Card.Content style={{ position: "relative" }}>
             <Card.Title title={`#${table}`}></Card.Title>
 
@@ -163,22 +163,24 @@ const Ticket = (props) => {
                 .format("hh:mm:ss")}
             </Subheading>
 
-            <List.Section>
-              {orderItems.length ? (
-                orderItems
+            <ScrollView style={{ height: "90%" }}>
+              <List.Section>
+                {orderItems.length ? (
+                  orderItems
 
-                  .sort((a, b) => a.prepTime - b.prepTime)
-                  .map((food) => <TicketItem key={uuidv4()} food={food} />)
-              ) : (
-                <List.Item
-                  titleStyle={{
-                    color: colors.secondary,
-                    fontStyle: "italic",
-                  }}
-                  title="no items entered..."
-                ></List.Item>
-              )}
-            </List.Section>
+                    .sort((a, b) => a.prepTime - b.prepTime)
+                    .map((food) => <TicketItem key={uuidv4()} food={food} />)
+                ) : (
+                  <List.Item
+                    titleStyle={{
+                      color: colors.secondary,
+                      fontStyle: "italic",
+                    }}
+                    title="no items entered..."
+                  ></List.Item>
+                )}
+              </List.Section>
+            </ScrollView>
           </Card.Content>
         </Card>
       </Animatable.View>
