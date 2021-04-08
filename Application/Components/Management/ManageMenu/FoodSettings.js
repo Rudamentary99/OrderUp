@@ -417,7 +417,7 @@ function ManageFoodType({ route, navigation }) {
           onDismiss={() => {
             setCreateFoodType(false);
           }}
-          style={{ marginBottom: 400 }}
+          style={{ marginBottom: 400, ...CustomStyles.dialogContainer }}
         >
           <Dialog.Title label="New Tag">New Food Type</Dialog.Title>
           <Dialog.Content>
