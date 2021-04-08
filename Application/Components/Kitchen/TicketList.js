@@ -17,14 +17,17 @@ import {
   IconButton,
   Chip,
 } from "react-native-paper";
-import { getOpenOrdersFull, updateOrderItem } from "../../DB/orderController";
+import {
+  completeOrder,
+  getOpenOrdersFull,
+  updateOrderItem,
+} from "../../DB/orderController";
 import {
   FlingGestureHandler,
   Directions,
   TouchableHighlight,
 } from "react-native-gesture-handler";
 import { Audio } from "expo-av";
-import { closeOrder } from "../../DB/orderController";
 import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
 import { TagChip } from "../helpers/Tag";
@@ -283,7 +286,11 @@ export default class TicketList extends React.Component {
           }
         }),
       }))
-      .filter((ticket) => ticket?.orderItems?.length);
+      .filter(
+        (ticket) =>
+          ticket?.orderItems?.length &&
+          ticket?.orderItems?.find(({ completed }) => !completed)
+      );
     return (
       <View style={StyleSheet.absoluteFill}>
         {filteredTickets.length ? (
@@ -299,7 +306,7 @@ export default class TicketList extends React.Component {
                     }}
                     onClose={(pId) => {
                       this.playCloseSound();
-                      closeOrder(pId)
+                      completeOrder(pId)
                         .then((result) => {
                           if (result)
                             this.setState({ snackMessage: "Ticket Closed!" });
@@ -331,7 +338,7 @@ export default class TicketList extends React.Component {
         )}
         <Snackbar
           visible={this.state.snackMessage}
-          duration={3000}
+          duration={2000}
           onDismiss={() => {
             this.setState({ snackMessage: null });
           }}

@@ -108,6 +108,18 @@ export async function updateOrderItem(orderItemID, orderItem) {
       console.error(err);
     });
 }
+export async function completeOrder(orderID) {
+  return await axios
+    .post(`/api/order/${orderID}/complete`)
+    .then((result) => {
+      if (result.status == 200) return true;
+
+      return false;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
 /**
  * closes an order
  * @param {string} orderID id of order you want to close

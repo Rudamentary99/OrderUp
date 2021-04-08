@@ -256,7 +256,25 @@ module.exports = (rdbConn) => [
       ]);
     },
   },
-
+  {
+    method: "post",
+    path: "/api/order/:id/complete",
+    fn: (req, res) => {
+      r.table("orderItem")
+        .getAll(req.params.id, { index: "orderID" })
+        .update({ completed: true, completionTime: new Date() })
+        .run(rdbConn, (err, result) => {
+          if (err) {
+            console.error(err);
+            res
+              .status(400)
+              .send({ message: "could not mark items complete", err: err });
+          } else {
+            res.end();
+          }
+        });
+    },
+  },
   {
     method: "post",
     path: "/api/order/:id/close",
