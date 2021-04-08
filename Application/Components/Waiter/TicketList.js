@@ -12,10 +12,9 @@ import {
   Portal,
 } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { getOrders } from "../../DB/orderController";
+import { getOpenOrdersFull, getOrders } from "../../DB/orderController";
 import { useNavigation } from "@react-navigation/native";
 import { CustomStyles } from "../../Styles";
-
 const moment = require("moment"); // require
 const Tab = createMaterialTopTabNavigator();
 const Ticket = ({ ticket }) => {
@@ -31,9 +30,15 @@ const Ticket = ({ ticket }) => {
       style={{ height: 200, width: 200, margin: 20 }}
     >
       <Card.Title title={ticket.table}></Card.Title>
-      <Card.Content>
+      <Card.Content style={{ flexGrow: 1 }}>
         <Text>{moment(ticket.created).format("hh:mm A, MMM DD, yyyy")}</Text>
-        {ticket.closeDate && <Text>Closed</Text>}
+        <View style={{ alignSelf: "flex-end", marginTop: "auto" }}>
+          {ticket.orderItems?.find(({ completed }) => !completed) ? (
+            <Subheading>In Progress</Subheading>
+          ) : (
+            <Subheading>Completed!</Subheading>
+          )}
+        </View>
       </Card.Content>
     </Card>
   );
@@ -62,7 +67,7 @@ export default class TicketList extends React.Component {
   }
 
   loadData() {
-    getOrders(this.state.ticketType)
+    getOpenOrdersFull()
       .then((result) => {
         this.setState({ tickets: result || [] });
 
@@ -158,7 +163,6 @@ export default class TicketList extends React.Component {
           onPress={() => {
             this.props.navigation.navigate("New Ticket");
           }}
-          
           style={CustomStyles.bottomRightAction}
         />
         <Snackbar
