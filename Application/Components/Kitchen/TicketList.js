@@ -36,6 +36,7 @@ const TicketItem = (props) => {
   const {
     food: { id, name, customization, tags },
     // timeElapsed,
+    onComplete,
   } = props;
   const [completed] = React.useState(props.food.completed);
   const { colors } = useTheme();
@@ -60,9 +61,13 @@ const TicketItem = (props) => {
             onPress={() => {
               updateOrderItem(id, {
                 completed: !completed,
-              }).catch((err) => {
-                console.error(err);
-              });
+              })
+                .then((result) => {
+                  if (result) onComplete();
+                })
+                .catch((err) => {
+                  console.error(err);
+                });
             }}
             icon={
               completed
@@ -120,6 +125,7 @@ const Ticket = (props) => {
     ticket: { id, table, orderItems, created },
     filterTags,
     onClose,
+    onItemComplete,
   } = props;
   const [duration, setDuration] = React.useState(getDuration());
   const { colors } = useTheme();
@@ -172,7 +178,13 @@ const Ticket = (props) => {
                   orderItems
 
                     .sort((a, b) => a.prepTime - b.prepTime)
-                    .map((food) => <TicketItem key={uuidv4()} food={food} />)
+                    .map((food) => (
+                      <TicketItem
+                        key={uuidv4()}
+                        food={food}
+                        onComplete={onItemComplete}
+                      />
+                    ))
                 ) : (
                   <List.Item
                     titleStyle={{
@@ -322,6 +334,7 @@ export default class TicketList extends React.Component {
                         ),
                       });
                     }}
+                    onItemComplete={() => this.loadData()}
                   />
                 ))}
             </View>
