@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import {
   Text,
@@ -10,37 +10,94 @@ import {
   IconButton,
   Button,
   Portal,
+  Menu,
 } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { getOpenOrdersFull, getOrders } from "../../DB/orderController";
+import {
+  closeOrder,
+  getOpenOrdersFull,
+  getOrders,
+} from "../../DB/orderController";
 import { useNavigation } from "@react-navigation/native";
 import { CustomStyles } from "../../Styles";
 const moment = require("moment"); // require
-const Tab = createMaterialTopTabNavigator();
+
 const Ticket = ({ ticket }) => {
+  const [showQuickAction, setShowQuickAction] = useState(false);
   const navigation = useNavigation();
   return (
-    <Card
-      onPress={() => {
-        navigation.navigate("Ticket Details", {
-          ticket,
-          //onBack: this.onBack,
-        });
+    <Menu
+      visible={showQuickAction}
+      onDismiss={() => {
+        setShowQuickAction(false);
       }}
-      style={{ height: 200, width: 200, margin: 20 }}
+      style={{ marginTop: 100, marginLeft: 20 }}
+      anchor={
+        <Card
+          onPress={() => {
+            navigation.navigate("Ticket Details", {
+              ticket,
+              //onBack: this.onBack,
+            });
+          }}
+          onLongPress={() => {
+            setShowQuickAction(true);
+          }}
+          style={{ height: 200, width: 200, margin: 20 }}
+        >
+          <Card.Title title={ticket.table}></Card.Title>
+          <Card.Content style={{ flexGrow: 1 }}>
+            <Text>
+              {moment(ticket.created).format("hh:mm A, MMM DD, yyyy")}
+            </Text>
+            <View style={{ alignSelf: "flex-end", marginTop: "auto" }}>
+              <Subheading
+                style={{
+                  display: ticket.orderItems?.find(
+                    ({ completed }) => !completed
+                  )
+                    ? "none"
+                    : "flex",
+                }}
+              >
+                Order Ready!
+              </Subheading>
+            </View>
+          </Card.Content>
+        </Card>
+      }
     >
-      <Card.Title title={ticket.table}></Card.Title>
-      <Card.Content style={{ flexGrow: 1 }}>
-        <Text>{moment(ticket.created).format("hh:mm A, MMM DD, yyyy")}</Text>
-        <View style={{ alignSelf: "flex-end", marginTop: "auto" }}>
-          {ticket.orderItems?.find(({ completed }) => !completed) ? (
-            <Subheading>In Progress</Subheading>
-          ) : (
-            <Subheading>Completed!</Subheading>
-          )}
-        </View>
-      </Card.Content>
-    </Card>
+      <Menu.Item
+        icon="pencil"
+        title="Edit"
+        onPress={() => {
+          setShowQuickAction(false);
+          navigation.navigate("Edit Ticket", { ticket });
+        }}
+      />
+      {/* <Menu.Item
+        icon="check"
+        title="Close"
+        onPress={() => {
+          closeOrder(id)
+            .then((result) => {
+              if (result) {
+                navigation.navigate("Open Tickets", {
+                  snackMessage: "Ticket has been closed",
+                });
+              } else {
+                navigation.navigate("Open Tickets", {
+                  snackMessage: "Could not close. :(",
+                });
+                console.error(result);
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        }}
+      /> */}
+    </Menu>
   );
 };
 export default class TicketList extends React.Component {
@@ -167,6 +224,7 @@ export default class TicketList extends React.Component {
         />
         <Snackbar
           visible={this.state.snackMessage}
+          duration={2000}
           onDismiss={() => {
             this.setState({ snackMessage: null });
           }}
