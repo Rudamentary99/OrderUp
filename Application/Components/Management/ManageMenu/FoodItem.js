@@ -16,8 +16,10 @@ import {
   TextInput,
   List,
   Chip,
+  Dialog,
+  Paragraph,
 } from "react-native-paper";
-import { getFoodItem } from "../../../DB/foodController";
+import { getFoodItem, updateFoodItem } from "../../../DB/foodController";
 import { ScrollView } from "react-native-gesture-handler";
 import { CustomStyles } from "../../../Styles";
 export function FoodItem(props) {
@@ -91,6 +93,8 @@ export class FoodDetails extends React.Component {
     super(props);
     this.state = {
       foodItem: {},
+      manageItemOpen: false,
+      confirmArchive: false,
     };
   }
   componentDidMount() {
@@ -116,7 +120,8 @@ export class FoodDetails extends React.Component {
 
   render() {
     const {
-      foodItem: { name, prepTime, foodType, price, ingredients, tags },
+      foodItem: { id, name, prepTime, foodType, price, ingredients, tags },
+      confirmArchive,
     } = this.state;
     return (
       <View
@@ -153,21 +158,78 @@ export class FoodDetails extends React.Component {
               </Chip>
             ))}
           </View>
-          <Headline style={{}}>Price: ${price}</Headline>
+          <Headline>Price: ${price}</Headline>
         </View>
-        <FAB
-          icon="pencil"
-          onPress={() => {
-            this.props.navigation.navigate(
-              "Edit Food",
-              this.props.route.params
-            );
+        <FAB.Group
+          icon={this.state.manageItemOpen ? "dots-vertical" : "pencil"}
+          open={this.state.manageItemOpen}
+          onStateChange={() => {
+            this.setState({ manageItemOpen: !this.state.manageItemOpen });
           }}
+          actions={[
+            {
+              icon: "pencil",
+              label: "Archive",
+              onPress: () => {
+                this.setState({ confirmArchive: true });
+              },
+            },
+            {
+              icon: "pencil",
+              label: "Edit",
+
+              onPress: () => {
+                this.props.navigation.navigate(
+                  "Edit Food",
+                  this.props.route.params
+                );
+              },
+            },
+          ]}
           style={{
-            ...CustomStyles.bottomRightAction,
+            ...CustomStyles.bottomRightActionGroup,
             display: Boolean(this.props.route.params?.noEdit) ? "none" : "flex",
           }}
-        ></FAB>
+        ></FAB.Group>
+        <Dialog
+          visible={confirmArchive}
+          onDismiss={() => {
+            this.setState({ confirmArchive: false });
+          }}
+        >
+          <Dialog.Title>Archiving food item</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>
+              This action cannot be undone. Do you wish to proceed?
+            </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              onPress={() => {
+                //updateFoodItem({ id, archived: true })
+                // .then((result) => {
+                // if (result) {
+                this.props.navigation.navigate("Food Items", {
+                  archivee: this.props.foodItem,
+                  playArchivedSound: true,
+                });
+                //  }
+                // })
+                // .catch((err) => {console.error(err)});
+              }}
+            >
+              Proceed
+            </Button>
+            <Button
+              mode="contained"
+              onPress={() => {
+                this.setState({ confirmArchive: false });
+              }}
+            >
+              Nevermind
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
       </View>
     );
   }

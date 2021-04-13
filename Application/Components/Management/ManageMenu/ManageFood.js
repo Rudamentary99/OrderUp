@@ -93,6 +93,14 @@ class FoodMain extends React.Component {
   componentDidMount() {
     this.focusListener = this.props.navigation.addListener("focus", () => {
       this.loadFood();
+      this.setState({ archived: this.props.route.params.archivee });
+      console.log(
+        `this.props.route.params.playArchivedFoodSound`,
+        this.props.route.params
+      );
+      if (this.props.route.params.playArchivedSound) {
+        this.playArchivedFoodSound();
+      }
     });
     this.loadFood();
     getFoodTypes()
@@ -172,7 +180,7 @@ class FoodMain extends React.Component {
                           );
                           updateFoodItem({ ...archivee, archived: true })
                             .then((result) => {
-                              console.log("result", result);
+                              // console.log("result", result);
                               if (result) {
                                 this.playArchivedFoodSound();
                                 removeFoodItem(pID);
