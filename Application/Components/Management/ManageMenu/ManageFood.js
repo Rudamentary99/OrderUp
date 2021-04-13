@@ -93,12 +93,12 @@ class FoodMain extends React.Component {
   componentDidMount() {
     this.focusListener = this.props.navigation.addListener("focus", () => {
       this.loadFood();
-      this.setState({ archived: this.props.route.params.archivee });
+      this.setState({ archived: this?.props?.route?.params?.archivee });
       console.log(
         `this.props.route.params.playArchivedFoodSound`,
         this.props.route.params
       );
-      if (this.props.route.params.playArchivedSound) {
+      if (this?.props?.route?.params?.playArchivedSound) {
         this.playArchivedFoodSound();
       }
     });
@@ -230,7 +230,10 @@ class FoodMain extends React.Component {
         <MenuBar navigation={this.props.navigation}></MenuBar>
 
         <ScrollView
-          contentContainerStyle={CustomStyles.container}
+          contentContainerStyle={[
+            CustomStyles.container,
+            { paddingBottom: 100 },
+          ]}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}

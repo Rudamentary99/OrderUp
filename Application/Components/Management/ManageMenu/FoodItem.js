@@ -206,16 +206,18 @@ export class FoodDetails extends React.Component {
           <Dialog.Actions>
             <Button
               onPress={() => {
-                //updateFoodItem({ id, archived: true })
-                // .then((result) => {
-                // if (result) {
-                this.props.navigation.navigate("Food Items", {
-                  archivee: this.props.foodItem,
-                  playArchivedSound: true,
-                });
-                //  }
-                // })
-                // .catch((err) => {console.error(err)});
+                updateFoodItem({ id, archived: true })
+                  .then((result) => {
+                    if (result) {
+                      this.props.navigation.navigate("Food Items", {
+                        archivee: this.state.foodItem,
+                        playArchivedSound: true,
+                      });
+                    }
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                  });
               }}
             >
               Proceed
