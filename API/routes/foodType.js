@@ -5,7 +5,7 @@ module.exports = (rdbConn) => [
     method: "get",
     path: "/api/foodTypes/",
     fn: (req, res) => {
-      r.table("foodTypes").run(rdbConn, (err, result) => {
+      r.table("foodType").run(rdbConn, (err, result) => {
         if (err) {
           console.error(err);
         } else {
@@ -22,12 +22,12 @@ module.exports = (rdbConn) => [
       const { foodTypes, removedFoodTypes } = req.body;
       async.waterfall([
         function saveNewFoodTypes(callback) {
-          r.table("foodTypes")
+          r.table("foodType")
             .insert(foodTypes.filter(({ id }) => !id))
             .run(rdbConn, callback);
         },
         function removeFoodTypes(result, callback) {
-          r.table("foodTypes")
+          r.table("foodType")
             .getAll(r.args(removedFoodTypes.map(({ id }) => id)))
             .delete()
             .run(rdbConn, callback);

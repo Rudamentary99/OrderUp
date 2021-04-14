@@ -259,7 +259,6 @@ function ManageFoodType({ route, navigation }) {
         console.error(err);
       });
   };
-  console.log(`foodTypes`, foodTypes);
   React.useEffect(() => {
     const focusListener = navigation.addListener("focus", loadData);
     return focusListener;

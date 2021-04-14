@@ -259,7 +259,11 @@ export function ManageFoodItem(props) {
                   console.error(err);
                 });
             } else {
-              createFoodItem({ ...data, archived: false })
+              createFoodItem({
+                ...data,
+                prepTime: data.prepTime * 60 * 1000,
+                archived: false,
+              })
                 .then((result) => {
                   // console.log("result", result);
                   props.navigation.navigate("Food Items");

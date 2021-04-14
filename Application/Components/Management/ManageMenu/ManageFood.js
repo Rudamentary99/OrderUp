@@ -147,7 +147,6 @@ class FoodMain extends React.Component {
   }
   render() {
     const { foodItems, archived, refreshing, foodTypes } = this.state;
-
     const removeFoodItem = (pID) => {
       this.setState({ foodItems: foodItems.filter(({ id }) => id != pID) });
     };
