@@ -104,7 +104,7 @@ export function customizeItem({
           multiline={true}
         />
         <TagInput
-          items={tags}
+          items={tags.map(({ name }) => name)}
           selectedItems={customTags}
           style={{ padding: 30 }}
           onChangeSelection={(newTags) => {

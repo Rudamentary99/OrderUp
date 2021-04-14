@@ -48,7 +48,7 @@ function DeviceFilter(props) {
         <View>
           <Surface style={{ padding: 10 }}>
             <TagInput
-              items={tags}
+              items={tags.map(({ name }) => name)}
               tagMode="flat"
               onChangeSelection={setFilterTags}
               selectedItems={filterTags}
@@ -85,7 +85,7 @@ function DeviceFilter(props) {
                 selected={filterTags.find((ft) => ft == tag.name)}
                 style={{ marginRight: 3 }}
               >
-                {tag}
+                {tag.name}
               </Chip>
             ))}
           </View>
