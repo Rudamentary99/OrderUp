@@ -225,7 +225,7 @@ export function ManageFoodItem(props) {
                 }}
               >
                 <TagInput
-                  items={tags}
+                  items={tags.map(({ name }) => name)}
                   selectedItems={value}
                   onChangeSelection={onChange}
                 />

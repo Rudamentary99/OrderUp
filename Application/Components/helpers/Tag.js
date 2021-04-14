@@ -2,6 +2,8 @@ import React from "react";
 import { View } from "react-native";
 import { Chip, useTheme } from "react-native-paper";
 
+import { v4 as uuidv4 } from "uuid";
+import "react-native-get-random-values";
 export function TagInput({
   selectedItems,
   onChangeSelection,
@@ -13,23 +15,25 @@ export function TagInput({
     <View style={{ flexDirection: "row", ...style }}>
       {items.map((tag) => (
         <Chip
-          key={tag.id}
+          key={uuidv4()}
           mode={tagMode || "outlined"}
-          selected={selectedItems?.find(({ id }) => id == tag.id) || false}
+          selected={
+            selectedItems?.find((selectedTag) => selectedTag == tag) || false
+          }
           style={{ margin: 5 }}
           onPress={() => {
-            if (selectedItems.find(({ id }) => tag.id == id))
-              onChangeSelection(selectedItems.filter(({ id }) => tag.id != id));
+            if (selectedItems?.find((selectedTag) => selectedTag == tag))
+              onChangeSelection(selectedItems.filter((st) => st != tag));
             else onChangeSelection([...selectedItems, tag]);
           }}
         >
-          {tag.name}
+          {tag}
         </Chip>
       ))}
     </View>
   );
 }
-export function TagChip({ tag, emphasized, style }) {
+export function TagChip({ tag, emphasized, style, mode }) {
   const theme = useTheme();
   const colorStyle = emphasized
     ? {
@@ -37,8 +41,8 @@ export function TagChip({ tag, emphasized, style }) {
       }
     : {};
   return (
-    <Chip mode="outlined" style={{ ...style, ...colorStyle }}>
-      {tag.name}
+    <Chip mode={mode} style={{ marginLeft: 3, ...style, ...colorStyle }}>
+      {tag}
     </Chip>
   );
 }

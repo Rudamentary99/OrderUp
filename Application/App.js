@@ -70,8 +70,8 @@ export default function App() {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      accent: "#98ded9",
-      primary: "#161d6f",
+      accent: "#3FD498",
+      primary: "#1320b0",
       card: "rgb(255, 255, 255)",
       text: "#1e212d",
     },

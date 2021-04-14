@@ -99,19 +99,17 @@ const TicketItem = (props) => {
         }}
       >
         {tags
-          ?.filter(
-            (tag) => !customization?.customTags.find(({ id }) => tag.id == id)
-          )
+          ?.filter((tag) => !customization?.customTags.find((ct) => tag == ct))
           .map((tag) => (
             <Chip key={uuidv4()} disabled>
-              {tag.name}
+              {tag}
             </Chip>
           ))}
         {customization?.customTags
-          ?.filter((customTag) => !tags.find(({ id }) => customTag.id == id))
+          ?.filter((customTag) => !tags.find((tag) => customTag == customTag))
           ?.map((customTag) => (
-            <Chip key={uuidv4()} style={{ display: customTag }}>
-              {customTag.name}
+            <Chip key={uuidv4()} style={{ display: Boolean(customTag) }}>
+              {customTag}
             </Chip>
           ))}
       </View>

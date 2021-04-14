@@ -22,6 +22,7 @@ import {
 import { getFoodItem, updateFoodItem } from "../../../DB/foodController";
 import { ScrollView } from "react-native-gesture-handler";
 import { CustomStyles } from "../../../Styles";
+import { TagChip } from "../../helpers/Tag";
 export function FoodItem(props) {
   const {
     item: { id, name, prepTime, tags },
@@ -59,9 +60,7 @@ export function FoodItem(props) {
           <Card.Content>
             <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
               {tags?.map((tag) => (
-                <Chip key={tag.id} style={{ marginLeft: 3 }}>
-                  {tag.name}
-                </Chip>
+                <TagChip key={uuidv4()} tag={tag} mode="flat" />
               ))}
             </View>
           </Card.Content>
@@ -153,8 +152,8 @@ export class FoodDetails extends React.Component {
         <View>
           <View style={{ flexDirection: "row", alignSelf: "flex-end" }}>
             {tags?.map((tag) => (
-              <Chip mode="outlined" key={tag.id} style={{ marginLeft: 3 }}>
-                {tag.name}
+              <Chip mode="outlined" key={uuidv4()} style={{ marginLeft: 3 }}>
+                {tag}
               </Chip>
             ))}
           </View>

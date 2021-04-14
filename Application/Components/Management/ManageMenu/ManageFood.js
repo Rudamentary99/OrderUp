@@ -94,10 +94,7 @@ class FoodMain extends React.Component {
     this.focusListener = this.props.navigation.addListener("focus", () => {
       this.loadFood();
       this.setState({ archived: this?.props?.route?.params?.archivee });
-      console.log(
-        `this.props.route.params.playArchivedFoodSound`,
-        this.props.route.params
-      );
+
       if (this?.props?.route?.params?.playArchivedSound) {
         this.playArchivedFoodSound();
       }

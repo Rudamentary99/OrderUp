@@ -112,12 +112,11 @@ export class TicketItemDetails extends React.Component {
               <>
                 {tags
                   .filter(
-                    (tag) =>
-                      !customization?.customTags?.find(({ id }) => id == tag.id)
+                    (tag) => !customization?.customTags?.find((ct) => ct == tag)
                   )
                   .map((tag) => (
                     <Chip key={uuidv4()} disabled style={{ marginRight: 3 }}>
-                      {tag.name}
+                      {tag}
                     </Chip>
                   ))}
                 {customization?.customTags?.map((customTag) => (
@@ -125,7 +124,7 @@ export class TicketItemDetails extends React.Component {
                     key={uuidv4()}
                     tag={customTag}
                     style={{ marginRight: 3 }}
-                    emphasized={!tags.find(({ id }) => customTag.id == id)}
+                    emphasized={!tags.find((tag) => customTag == tag)}
                   />
                 ))}
               </>
@@ -138,7 +137,7 @@ export class TicketItemDetails extends React.Component {
                     marginRight: 3,
                   }}
                 >
-                  {tag.name}
+                  {tag}
                 </Chip>
               ))
             )}

@@ -7,7 +7,7 @@ import { getTags } from "../../DB/SettingsController";
 import { CustomStyles } from "../../Styles";
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
-import { TagInput } from "../helpers/Tag";
+import { TagChip, TagInput } from "../helpers/Tag";
 import { getData, storeData } from "../../Storage";
 
 function DeviceFilter(props) {
@@ -82,10 +82,10 @@ function DeviceFilter(props) {
               <Chip
                 key={uuidv4()}
                 mode="outlined"
-                selected={filterTags.find(({ id }) => id == tag.id)}
+                selected={filterTags.find((ft) => ft == tag.name)}
                 style={{ marginRight: 3 }}
               >
-                {tag.name}
+                {tag}
               </Chip>
             ))}
           </View>

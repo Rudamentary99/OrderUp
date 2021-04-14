@@ -60,9 +60,15 @@ module.exports = (rdbConn) => [
               .eqJoin("foodID", r.table("food"))
               .without({ right: "id" })
               .zip()
+
               .coerceTo("array"),
           });
         })
+        // .filter((row) => {
+        //   if (row.hasFields())
+        //     if (row.hasFields("tags")) {
+        //     }
+        // })
         .run(rdbConn, (err, result) => {
           if (err) {
             console.error(err);

@@ -107,9 +107,7 @@ const FoodListPane = (props) => {
                 <Card.Title title={food.name}></Card.Title>
                 <Card.Content style={{ flexDirection: "row" }}>
                   <View style={{ flexDirection: "row" }}>
-                    {/* {food.tags?.map((tag) => (
-                      <Chip key={uuidv4()}>{tag.name}</Chip>
-                    ))} */}
+                    
                   </View>
                   <Subheading
                     style={{ alignSelf: "flex-end", marginLeft: "auto" }}
@@ -167,17 +165,17 @@ const FoodListPane = (props) => {
             {tags?.map((tag) => (
               <Chip
                 key={uuidv4()}
-                selected={filterTags.find(({ id }) => tag.id == id)}
+                selected={filterTags.find(( ft ) => tag == ft)}
                 style={{ marginRight: 3 }}
                 onPress={() => {
-                  if (filterTags.find(({ id }) => tag.id == id)) {
-                    setFilterTags(filterTags.filter(({ id }) => id != tag.id));
+                  if (filterTags.find((ft) => tag == ft)) {
+                    setFilterTags(filterTags.filter(( ft) => ft != tag));
                   } else {
                     setFilterTags([...filterTags, tag]);
                   }
                 }}
               >
-                {tag.name}
+                {tag}
               </Chip>
             ))}
           </View>
