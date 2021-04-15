@@ -22,7 +22,7 @@ import { useNavigation } from "@react-navigation/native";
 import { CustomStyles } from "../../Styles";
 const moment = require("moment"); // require
 
-export const Ticket = ({ ticket }) => {
+const Ticket = ({ ticket }) => {
   const [showQuickAction, setShowQuickAction] = useState(false);
   const navigation = useNavigation();
   return (

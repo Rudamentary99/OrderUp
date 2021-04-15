@@ -282,7 +282,7 @@ export default class TicketList extends React.Component {
               let rv = false;
               const tags = item?.customization?.customTags || item?.tags;
               filterTags?.forEach((ft) => {
-                if (tags.find((itemTag) => itemTag == ft)) {
+                if (tags.find((tag) => tag == ft)) {
                   rv = true;
                   return;
                 }

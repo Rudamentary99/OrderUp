@@ -23,7 +23,17 @@ export async function getOrders(type) {
       console.error(err);
     });
 }
-
+export async function getClosedOrdersFull() {
+  return await axios
+    .get("api/order/full/closed")
+    .then((result) => {
+      // console.log(`result`, result);
+      return result.data;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
 /**
  * Gets Open orders and their foodItems
  * @returns {Object} orders
