@@ -119,10 +119,10 @@ export function ManageTickets({ navigation }) {
         if (cd.isBefore(moment(baseDay).endOf("day"))) {
           baseDay = cd;
           return (
-            <View key={uuidv4()}>
+            <React.Fragment key={uuidv4()}>
               <Subheading key={uuidv4()}>{cd.format("MMM DD")}</Subheading>
               <Ticket key={uuidv4()} ticket={ticket} />
-            </View>
+            </React.Fragment>
           );
         } else {
           return <Ticket key={uuidv4()} ticket={ticket} />;
