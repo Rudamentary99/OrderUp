@@ -125,12 +125,7 @@ export function ManageTickets({ navigation }) {
             </View>
           );
         } else {
-          return (
-            <>
-              <Headline>test</Headline>
-              <Ticket key={uuidv4()} ticket={ticket} />
-            </>
-          );
+          return <Ticket key={uuidv4()} ticket={ticket} />;
         }
       });
   }
