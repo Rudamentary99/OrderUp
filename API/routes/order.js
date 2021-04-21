@@ -44,17 +44,19 @@ module.exports = (rdbConn) => [
     method: "get",
     path: "/api/order/full/:type",
     fn: (req, res) => {
-      let filter = (row) => {
+      let filterTags = req.query.filterTags;
+      console.log(`filterTags`, filterTags);
+      let typeFilter = (row) => {
         return row.hasFields("id");
       };
       if (req?.params?.type == "open") {
-        filter = (row) => row.hasFields("closeDate").not();
+        typeFilter = (row) => row.hasFields("closeDate").not();
       } else if (req?.params?.type == "closed") {
-        filter = (row) => row.hasFields("closeDate");
+        typeFilter = (row) => row.hasFields("closeDate");
       }
 
       r.table("order")
-        .filter(filter)
+        .filter(typeFilter)
         .map((order) => {
           return order.merge({
             orderItems: r
@@ -63,6 +65,33 @@ module.exports = (rdbConn) => [
               .eqJoin("foodID", r.table("food"))
               .without({ right: "id" })
               .zip()
+              // .filter((item) => {
+              //   if (filterTags?.length) {
+              //     console.log("filtering");
+              //     let rv = false;
+              //     if (item.hasFields({ customization: { customTags: true } })) {
+              //       console.log("filter custom fields");
+              //       filterTags.forEach((tag) => {
+              //         if (item("customization")("customTags").contains(tag)) {
+              //           console.log("returning true");
+              //           rv = true;
+              //           return;
+              //         }
+              //       });
+              //     } else if (item.hasFields("tags")) {
+              //       console.log("filtering normal fields");
+              //       filterTags.forEach((tag) => {
+              //         if (item("tags").contains(tag)) {
+              //           rv = true;
+              //           return;
+              //         }
+              //       });
+              //     }
+              //     return rv;
+              //   } else {
+              //     return true;
+              //   }
+              // })
 
               .coerceTo("array"),
           });

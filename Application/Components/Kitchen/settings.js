@@ -8,7 +8,7 @@ import { CustomStyles } from "../../Styles";
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
 import { TagChip, TagInput } from "../helpers/Tag";
-import { getData, storeData } from "../../Storage";
+import { getData, removeData, storeData } from "../../Storage";
 
 function DeviceFilter(props) {
   const [tags, setTags] = React.useState([]);
@@ -66,6 +66,7 @@ function DeviceFilter(props) {
             </Button>
             <Button
               onPress={() => {
+                // removeData("filterTags");
                 storeData("filterTags", filterTags);
                 setEditTags(false);
                 loadData();

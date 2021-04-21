@@ -207,7 +207,7 @@ export default class TicketList extends React.Component {
     this.state = {
       tickets: [],
       snackMessage: null,
-      filterTags: [],
+      filterTags: null,
     };
   }
   componentDidMount() {
@@ -219,7 +219,7 @@ export default class TicketList extends React.Component {
         getData("filterTags")
           .then((result) => {
             if (result) {
-              this.setState({ filterTags: result });
+              this.setState({ filterTags: result || [] });
             }
           })
           .catch((err) => {
@@ -240,21 +240,22 @@ export default class TicketList extends React.Component {
     this.setState({ timeElapsed: this.state.timeElapsed + 1000 });
   }
   loadData() {
-    getOpenOrdersFull()
-      .then((result) => {
-        if (result)
-          result?.forEach((ticket) => {
-            if (!this.state.tickets.find(({ id }) => id == ticket.id)) {
-              this.playNewTicketSound();
-            }
-          });
+    if (this.state.filterTags != null)
+      getOpenOrdersFull(this.state.filterTags)
+        .then((result) => {
+          if (result)
+            result?.forEach((ticket) => {
+              if (!this.state.tickets.find(({ id }) => id == ticket.id)) {
+                this.playNewTicketSound();
+              }
+            });
 
-        this.setState({ tickets: result || [] });
-        // console.log("result", result);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+          this.setState({ tickets: result || [] });
+          // console.log("result", result);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
   }
   async playCloseSound() {
     const { sound } = await Audio.Sound.createAsync(
@@ -272,35 +273,30 @@ export default class TicketList extends React.Component {
   }
   render() {
     const { filterTags, tickets } = this.state;
-    const filteredTickets = tickets
-      .map((ticket) => ({
-        ...ticket,
-        orderItems: ticket.orderItems.filter((item) => {
-          // console.log(`item`, item);
-          if (filterTags?.length) {
-            if (item?.tags || item?.customization?.customTags) {
-              let rv = false;
-              const tags = item?.customization?.customTags || item?.tags;
-              filterTags?.forEach((ft) => {
-                if (tags.find((tag) => tag == ft)) {
-                  rv = true;
-                  return;
-                }
-              });
-              return rv;
-            } else {
-              return false;
-            }
-          } else {
-            return true;
-          }
-        }),
-      }))
-      .filter(
-        (ticket) =>
-          ticket?.orderItems?.length &&
-          ticket?.orderItems?.find(({ completed }) => !completed)
-      );
+    const filteredTickets = tickets.map((ticket) => ({
+      ...ticket,
+      // orderItems: ticket.orderItems.filter((item) => {
+      //   // console.log(`item`, item);
+      //   if (filterTags?.length) {
+      //     if (item?.tags || item?.customization?.customTags) {
+      //       let rv = false;
+      //       const tags = item?.customization?.customTags || item?.tags;
+      //       filterTags?.forEach((ft) => {
+      //         if (tags.find((tag) => tag == ft)) {
+      //           rv = true;
+      //           return;
+      //         }
+      //       });
+      //       return rv;
+      //     } else {
+      //       return false;
+      //     }
+      //   } else {
+      //     return true;
+      //   }
+      // }),
+    }));
+
     return (
       <View style={StyleSheet.absoluteFill}>
         {filteredTickets.length ? (

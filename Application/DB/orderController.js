@@ -38,11 +38,43 @@ export async function getClosedOrdersFull() {
  * Gets Open orders and their foodItems
  * @returns {Object} orders
  */
-export async function getOpenOrdersFull() {
+export async function getOpenOrdersFull(filterTags) {
+  //console.log(`controller filterTags`, filterTags);
   return await axios
-    .get("api/order/full/open")
+    .get("api/order/full/open", { params: { filterTags: filterTags } })
     .then((result) => {
-      return result.data;
+      return result.data
+        .map((order) => ({
+          ...order,
+          orderItems: order.orderItems?.filter(({ customization, tags }) => {
+            if (filterTags?.length) {
+              let rv = false;
+              let testTags;
+              if (customization?.customTags?.length) {
+                testTags = customization?.customTags;
+              } else if (tags?.length) {
+                testTags = tags;
+              } else {
+                return false;
+              }
+
+              filterTags.forEach((tag) => {
+                if (testTags.includes(tag)) {
+                  rv = true;
+                  return;
+                }
+              });
+              return rv;
+            } else {
+              return true;
+            }
+          }),
+        }))
+        .filter(
+          (ticket) =>
+            ticket?.orderItems?.length &&
+            ticket?.orderItems?.find(({ completed }) => !completed)
+        );
     })
     .catch((err) => {
       console.log("Error ocurred in getOpenOrdersFull()");

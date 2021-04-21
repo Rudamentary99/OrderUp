@@ -10,7 +10,13 @@ export async function storeData(key, value) {
     console.error(err);
   }
 }
-
+export async function removeData(key) {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (error) {
+    console.error(error);
+  }
+}
 export async function getData(key) {
   try {
     const result = await AsyncStorage.getItem(key);
