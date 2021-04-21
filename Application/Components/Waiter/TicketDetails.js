@@ -126,7 +126,7 @@ export default class TicketDetails extends React.Component {
                   openOrder(id)
                     .then((result) => {
                       if (result) {
-                        this.props.navigation.navigate("Open", {
+                        this.props.navigation.navigate("Closed Tickets", {
                           snackMessage: "Ticket Reopened",
                         });
                       } else {

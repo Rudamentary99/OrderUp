@@ -110,6 +110,31 @@ module.exports = (rdbConn) => [
     },
   },
   {
+    method: "get",
+    path: "/api/orderItems/full/simple",
+    fn: (req, res) => {
+      r.table("orderItem")
+        .eqJoin("orderID", r.table("order"))
+        .without({ right: "id" })
+        .zip()
+        .run(rdbConn, (err, result) => {
+          if (err) {
+            console.error(err);
+            res
+              .status(400)
+              .send({ message: "Could not get order items >:(", error: err });
+          } else {
+            const data = result?._responses[0]?.r;
+            if (data) res.json(data);
+            else
+              res
+                .status(400)
+                .send({ message: "Could not get Order's Items :(" });
+          }
+        });
+    },
+  },
+  {
     method: "post",
     path: "/api/orderItem/:id",
     fn: (req, res) => {

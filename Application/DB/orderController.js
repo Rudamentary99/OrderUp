@@ -63,6 +63,16 @@ export async function getOrderItems(orderID) {
       console.error(err);
     });
 }
+export async function getOrderItemsFullSimple() {
+  return await axios
+    .get("/api/orderItems/full/simple")
+    .then((result) => {
+      return result.data;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
 export async function getOrderItem(orderItemID) {
   return await axios
     .get("/api/orderItem/" + orderItemID)

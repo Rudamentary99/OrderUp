@@ -7,6 +7,7 @@ import AdminOverview from "./Overview";
 import ManageMenu from "./ManageMenu/ManageMenu";
 import ManageHouse from "./ManageHouse/ManageHouse";
 import { useTheme } from "@react-navigation/native";
+import { Reports } from "./Reports/Report";
 const Stack = createStackNavigator();
 
 const AdminNav = () => {
@@ -31,6 +32,11 @@ const AdminNav = () => {
         options={{ tabBarIcon: "home" }}
         name="Manage House"
         component={ManageHouse}
+      />
+      <Tab.Screen
+        options={{ tabBarIcon: "poll" }}
+        name="Reports"
+        component={Reports}
       />
     </Tab.Navigator>
   );
