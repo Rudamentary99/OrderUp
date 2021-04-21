@@ -160,6 +160,7 @@ export class FoodDetails extends React.Component {
           <Headline>Price: ${price}</Headline>
         </View>
         <FAB.Group
+          style={{ display: this.props.route.params.noEdit ? "none" : "flex" }}
           icon={this.state.manageItemOpen ? "dots-vertical" : "pencil"}
           open={this.state.manageItemOpen}
           onStateChange={() => {

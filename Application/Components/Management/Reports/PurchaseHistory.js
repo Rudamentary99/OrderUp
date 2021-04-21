@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View } from "react-native";
+import { TouchableWithoutFeedback, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ScrollView } from "react-native-gesture-handler";
 import { CustomStyles } from "../../../Styles";
@@ -19,7 +19,7 @@ import {
   getOrderItems,
   getOrderItemsFullSimple,
 } from "../../../DB/orderController";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 
 const moment = require("moment"); // require
 import { DatePickerModal } from "react-native-paper-dates";
@@ -29,25 +29,29 @@ function FoodItem(props) {
     food: { name, prepTime },
     count,
   } = props;
+  const navigation = useNavigation();
   const theme = useTheme();
   return (
-    <Surface
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-
-        margin: 20,
-        padding: 20,
-        borderRadius: theme.roundness,
-      }}
+    <TouchableWithoutFeedback
       onPress={() => {
-        navigation.navigate("Food Details", props.food);
+        navigation.navigate("Food Details", { ...props.food, noEdit: true });
       }}
     >
-      <Headline>{name}</Headline>
+      <Surface
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
 
-      <Headline>{count}</Headline>
-    </Surface>
+          margin: 20,
+          padding: 20,
+          borderRadius: theme.roundness,
+        }}
+      >
+        <Headline>{name}</Headline>
+
+        <Headline>{count}</Headline>
+      </Surface>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -151,18 +155,19 @@ export function PurchaseHistory({ navigation }) {
           <ToggleButton icon="calendar-edit" value="Custom" />
         </ToggleButton.Row>
       </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingHorizontal: 40,
+          ...CustomStyles.container,
+        }}
+      >
+        <Subheading>Food</Subheading>
+        <Subheading>Units Sold</Subheading>
+      </View>
       <ScrollView>
         <View style={[CustomStyles.container, { padding: 15 }]}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingHorizontal: 40,
-            }}
-          >
-            <Subheading>Food</Subheading>
-            <Subheading>Units Sold</Subheading>
-          </View>
           {FoodItems.filter((food) => {
             if (filterMode) {
               return moment(food.closeDate).isBetween(
@@ -172,15 +177,16 @@ export function PurchaseHistory({ navigation }) {
             } else {
               return true;
             }
-          }).map((food) => (
-            <FoodItem
-              key={uuidv4()}
-              food={food}
-              count={
-                OrderItems.filter(({ foodID }) => foodID == food.id).length
-              }
-            />
-          ))}
+          })
+            .map((food) => ({
+              ...food,
+              count: OrderItems.filter(({ foodID }) => foodID == food.id)
+                .length,
+            }))
+            .sort((a, b) => b.count - a.count)
+            .map((food) => (
+              <FoodItem key={uuidv4()} food={food} count={food.count} />
+            ))}
         </View>
       </ScrollView>
       <DatePickerModal
