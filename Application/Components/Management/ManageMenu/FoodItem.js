@@ -168,7 +168,7 @@ export class FoodDetails extends React.Component {
           }}
           actions={[
             {
-              icon: "pencil",
+              icon: "archive",
               label: "Archive",
               onPress: () => {
                 this.setState({ confirmArchive: true });
