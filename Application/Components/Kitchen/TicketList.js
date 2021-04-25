@@ -106,11 +106,9 @@ const TicketItem = (props) => {
             </Chip>
           ))}
         {customization?.customTags
-          ?.filter((customTag) => !tags.find((tag) => customTag == customTag))
+          ?.filter((customTag) => !tags.find((tag) => customTag == tag))
           ?.map((customTag) => (
-            <Chip key={uuidv4()} style={{ display: Boolean(customTag) }}>
-              {customTag}
-            </Chip>
+            <TagChip key={uuidv4()} tag={customTag} emphasized></TagChip>
           ))}
       </View>
     </View>
@@ -243,14 +241,19 @@ export default class TicketList extends React.Component {
     if (this.state.filterTags != null)
       getOpenOrdersFull(this.state.filterTags)
         .then((result) => {
-          if (result)
+          const newTickets = result.filter(
+            (ticket) =>
+              ticket?.orderItems?.length &&
+              ticket?.orderItems?.find(({ completed }) => !completed)
+          );
+          if (newTickets)
             result?.forEach((ticket) => {
               if (!this.state.tickets.find(({ id }) => id == ticket.id)) {
                 this.playNewTicketSound();
               }
             });
 
-          this.setState({ tickets: result || [] });
+          this.setState({ tickets: newTickets || [] });
           // console.log("result", result);
         })
         .catch((err) => {

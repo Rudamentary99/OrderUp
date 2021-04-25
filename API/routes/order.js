@@ -44,8 +44,8 @@ module.exports = (rdbConn) => [
     method: "get",
     path: "/api/order/full/:type",
     fn: (req, res) => {
-      let filterTags = req.query.filterTags;
-      console.log(`filterTags`, filterTags);
+      // let filterTags = req.query.filterTags;
+      // console.log(`filterTags`, filterTags);
       let typeFilter = (row) => {
         return row.hasFields("id");
       };

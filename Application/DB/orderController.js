@@ -41,40 +41,34 @@ export async function getClosedOrdersFull() {
 export async function getOpenOrdersFull(filterTags) {
   //console.log(`controller filterTags`, filterTags);
   return await axios
-    .get("api/order/full/open", { params: { filterTags: filterTags } })
+    .get("api/order/full/open")
     .then((result) => {
-      return result.data
-        .map((order) => ({
-          ...order,
-          orderItems: order.orderItems?.filter(({ customization, tags }) => {
-            if (filterTags?.length) {
-              let rv = false;
-              let testTags;
-              if (customization?.customTags?.length) {
-                testTags = customization?.customTags;
-              } else if (tags?.length) {
-                testTags = tags;
-              } else {
-                return false;
-              }
-
-              filterTags.forEach((tag) => {
-                if (testTags.includes(tag)) {
-                  rv = true;
-                  return;
-                }
-              });
-              return rv;
+      return result.data.map((order) => ({
+        ...order,
+        orderItems: order.orderItems?.filter(({ customization, tags }) => {
+          if (filterTags?.length) {
+            let rv = false;
+            let testTags;
+            if (customization?.customTags?.length) {
+              testTags = customization?.customTags;
+            } else if (tags?.length) {
+              testTags = tags;
             } else {
-              return true;
+              return false;
             }
-          }),
-        }))
-        .filter(
-          (ticket) =>
-            ticket?.orderItems?.length &&
-            ticket?.orderItems?.find(({ completed }) => !completed)
-        );
+
+            filterTags.forEach((tag) => {
+              if (testTags.includes(tag)) {
+                rv = true;
+                return;
+              }
+            });
+            return rv;
+          } else {
+            return true;
+          }
+        }),
+      }));
     })
     .catch((err) => {
       console.log("Error ocurred in getOpenOrdersFull()");

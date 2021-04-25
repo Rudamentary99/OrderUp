@@ -127,7 +127,7 @@ export default class TicketList extends React.Component {
     getOpenOrdersFull()
       .then((result) => {
         this.setState({ tickets: result || [] });
-
+        //console.log(`result`, result);
         // console.log("result", result);
       })
       .catch((err) => {
