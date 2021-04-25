@@ -106,9 +106,7 @@ const FoodListPane = (props) => {
               >
                 <Card.Title title={food.name}></Card.Title>
                 <Card.Content style={{ flexDirection: "row" }}>
-                  <View style={{ flexDirection: "row" }}>
-                    
-                  </View>
+                  <View style={{ flexDirection: "row" }}></View>
                   <Subheading
                     style={{ alignSelf: "flex-end", marginLeft: "auto" }}
                   >
@@ -165,11 +163,11 @@ const FoodListPane = (props) => {
             {tags?.map((tag) => (
               <Chip
                 key={uuidv4()}
-                selected={filterTags.find(( ft ) => tag == ft)}
+                selected={filterTags.find((ft) => tag == ft)}
                 style={{ marginRight: 3 }}
                 onPress={() => {
                   if (filterTags.find((ft) => tag == ft)) {
-                    setFilterTags(filterTags.filter(( ft) => ft != tag));
+                    setFilterTags(filterTags.filter((ft) => ft != tag));
                   } else {
                     setFilterTags([...filterTags, tag]);
                   }
@@ -213,11 +211,12 @@ const TicketListPane = (props) => {
             style={{
               backgroundColor: "white",
               justifyContent: "center",
+
               // height: 50,
             }}
             underlayColor={"#AAA"}
           >
-            <View>
+            <View style={{ marginBottom: 10 }}>
               <View
                 style={{
                   flexDirection: "row",
@@ -241,6 +240,13 @@ const TicketListPane = (props) => {
                     </Text>
                   )
                 )}
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                {data.item?.customization?.customTags
+                  ?.filter((ct) => data.item?.tags?.find((tag) => tag == ct))
+                  ?.map((tag) => (
+                    <Chip>{tag}</Chip>
+                  ))}
               </View>
             </View>
           </TouchableHighlight>
@@ -468,9 +474,9 @@ export class ManageTicket extends React.Component {
         </View>
         <Dialog
           visible={this.state.getTableNumber}
-          onDismiss={() => {
-            this.setState({ getTableNumber: false });
-          }}
+          // onDismiss={() => {
+          //   this.setState({ getTableNumber: false });
+          // }}
           style={{ marginBottom: 400, ...CustomStyles.dialogContainer }}
         >
           <Dialog.Content>
