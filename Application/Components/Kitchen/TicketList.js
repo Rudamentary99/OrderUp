@@ -246,8 +246,8 @@ export default class TicketList extends React.Component {
               ticket?.orderItems?.length &&
               ticket?.orderItems?.find(({ completed }) => !completed)
           );
-          if (newTickets)
-            result?.forEach((ticket) => {
+          if (newTickets?.length)
+            newTickets?.forEach((ticket) => {
               if (!this.state.tickets.find(({ id }) => id == ticket.id)) {
                 this.playNewTicketSound();
               }
