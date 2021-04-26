@@ -48,7 +48,7 @@ const FoodListPane = (props) => {
     if (!tags.length)
       getTags()
         .then((result) => {
-          setTags(result);
+          setTags(result.map((tag) => tag.name));
         })
         .catch((err) => {
           console.error(err);
@@ -76,7 +76,7 @@ const FoodListPane = (props) => {
               if (filterTags?.length) {
                 if (tags?.length) {
                   filterTags.forEach((filterTag) => {
-                    if (!tags.find((tag) => tag.id == filterTag.id)) {
+                    if (!tags.find((tag) => tag == filterTag)) {
                       rv = false;
                     }
                   });
