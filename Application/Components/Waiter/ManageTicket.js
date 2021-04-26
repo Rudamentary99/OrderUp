@@ -243,7 +243,7 @@ const TicketListPane = (props) => {
               </View>
               <View style={{ flexDirection: "row" }}>
                 {data.item?.customization?.customTags
-                  ?.filter((ct) => data.item?.tags?.find((tag) => tag == ct))
+                  ?.filter((ct) => !data.item?.tags?.find((tag) => tag == ct))
                   ?.map((tag) => (
                     <Chip>{tag}</Chip>
                   ))}

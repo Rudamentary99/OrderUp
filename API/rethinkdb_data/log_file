@@ -1,0 +1,18 @@
+2021-04-25T10:28:22.506566000 0.092687s notice: Recursively removing directory /Users/seniorproject/Documents/GitHub/que-ue-rn/API/rethinkdb_data/tmp
+2021-04-25T10:28:22.508891000 0.095016s notice: Initializing directory /Users/seniorproject/Documents/GitHub/que-ue-rn/API/rethinkdb_data
+2021-04-25T10:28:22.509017000 0.095137s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/Users/seniorproject/Documents/GitHub/que-ue-rn/API/rethinkdb_data' did not already exist or is empty.)
+2021-04-25T10:28:22.509052000 0.095172s notice: Running rethinkdb 2.4.1 (CLANG 11.0.3 (clang-1103.0.32.62))...
+2021-04-25T10:28:22.516028000 0.102149s notice: Running on Darwin 17.7.0 x86_64
+2021-04-25T10:28:22.516083000 0.102203s notice: Loading data from directory /Users/seniorproject/Documents/GitHub/que-ue-rn/API/rethinkdb_data
+2021-04-25T10:28:22.578748000 0.164870s info: Automatically using cache size of 258 MB
+2021-04-25T10:28:22.581983000 0.168105s notice: Listening for intracluster connections on port 29015
+2021-04-25T10:28:22.585509000 0.171631s notice: Listening for client driver connections on port 28015
+2021-04-25T10:28:22.585607000 0.171729s notice: Listening for administrative HTTP connections on port 8080
+2021-04-25T10:28:22.585615000 0.171737s notice: Listening on cluster addresses: 127.0.0.1, ::1
+2021-04-25T10:28:22.585622000 0.171744s notice: Listening on driver addresses: 127.0.0.1, ::1
+2021-04-25T10:28:22.585631000 0.171752s notice: Listening on http addresses: 127.0.0.1, ::1
+2021-04-25T10:28:22.585638000 0.171760s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2021-04-25T10:28:22.585646000 0.171768s notice: Server ready, "ITLOANMAC17164_local_1cj" e1aa05e9-c710-4007-9de3-37a9ad63bbb4
+2021-04-25T10:29:56.867459000 94.456860s notice: Server got SIGINT from pid 644, uid 502; shutting down...
+2021-04-25T10:29:56.867801000 94.457202s notice: Shutting down client connections...
+2021-04-25T10:29:56.868090000 94.457491s notice: All client connections closed.

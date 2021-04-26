@@ -7,6 +7,8 @@ const orderRoutes = require("./routes/order");
 const foodTypeRoutes = require("./routes/foodType");
 const settingRoutes = require("./routes/settings");
 const expressApp = require("./expressApp");
+const { exec } = require("child_process");
+
 //get App Config
 const config = JSON.parse(fs.readFileSync(`${__dirname}/config.json`));
 
