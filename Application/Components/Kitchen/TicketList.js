@@ -18,6 +18,7 @@ import {
   Chip,
 } from "react-native-paper";
 import {
+  completeItems,
   completeOrder,
   getOpenOrdersFull,
   updateOrderItem,
@@ -315,7 +316,7 @@ export default class TicketList extends React.Component {
                     }}
                     onClose={(pId) => {
                       this.playCloseSound();
-                      completeOrder(pId)
+                      completeItems(ticket.orderItems.map(({ id }) => id))
                         .then((result) => {
                           if (result)
                             this.setState({ snackMessage: "Ticket Closed!" });

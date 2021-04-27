@@ -154,9 +154,9 @@ export async function updateOrderItem(orderItemID, orderItem) {
       console.error(err);
     });
 }
-export async function completeOrder(orderID) {
+export async function completeItems(items) {
   return await axios
-    .post(`/api/order/${orderID}/complete`)
+    .post(`/api/orderItems/complete`, { items: items })
     .then((result) => {
       if (result.status == 200) return true;
 

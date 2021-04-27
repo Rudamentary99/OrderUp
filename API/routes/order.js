@@ -321,12 +321,14 @@ module.exports = (rdbConn) => [
   },
   {
     method: "post",
-    path: "/api/order/:id/complete",
+    path: "/api/orderItems/complete",
     fn: (req, res) => {
+      console.log(`req.body`, req.body);
       r.table("orderItem")
-        .getAll(req.params.id, { index: "orderID" })
+        .getAll(...req.body.items)
         .update({ completed: true, completionTime: new Date() })
         .run(rdbConn, (err, result) => {
+          console.log(`result`, result);
           if (err) {
             console.error(err);
             res
