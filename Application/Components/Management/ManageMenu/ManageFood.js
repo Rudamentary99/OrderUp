@@ -244,7 +244,7 @@ class FoodMain extends React.Component {
         <FAB
           icon="plus"
           onPress={() => {
-            this.props.navigation.navigate("create-food");
+            this.props.navigation.navigate("Create Food");
           }}
           style={CustomStyles.bottomRightAction}
         />
@@ -284,7 +284,7 @@ export default function ManageFood(props) {
   return (
     <Stack.Navigator initialRouteName="main" headerMode="float">
       <Stack.Screen name="Food Items" component={FoodMain} />
-      <Stack.Screen name="create-food" component={ManageFoodItem} />
+      <Stack.Screen name="Create Food" component={ManageFoodItem} />
       <Stack.Screen name="Food Details" component={FoodDetails} />
       <Stack.Screen name="Edit Food" component={ManageFoodItem} />
       <Stack.Screen name="Food Settings" component={FoodSettings} />
