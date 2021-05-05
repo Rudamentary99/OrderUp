@@ -166,7 +166,7 @@ export function PurchaseHistory({ navigation }) {
         <Subheading>Food</Subheading>
         <Subheading>Units Sold</Subheading>
       </View>
-      <ScrollView>
+      <ScrollView style={{ marginBottom: 100 }}>
         <View style={[CustomStyles.container, { padding: 15 }]}>
           {FoodItems.map((food) => ({
             ...food,
