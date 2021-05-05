@@ -202,10 +202,10 @@ export function ManageFoodItem(props) {
                   onChange={(newIngredient) => {
                     onChange([...value, newIngredient]);
                   }}
-                  onRemove={(index) => {
-                    let temp = value;
-                    temp.splice(index);
-                    onChange([...temp]);
+                  onRemove={({ item }) => {
+                    // let temp = value;
+                    // temp.splice(index);
+                    onChange(value.filter((ingredient) => ingredient != item));
                   }}
                   sortFunction={(a, b) => a.localeCompare(b)}
                 />

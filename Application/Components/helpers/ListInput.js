@@ -2,7 +2,13 @@ import React from "react";
 
 import { v4 as uuidv4 } from "uuid";
 import "react-native-get-random-values";
-import { Divider, IconButton, Surface, TextInput } from "react-native-paper";
+import {
+  Divider,
+  HelperText,
+  IconButton,
+  Surface,
+  TextInput,
+} from "react-native-paper";
 import { List } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { View } from "react-native";
@@ -15,11 +21,12 @@ export function ListInput({
   sortFunction,
 }) {
   const [newItem, setNewItem] = React.useState();
+  const [errorMessage, setErrorMessage] = React.useState("");
   const getItems = () => {
     return sortFunction ? items.sort(sortFunction) : items;
   };
   const submit = () => {
-    if (newItem) {
+    if (newItem && !errorMessage) {
       onChange(newItem);
       setNewItem("");
     }
@@ -29,7 +36,13 @@ export function ListInput({
       <TextInput
         label={inputTitle}
         value={newItem}
+        error={Boolean(errorMessage)}
         onChangeText={(text) => {
+          if (items.find((item) => item == text)) {
+            setErrorMessage("This ingredient already exists.");
+          } else {
+            setErrorMessage("");
+          }
           setNewItem(text);
         }}
         onSubmitEditing={() => {
@@ -46,6 +59,9 @@ export function ListInput({
         }
         blurOnSubmit={false}
       />
+      <HelperText type="error" visible={Boolean(errorMessage)}>
+        {errorMessage}
+      </HelperText>
       <ScrollView>
         {getItems().map((item, index) => (
           <View key={uuidv4()}>
@@ -57,7 +73,8 @@ export function ListInput({
                 <IconButton
                   icon="close"
                   onPress={() => {
-                    onRemove(index);
+                    // console.log(`index`, index);
+                    onRemove({ index: index, item: item });
                   }}
                 />
               )}
