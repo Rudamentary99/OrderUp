@@ -74,7 +74,7 @@ export function ManageFoodItem(props) {
   return (
     <KeyboardAvoidingView
       // contentContainerStyle={{ flex: 1 }}
-      keyboardVerticalOffset={useHeaderHeight() + 10}
+      keyboardVerticalOffset={useHeaderHeight() + 55}
       behavior="padding"
       style={[styles.containerStyle, { flex: 1 }]}
     >
