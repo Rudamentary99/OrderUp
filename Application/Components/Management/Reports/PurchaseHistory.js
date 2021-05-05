@@ -168,21 +168,21 @@ export function PurchaseHistory({ navigation }) {
       </View>
       <ScrollView>
         <View style={[CustomStyles.container, { padding: 15 }]}>
-          {FoodItems.filter((food) => {
-            if (filterMode) {
-              return moment(food.closeDate).isBetween(
-                moment(filterStart),
-                moment(filterEnd)
-              );
-            } else {
-              return true;
-            }
-          })
-            .map((food) => ({
-              ...food,
-              count: OrderItems.filter(({ foodID }) => foodID == food.id)
-                .length,
-            }))
+          {FoodItems.map((food) => ({
+            ...food,
+            count: OrderItems.filter(({ foodID }) => foodID == food.id).filter(
+              (food) => {
+                if (filterMode) {
+                  return moment(food.closeDate).isBetween(
+                    moment(filterStart),
+                    moment(filterEnd)
+                  );
+                } else {
+                  return true;
+                }
+              }
+            ).length,
+          }))
             .sort((a, b) => b.count - a.count)
             .map((food) => (
               <FoodItem key={uuidv4()} food={food} count={food.count} />
