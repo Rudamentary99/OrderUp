@@ -38,9 +38,7 @@ function ManageTags({ route, navigation }) {
   const [createTag, setCreateTag] = React.useState(false);
   const [newTagName, setNewTagName] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
-  const [snackMessage, setSnackMessage] = React.useState(
-    route.params?.snackMessage || ""
-  );
+  const [snackMessage, setSnackMessage] = React.useState("");
   const loadData = () => {
     getTags()
       .then((result) => {
@@ -51,7 +49,11 @@ function ManageTags({ route, navigation }) {
       });
   };
   React.useEffect(() => {
-    const focusListener = navigation.addListener("focus", loadData);
+    const focusListener = navigation.addListener("focus", () => {
+      setSnackMessage(route.params?.snackMessage);
+      this.props.navigation.setParams({ snackMessage: null });
+      loadData();
+    });
     return focusListener;
   });
   const { roundness } = useTheme();
@@ -243,9 +245,7 @@ function ManageFoodType({ route, navigation }) {
   const [newFoodTypePriority, setNewFoodTypePriority] = React.useState("0");
   const [errorMessage, setErrorMessage] = React.useState("");
   const [priorityErrorMessage, setPriorityErrorMessage] = React.useState("");
-  const [snackMessage, setSnackMessage] = React.useState(
-    route.params?.snackMessage || ""
-  );
+  const [snackMessage, setSnackMessage] = React.useState("");
   const [deleteItem, setDeleteItem] = React.useState(null);
   const loadData = () => {
     getFoodTypes()
@@ -260,7 +260,11 @@ function ManageFoodType({ route, navigation }) {
       });
   };
   React.useEffect(() => {
-    const focusListener = navigation.addListener("focus", loadData);
+    const focusListener = navigation.addListener("focus", () => {
+      setSnackMessage(route.params?.snackMessage);
+      navigation.setParams({ snackMessage: null });
+      loadData();
+    });
     return focusListener;
   });
   const { roundness } = useTheme();

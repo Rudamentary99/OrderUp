@@ -112,6 +112,7 @@ export default class TicketList extends React.Component {
   componentDidMount() {
     this.focusSubscription = this.props.navigation.addListener("focus", () => {
       this.setState({ snackMessage: this.props.route?.params?.snackMessage });
+      this.props.navigation.setParams({ snackMessage: null });
       this.loadData();
     });
     this.intervalID = setInterval(() => this.loadData(), 5 * 1000);

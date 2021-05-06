@@ -100,6 +100,7 @@ export function TicketList({ navigation, route }) {
     const listener = navigation.addListener("focus", () => {
       loadData();
       setSnackMessage(route?.params?.snackMessage);
+      navigation.setParams({ snackMessage: null });
     });
     const interval = setInterval(loadData, 1000);
     return () => {

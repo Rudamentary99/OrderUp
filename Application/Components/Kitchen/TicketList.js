@@ -214,6 +214,7 @@ export default class TicketList extends React.Component {
       "focus",
       () => {
         this.setState({ snackMessage: this.props.route?.params?.snackMessage });
+        this.props.navigation.setParams({ snackMessage: null });
         this.loadData();
         getData("filterTags")
           .then((result) => {
