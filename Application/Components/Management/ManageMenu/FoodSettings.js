@@ -51,7 +51,7 @@ function ManageTags({ route, navigation }) {
   React.useEffect(() => {
     const focusListener = navigation.addListener("focus", () => {
       setSnackMessage(route.params?.snackMessage);
-      this.props.navigation.setParams({ snackMessage: null });
+      navigation.setParams({ snackMessage: null });
       loadData();
     });
     return focusListener;
@@ -262,7 +262,7 @@ function ManageFoodType({ route, navigation }) {
   React.useEffect(() => {
     const focusListener = navigation.addListener("focus", () => {
       setSnackMessage(route.params?.snackMessage);
-      navigation.setParams({ snackMessage: null });
+      //  navigation?.setParams({ snackMessage: null });
       loadData();
     });
     return focusListener;
